@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>皮克敏雙核靈魂屬性測驗 | Pikmin Soul Test</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js (繪製雷達圖) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- html2canvas (一鍵圖片繪製與分享) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#FDFBF7',
+            wood: '#3A332C',
+            earth: '#8C6D58',
+            forest: '#4A7C59',
+            forestHover: '#3B6447',
+            cardBg: '#FFFFFF',
+          },
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'sans-serif'],
+          },
+          boxShadow: {
+            'paper': '0 4px 20px -2px rgba(140, 109, 88, 0.12), 0 2px 6px -1px rgba(140, 109, 88, 0.08)',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body {
+      background-color: #FDFBF7;
+      background-image: radial-gradient(#8C6D58 0.6px, transparent 0.6px);
+      background-size: 20px 20px;
+      overflow-x: hidden;
+    }
+
+    /* 卡片橫向滑動動畫 */
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideOutLeft {
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(-40px); }
+    }
+
+    .slide-in {
+      animation: slideInRight 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    .slide-out {
+      animation: slideOutLeft 0.25s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+    }
+  </style>
+</head>
+<body class="text-wood font-sans antialiased min-h-screen flex flex-col items-center justify-between p-4 sm:p-6">
+
+  <!-- ==================== 1. 測驗答題區塊 (Quiz Screen) ==================== -->
+  <div id="quiz-screen" class="w-full max-w-md flex flex-col items-center justify-between min-h-[90vh] relative">
+    
+    <!-- 計算結果時的 Loading 蓋層 -->
+    <div id="loading-overlay" class="absolute inset-0 bg-paper/95 z-20 hidden flex-col items-center justify-center gap-4 text-center rounded-3xl">
+      <div class="text-5xl animate-bounce">🌱</div>
+      <h2 class="text-lg font-bold text-wood">正在拔起屬於你的外顯與內在皮克敏...</h2>
+      <p class="text-xs text-earth">分析雙核靈魂數據中</p>
+    </div>
+
+    <header class="w-full text-center pt-4 pb-2">
+      <h1 class="text-xl font-bold tracking-wide text-wood">探索你的皮克敏靈魂屬性</h1>
+    </header>
+
+    <main class="w-full my-4 flex-1 flex flex-col justify-center">
+      <div id="quiz-card" class="bg-cardBg border-2 border-[#EFEAE1] rounded-3xl p-6 sm:p-8 shadow-paper relative overflow-hidden slide-in">
+        <div class="absolute -top-3 -right-3 w-12 h-12 text-forest/20 pointer-events-none">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M17,8C8,10 5,16 3,22C9,22 18,17 21,9C20,8 18.5,8 17,8Z"/></svg>
+        </div>
+
+        <div class="mb-6">
+          <div class="flex justify-between items-center text-xs text-earth font-medium mb-2">
+            <span>QUESTION <strong id="q-num" class="text-forest text-sm">01</strong> / <span id="q-total">20</span></span>
+            <span id="q-tag" class="bg-paper px-2 py-0.5 rounded-md border border-[#EFEAE1] text-earth">🌱 靈魂探索</span>
+          </div>
+          <div class="w-full bg-paper h-2.5 rounded-full overflow-hidden border border-[#EFEAE1]">
+            <div id="progress-bar" class="bg-forest h-full rounded-full transition-all duration-300 ease-out" style="width: 5%;"></div>
+          </div>
+        </div>
+
+        <div class="min-h-[80px] flex items-center mb-6">
+          <h2 id="question-text" class="text-base sm:text-lg font-bold text-wood leading-relaxed">
+            載入題目庫中...
+          </h2>
+        </div>
+
+        <div id="options-container" class="space-y-3"></div>
+      </div>
+    </main>
+
+    <footer class="w-full text-center py-2 text-xs text-earth/70">
+      <p>🍃 憑第一直覺選擇，測驗結果會更加精準</p>
+    </footer>
+  </div>
+
+  <!-- ==================== 2. 結果頁區塊 (Result Screen) ==================== -->
+  <div id="result-screen" class="w-full max-w-md hidden flex-col items-center">
+    
+    <!-- 雙核結果卡片 (支援下半部 180 度顛倒) -->
+    <main id="result-card" class="w-full bg-cardBg border-2 border-[#EFEAE1] rounded-3xl p-6 shadow-paper relative overflow-hidden my-4">
+      
+      <!-- ☀️ 上半部：外顯皮克敏 -->
+      <section class="outer-section pb-6 border-b-2 border-dashed border-[#EFEAE1]">
+        <div class="flex justify-between items-center mb-3">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold">
+            ☀️ 外顯皮克敏 (社交與行動)
+          </span>
+          <span id="outer-code" class="text-xs text-earth/70 font-mono">#001_RED</span>
+        </div>
+
+        <div class="text-center mb-4">
+          <p id="outer-title" class="text-xs font-bold text-earth tracking-wide mb-1">「永不退縮的直球衝鋒隊」</p>
+          <h1 id="outer-name" class="text-2xl font-extrabold text-wood">🔴 紅色皮克敏</h1>
+        </div>
+
+        <!-- 外顯專屬雷達圖 -->
+        <div class="w-full h-44 relative mb-4 flex justify-center items-center">
+          <canvas id="radarChart"></canvas>
+        </div>
+
+        <div class="bg-paper p-3.5 rounded-2xl border border-[#EFEAE1] mb-4">
+          <h3 class="text-xs font-bold text-earth mb-1">📖 外顯性格詳細解析</h3>
+          <p id="outer-desc" class="text-xs text-wood leading-relaxed">解析載入中...</p>
+        </div>
+
+        <!-- 外顯搭檔 -->
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div id="outer-soulmate-card" class="p-2.5 rounded-xl border transition-colors duration-300">
+            <div id="outer-soulmate-title" class="font-bold mb-0.5">🍀 幸運搭檔</div>
+            <div id="outer-soulmate" class="font-bold text-wood">藍色皮克敏</div>
+            <p id="outer-soulmate-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight">一個冷靜觀察防守，一個向前衝刺破局。</p>
+          </div>
+          <div id="outer-enemy-card" class="p-2.5 rounded-xl border transition-colors duration-300">
+            <div id="outer-enemy-title" class="font-bold mb-0.5">⚡ 相剋隊友</div>
+            <div id="outer-enemy" class="font-bold text-wood">黃色皮克敏</div>
+            <p id="outer-enemy-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight">覺得對方天馬行空不接地氣。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ↺ 翻轉提示語 ↺ -->
+      <div class="py-6 text-center select-none">
+        <div class="inline-block px-4 py-2 bg-paper border border-[#EFEAE1] rounded-full text-xs font-bold text-forest shadow-sm animate-pulse">
+          ↺ 請將電話旋轉 180 度閱讀內在皮克敏 ↺
+        </div>
+      </div>
+
+      <!-- 🌙 下半部：內在皮克敏 (旋轉 180 度倒置) -->
+      <section class="inner-section transform rotate-180 pt-2">
+        <div class="flex justify-between items-center mb-3">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold">
+            🌙 內在皮克敏 (深層靈魂)
+          </span>
+          <span id="inner-code" class="text-xs text-earth/70 font-mono">#003_BLUE</span>
+        </div>
+
+        <div class="text-center mb-4">
+          <p id="inner-title" class="text-xs font-bold text-earth tracking-wide mb-1">「深謀遠慮的冷靜觀察家」</p>
+          <h1 id="inner-name" class="text-2xl font-extrabold text-wood">🔵 藍色皮克敏</h1>
+        </div>
+
+        <!-- 內在專屬雷達圖 -->
+        <div class="w-full h-44 relative mb-4 flex justify-center items-center">
+          <canvas id="innerRadarChart"></canvas>
+        </div>
+
+        <div class="bg-paper p-3.5 rounded-2xl border border-[#EFEAE1] mb-4">
+          <h3 class="text-xs font-bold text-earth mb-1">🔮 隱藏內在詳細解析</h3>
+          <p id="inner-desc" class="text-xs text-wood leading-relaxed">解析載入中...</p>
+        </div>
+
+        <!-- 內在搭檔 -->
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div id="inner-soulmate-card" class="p-2.5 rounded-xl border transition-colors duration-300">
+            <div id="inner-soulmate-title" class="font-bold mb-0.5">🍀 幸運搭檔</div>
+            <div id="inner-soulmate" class="font-bold text-wood">紅色皮克敏</div>
+            <p id="inner-soulmate-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight">互補防守與進攻，提供內在絕對安全感。</p>
+          </div>
+          <div id="inner-enemy-card" class="p-2.5 rounded-xl border transition-colors duration-300">
+            <div id="inner-enemy-title" class="font-bold mb-0.5">⚡ 相剋隊友</div>
+            <div id="inner-enemy" class="font-bold text-wood">羽翅皮克敏</div>
+            <p id="inner-enemy-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight">受不了對方過於隨性與無秩序的節奏。</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 操作按鈕 -->
+    <div class="w-full space-y-3 mb-6">
+      <button id="share-btn" onclick="generateAndShareImage()" class="w-full py-3.5 px-4 bg-forest hover:bg-forestHover text-white font-bold rounded-2xl shadow-paper flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer">
+        <span>📸 儲存雙核卡片 (分享至 IG Story)</span>
+      </button>
+      <button onclick="restartQuiz()" class="w-full py-3 px-4 bg-white border border-[#EFEAE1] text-earth hover:text-wood font-medium rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer">
+        <span>🔄 重新測驗</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== 3. JavaScript 邏輯引擎 ==================== -->
+  <script>
+    // 1. 全域題庫變數
+    let masterQuestionBank = [];
+
+    // 2. 詳細皮克敏 Profile 設定
+    const pikminProfiles = {
+      red: {
+        code: "#001_RED",
+        name: "🔴 紅色皮克敏",
+        title: "「永不退縮的直球衝鋒隊」",
+        color: "#E65100",
+        desc: "你是團隊中不可或缺的堅韌先鋒。面對困難與未知，你很少退縮或優柔寡斷，習慣直接用行動破局。你的熱情與直率極具感染力，常能帶動身邊的人一起前進；然而，有時過於專注於目標衝刺，可能會忽略周遭細微的情緒與隱含的風險。",
+        soulmate: "藍色皮克敏",
+        soulmateDesc: "一個冷靜觀察防守，一個向前衝刺破局。",
+        enemy: "黃色皮克敏",
+        enemyDesc: "覺得對方天馬行空、缺乏接地氣的執行力。"
+      },
+      blue: {
+        code: "#003_BLUE",
+        name: "🔵 藍色皮克敏",
+        title: "「深謀遠慮的冷靜觀察家」",
+        color: "#0288D1",
+        desc: "你擁有如水一般的冷靜與包容力。即使在極度混亂的環境中，你也能抽離情緒，迅速梳理出問題的本質與秩序。你做事穩健、講求 logic 與全局觀，總是能在關鍵時刻給予最可靠的支援；但有時因考慮過於周全，會在行動前花費較長時間評估。",
+        soulmate: "紅色皮克敏",
+        soulmateDesc: "互補防守與進攻，提供內在絕對安全感。",
+        enemy: "羽翅皮克敏",
+        enemyDesc: "受不了對方過於隨性與缺乏秩序的步調。"
+      },
+      yellow: {
+        code: "#002_YELLOW",
+        name: "🟡 黃色皮克敏",
+        title: "「天馬行空的靈感發電機」",
+        color: "#F57F17",
+        desc: "你的腦袋裡裝滿了無數奇思妙想，充滿活力且彈性極佳。你不喜歡被固有的框架與規則束縛，遇到問題時總是能從意想不到的角度找到妙招。你是大家的開心果與靈感源泉，不過有時專注力容易被新奇事物吸引，需要身邊有人幫忙拉回常軌。",
+        soulmate: "岩石皮克敏",
+        soulmateDesc: "能把你天馬行空的點子穩穩落地實現。",
+        enemy: "紅色皮克敏",
+        enemyDesc: "覺得對方太過莽撞衝動、缺乏靈活變通。"
+      },
+      purple: {
+        code: "#004_PURPLE",
+        name: "🟣 紫色皮克敏",
+        title: "「力挽狂瀾的絕對核心」",
+        color: "#7B1FA2",
+        desc: "你具備無可比擬的氣場與強大執行力，一個人就能扛起數倍於常人的重任。你具有極強的責任感與掌控力，習慣在混亂中挺身而出擔任主導角色。你的存在給人極高的安全感，但也要注意別把所有壓力獨自扛在肩膀上而過度疲累。",
+        soulmate: "白色皮克敏",
+        soulmateDesc: "敏銳補位細節，讓你無後顧之憂集中輸出。",
+        enemy: "冰霜皮克敏",
+        enemyDesc: "覺得對方步調太慢、過於保守而打亂節奏。"
+      },
+      white: {
+        code: "#005_WHITE",
+        name: "⚪ 白色皮克敏",
+        title: "「機警敏銳的隱形快手」",
+        color: "#78909C",
+        desc: "你的直覺極其敏銳，擁有洞悉周遭環境微小變化的天賦。你討厭拖泥帶水與繁複的社交套路，習慣以最有效率且精準的方式處理事務。雖然看起來有些高冷或獨來獨往，但你總是能在一瞬間點出關鍵，是隊伍中極具威脅力的隱形奇兵。",
+        soulmate: "紫色皮克敏",
+        soulmateDesc: "大膽輸出與精細防護的黃金合作組合。",
+        enemy: "岩石皮克敏",
+        enemyDesc: "受不了對方過於沉悶固執、反應不夠靈敏。"
+      },
+      rock: {
+        code: "#006_ROCK",
+        name: "🪨 岩石皮克敏",
+        title: "「穩如泰山的鋼鐵盾牌」",
+        color: "#424242",
+        desc: "你是大家心中最可靠的定海神針。情緒穩定度極高，具有強大的抗壓性與原則性，無論外界如何動盪，你都能踏實地守住底線。你做事一步一腳印，絕不投機取巧；不過偶爾可能因為太過堅持原則，而被認為略顯固執與缺乏彈性。",
+        soulmate: "黃色皮克敏",
+        soulmateDesc: "為對方靈動的點子提供最堅實的落地支援。",
+        enemy: "白色皮克敏",
+        enemyDesc: "覺得對方太過急躁捉模不定、缺乏穩定度。"
+      },
+      wing: {
+        code: "#007_WING", 
+        name: "🌸 羽翅皮克敏",
+        title: "「自由翱翔的跨界奇才」",
+        color: "#EC407A",
+        desc: "你天生帶有一種輕盈自由的氣質，討厭任何形式的約束與繁文縟節。面對障礙，你不喜歡硬碰硬，而是擅長運用靈動的思維直飛彼岸。你具備極佳的適應力與跨界想像力，能為死板的環境注入活水，但有時也會被誤解為不夠嚴謹。",
+        soulmate: "發光皮克敏",
+        soulmateDesc: "靈動不設限，兩人在一起能創造無限可能。",
+        enemy: "藍色皮克敏",
+        enemyDesc: "覺得對方規矩太多、個性過於嚴肅沉重。"
+      },
+      ice: {
+        code: "#008_ICE",
+        name: "🧊 冰霜皮克敏",
+        title: "「掌控全局的局勢凍結者」",
+        color: "#00ACC1",
+        desc: "你擁有強大的局勢掌控力與極佳的冷靜度。當場面失控時，你總能以冰冷精確的邏輯降溫場面，將複雜問題一步步拆解並逐步凍結風險。你極具戰略眼光，行動俐落，雖然表面上看起來有些距離感，但其實對自己人無比照顧。",
+        soulmate: "藍色皮克敏",
+        soulmateDesc: "雙重冷靜思考，共同打造無懈可擊的防線。",
+        enemy: "紫色皮克敏",
+        enemyDesc: "覺得對方衝勁過頭、缺乏周全的控制規劃。"
+      },
+      glow: {
+        code: "#009_GLOW",
+        name: "✨ 發光皮克敏",
+        title: "「黑暗中的靈魂引路人」",
+        color: "#7CB342",
+        desc: "你本身就自帶獨特的光芒與感染力。在眾人迷茫或陷入黑暗低谷時，你總能憑藉極強的第六感與信念，照亮一條大家都沒想過的新路。你的靈魂獨立而純粹，不隨波逐流，是能夠在絕境中點燃希望的靈魂引路人。",
+        soulmate: "羽翅皮克敏",
+        soulmateDesc: "靈魂高度共鳴，彼此相處輕鬆自在無壓力。",
+        enemy: "岩石皮克敏",
+        enemyDesc: "覺得對方太過保守墨守成規、缺乏變通樂趣。"
+      }
+    };
+
+    const pikminColorThemeMap = {
+      '紅': { bg: 'bg-rose-50/80', border: 'border-rose-200', title: 'text-rose-600' },
+      '藍': { bg: 'bg-blue-50/80', border: 'border-blue-200', title: 'text-blue-600' },
+      '黃': { bg: 'bg-amber-50/80', border: 'border-amber-200', title: 'text-amber-600' },
+      '紫': { bg: 'bg-purple-50/80', border: 'border-purple-200', title: 'text-purple-600' },
+      '白': { bg: 'bg-slate-100/80', border: 'border-slate-300', title: 'text-slate-600' },
+      '岩': { bg: 'bg-stone-100/80', border: 'border-stone-300', title: 'text-stone-700' },
+      '羽': { bg: 'bg-pink-50/80', border: 'border-pink-200', title: 'text-pink-600' },
+      '冰': { bg: 'bg-cyan-50/80', border: 'border-cyan-200', title: 'text-cyan-600' },
+      '發光': { bg: 'bg-lime-50/80', border: 'border-lime-200', title: 'text-lime-600' }
+    };
+
+    function applyCardColor(cardId, titleId, targetPikminName) {
+      const cardEl = document.getElementById(cardId);
+      const titleEl = document.getElementById(titleId);
+      if (!cardEl || !titleEl) return;
+
+      let selectedTheme = { bg: 'bg-emerald-50/80', border: 'border-emerald-200', title: 'text-emerald-600' };
+
+      for (const [key, theme] of Object.entries(pikminColorThemeMap)) {
+        if (targetPikminName.includes(key)) {
+          selectedTheme = theme;
+          break;
+        }
+      }
+
+      cardEl.className = `p-2.5 rounded-xl border transition-colors duration-300 ${selectedTheme.bg} ${selectedTheme.border}`;
+      titleEl.className = `font-bold mb-0.5 ${selectedTheme.title}`;
+    }
+
+    // 3. 全域 State
+    let selectedQuestions = [];
+    let currentIndex = 0;
+    let questionStartTime = 0;
+    let lastQuestionIsOuter = null;
+    let chartInstance = null;
+    let innerChartInstance = null;
+
+    let userScores = {
+      outer: { action: 0, insight: 0, resilience: 0, flexibility: 0, uniqueness: 0 },
+      inner: { action: 0, insight: 0, resilience: 0, flexibility: 0, uniqueness: 0 }
+    };
+
+    const TOTAL_QUESTIONS_TO_ASK = 20;
+
+    // 📥 非同步載入 batch1.json 至 batch5.json 並合併為完整題庫
+    async function loadQuestionBank() {
+      try {
+        const batchFiles = [
+          './batch1.json',
+          './batch2.json',
+          './batch3.json',
+          './batch4.json',
+          './batch5.json'
+        ];
+
+        // 同時抓取 5 個 batch JSON
+        const responses = await Promise.all(batchFiles.map(file => fetch(file)));
+
+        // 檢查是否有讀取失敗的檔案
+        for (let i = 0; i < responses.length; i++) {
+          if (!responses[i].ok) {
+            throw new Error(`無法載入 ${batchFiles[i]} (狀態碼: ${responses[i].status})`);
+          }
+        }
+
+        // 解析 JSON 資料
+        const batchesData = await Promise.all(responses.map(res => res.json()));
+        
+        // 將 5 個 batch 的陣列展開並合併為一個完整的 masterQuestionBank
+        masterQuestionBank = batchesData.flat();
+
+        startQuiz();
+
+      } catch (error) {
+        console.error('題庫載入失敗:', error);
+        const quizScreen = document.getElementById('quiz-screen');
+        if (quizScreen) {
+          quizScreen.innerHTML = `
+            <div class="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center p-6 bg-cardBg border-2 border-rose-200 rounded-3xl shadow-paper my-auto">
+              <div class="text-5xl">⚠️</div>
+              <h2 class="text-lg font-bold text-wood">無法讀取 batch1.json ~ batch5.json 檔案</h2>
+              <p class="text-xs text-earth leading-relaxed max-w-xs">
+                請確認 batch1.json 至 batch5.json 是否已正確放置於同一目錄並上載至 GitHub Repo。<br/><br/>
+                （如在本地測試，請務必透過 Local Server 開啟，例如 VS Code Live Server）
+              </p>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function startQuiz() {
+      if (!masterQuestionBank || masterQuestionBank.length === 0) {
+        console.error("題庫尚未載入");
+        return;
+      }
+
+      currentIndex = 0;
+      lastQuestionIsOuter = null;
+      userScores = {
+        outer: { action: 0, insight: 0, resilience: 0, flexibility: 0, uniqueness: 0 },
+        inner: { action: 0, insight: 0, resilience: 0, flexibility: 0, uniqueness: 0 }
+      };
+
+      const shuffle = arr => [...arr].sort(() => 0.5 - Math.random());
+      
+      const outerQuestions = shuffle(masterQuestionBank.filter(q => q.isOuter));
+      const innerQuestions = shuffle(masterQuestionBank.filter(q => !q.isOuter));
+      
+      selectedQuestions = shuffle([...outerQuestions, ...innerQuestions]);
+
+      document.getElementById('loading-overlay').classList.add('hidden');
+      document.getElementById('loading-overlay').classList.remove('flex');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+      document.getElementById('quiz-screen').classList.add('flex');
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('flex');
+
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = selectedQuestions[currentIndex];
+      questionStartTime = Date.now();
+
+      const card = document.getElementById('quiz-card');
+      card.classList.remove('slide-out');
+      card.classList.add('slide-in');
+
+      document.getElementById('q-num').innerText = String(currentIndex + 1).padStart(2, '0');
+      document.getElementById('q-total').innerText = String(TOTAL_QUESTIONS_TO_ASK).padStart(2, '0');
+      document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / TOTAL_QUESTIONS_TO_ASK) * 100}%`;
+
+      let questionText = q.textVersions.default;
+      if (lastQuestionIsOuter !== null) {
+        questionText = lastQuestionIsOuter ? q.textVersions.afterOuter : q.textVersions.afterInner;
+      }
+      document.getElementById('question-text').innerText = questionText;
+
+      const container = document.getElementById('options-container');
+      container.innerHTML = '';
+
+      const optionLabels = ['A', 'B', 'C'];
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = "w-full text-left p-4 rounded-2xl border-2 border-[#EFEAE1] bg-paper hover:border-forest hover:bg-white hover:shadow-sm active:scale-[0.99] transition-all duration-200 group flex items-start gap-3.5 cursor-pointer";
+        btn.onclick = () => selectOption(opt.scores, q.isOuter);
+        btn.innerHTML = `
+          <span class="flex-shrink-0 w-6 h-6 rounded-full bg-earth/10 text-earth group-hover:bg-forest group-hover:text-white flex items-center justify-center text-xs font-bold transition-colors">
+            ${optionLabels[idx]}
+          </span>
+          <span class="text-sm text-wood group-hover:text-forest font-medium pt-0.5">${opt.text}</span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function selectOption(scores, isOuter) {
+      const elapsedTime = (Date.now() - questionStartTime) / 1000;
+      let multiplier = 1.0;
+      if (elapsedTime < 2.5) multiplier = 1.15;
+      else if (elapsedTime > 8.0) multiplier = 1.10;
+
+      const target = isOuter ? userScores.outer : userScores.inner;
+      for (const [dim, val] of Object.entries(scores)) {
+        target[dim] += Math.round(val * multiplier);
+      }
+
+      lastQuestionIsOuter = isOuter;
+
+      const card = document.getElementById('quiz-card');
+      card.classList.remove('slide-in');
+      card.classList.add('slide-out');
+
+      setTimeout(() => {
+        currentIndex++;
+        if (currentIndex < selectedQuestions.length && currentIndex < TOTAL_QUESTIONS_TO_ASK) {
+          renderQuestion();
+        } else {
+          showResult();
+        }
+      }, 250);
+    }
+
+    function showResult() {
+      const loadingOverlay = document.getElementById('loading-overlay');
+      loadingOverlay.classList.remove('hidden');
+      loadingOverlay.classList.add('flex');
+
+      setTimeout(() => {
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+
+        quizScreen.classList.add('hidden');
+        quizScreen.classList.remove('flex');
+        resultScreen.classList.remove('hidden');
+        resultScreen.classList.add('flex');
+
+        const getPikminKey = scoresObj => {
+          const topTrait = Object.entries(scoresObj).sort((a, b) => b[1] - a[1])[0][0];
+          const map = { action: 'red', insight: 'blue', flexibility: 'yellow', resilience: 'rock', uniqueness: 'wing' };
+          return map[topTrait] || 'red';
+        };
+
+        const outerKey = getPikminKey(userScores.outer);
+        const innerKey = getPikminKey(userScores.inner);
+
+        const outerP = pikminProfiles[outerKey];
+        const innerP = pikminProfiles[innerKey];
+
+        // 1. 渲染 外顯皮克敏資訊
+        document.getElementById('outer-code').innerText = outerP.code;
+        document.getElementById('outer-title').innerText = outerP.title;
+        document.getElementById('outer-name').innerText = outerP.name;
+        document.getElementById('outer-name').style.color = outerP.color;
+        document.getElementById('outer-desc').innerText = outerP.desc;
+        document.getElementById('outer-soulmate').innerText = outerP.soulmate;
+        document.getElementById('outer-soulmate-desc').innerText = outerP.soulmateDesc;
+        document.getElementById('outer-enemy').innerText = outerP.enemy;
+        document.getElementById('outer-enemy-desc').innerText = outerP.enemyDesc;
+
+        applyCardColor('outer-soulmate-card', 'outer-soulmate-title', outerP.soulmate);
+        applyCardColor('outer-enemy-card', 'outer-enemy-title', outerP.enemy);
+
+        // 2. 渲染 內在皮克敏資訊
+        document.getElementById('inner-code').innerText = innerP.code;
+        document.getElementById('inner-title').innerText = innerP.title;
+        document.getElementById('inner-name').innerText = innerP.name;
+        document.getElementById('inner-name').style.color = innerP.color;
+        document.getElementById('inner-desc').innerText = innerP.desc;
+        document.getElementById('inner-soulmate').innerText = innerP.soulmate;
+        document.getElementById('inner-soulmate-desc').innerText = innerP.soulmateDesc;
+        document.getElementById('inner-enemy').innerText = innerP.enemy;
+        document.getElementById('inner-enemy-desc').innerText = innerP.enemyDesc;
+
+        applyCardColor('inner-soulmate-card', 'inner-soulmate-title', innerP.soulmate);
+        applyCardColor('inner-enemy-card', 'inner-enemy-title', innerP.enemy);
+
+        // 3. 繪製雷達圖
+        renderRadarCharts(userScores.outer, outerP.color, userScores.inner, innerP.color);
+      }, 1200);
+    }
+
+    function renderRadarCharts(outerScores, outerColor, innerScores, innerColor) {
+      const ctxOuter = document.getElementById('radarChart').getContext('2d');
+      if (chartInstance) chartInstance.destroy();
+
+      chartInstance = new Chart(ctxOuter, {
+        type: 'radar',
+        data: {
+          labels: ['執行力', '洞察力', '韌性', '彈性', '獨特性'],
+          datasets: [{
+            label: '☀️ 外顯靈魂屬性',
+            data: [outerScores.action, outerScores.insight, outerScores.resilience, outerScores.flexibility, outerScores.uniqueness],
+            backgroundColor: outerColor + '40',
+            borderColor: outerColor,
+            borderWidth: 2,
+            pointBackgroundColor: outerColor,
+            pointBorderColor: '#FFFFFF',
+            pointRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: '#EFEAE1' },
+              grid: { color: '#EFEAE1' },
+              pointLabels: { font: { family: 'Noto Sans TC', size: 10, weight: 'bold' }, color: '#3A332C' },
+              ticks: { display: false },
+              suggestedMin: 0
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: { boxWidth: 10, padding: 6, font: { family: 'Noto Sans TC', size: 10, weight: 'bold' }, color: '#8C6D58' }
+            }
+          }
+        }
+      });
+
+      const ctxInner = document.getElementById('innerRadarChart').getContext('2d');
+      if (innerChartInstance) innerChartInstance.destroy();
+
+      innerChartInstance = new Chart(ctxInner, {
+        type: 'radar',
+        data: {
+          labels: ['執行力', '洞察力', '韌性', '彈性', '獨特性'],
+          datasets: [{
+            label: '🌙 內在靈魂屬性',
+            data: [innerScores.action, innerScores.insight, innerScores.resilience, innerScores.flexibility, innerScores.uniqueness],
+            backgroundColor: innerColor + '40',
+            borderColor: innerColor,
+            borderWidth: 2,
+            pointBackgroundColor: innerColor,
+            pointBorderColor: '#FFFFFF',
+            pointRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: '#EFEAE1' },
+              grid: { color: '#EFEAE1' },
+              pointLabels: { font: { family: 'Noto Sans TC', size: 10, weight: 'bold' }, color: '#3A332C' },
+              ticks: { display: false },
+              suggestedMin: 0
+            }
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: { boxWidth: 10, padding: 6, font: { family: 'Noto Sans TC', size: 10, weight: 'bold' }, color: '#8C6D58' }
+            }
+          }
+        }
+      });
+    }
+
+    // 📸 利用 html2canvas 繪製與分享卡片圖片
+    async function generateAndShareImage() {
+      const shareBtn = document.getElementById('share-btn');
+      const originalText = shareBtn.innerHTML;
+      shareBtn.innerText = '⏳ 正在生成卡片圖片...';
+      shareBtn.disabled = true;
+
+      try {
+        const resultCard = document.getElementById('result-card');
+        const canvas = await html2canvas(resultCard, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#FDFBF7'
+        });
+
+        canvas.toBlob(async (blob) => {
+          if (!blob) throw new Error('圖片生成失敗');
+          
+          const file = new File([blob], 'pikmin-soul-test.png', { type: 'image/png' });
+
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              title: '皮克敏雙核靈魂屬性測驗',
+              text: '快來看看你的外顯與內在皮克敏靈魂屬性！',
+              files: [file]
+            });
+          } else {
+            const link = document.createElement('a');
+            link.download = 'pikmin-soul-test.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+          }
+          shareBtn.innerHTML = originalText;
+          shareBtn.disabled = false;
+        }, 'image/png');
+
+      } catch (err) {
+        console.error('生成圖片失敗:', err);
+        alert('生成圖片時發生錯誤，請稍後再試！');
+        shareBtn.innerHTML = originalText;
+        shareBtn.disabled = false;
+      }
+    }
+
+    function restartQuiz() {
+      startQuiz();
+    }
+
+    // 🚀 初始化：執行題庫載入
+    loadQuestionBank();
+  </script>
+</body>
+</html>

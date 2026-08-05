@@ -1,0 +1,974 @@
+[
+  {
+    "id": "CORE_EXT_027",
+    "category": "exterior",
+    "core_question": "在團隊中面對意見停滯不前時的突破方式？",
+    "display_variants": {
+      "default": "當會議陷入長達一小時的死寂僵局時，你會？",
+      "after_work": "面對討論卡關的僵局，你會？",
+      "transition": "當現場討論完全卡住時，你會？"
+    },
+    "left_option": {
+      "text": "拋出一個極端或顛覆性的構想，打破僵局激發討論",
+      "scores": { "uniqueness": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "梳理目前爭議點，提出折衷的第三方案尋求共識",
+      "scores": { "insight": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_028",
+    "category": "exterior",
+    "core_question": "面對新穎但複雜的軟體或工具學習時？",
+    "display_variants": {
+      "default": "公司引進了一套功能強大但極其複雜的新系統，你會？",
+      "after_action": "面對複雜的新工具，你會？",
+      "transition": "當需要上手一套全新工具時，你會？"
+    },
+    "left_option": {
+      "text": "直接開軟體亂按一通，在實際操作中摸索出用法",
+      "scores": { "action": 2, "flexibility": 1 }
+    },
+    "right_option": {
+      "text": "先把說明文件與教學影片看一遍，掌握架構再使用",
+      "scores": { "insight": 2, "resilience": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_029",
+    "category": "exterior",
+    "core_question": "在社交場合中，對於場面主導權的展現？",
+    "display_variants": {
+      "default": "在十幾人的大型聚餐中，你的外在狀態通常是？",
+      "after_ext": "在大型聚會場合中，你會？",
+      "transition": "聊到大型聚會的互動，你會？"
+    },
+    "left_option": {
+      "text": "站在桌邊或中央講故事，成為全場的目光焦點",
+      "scores": { "action": 2, "uniqueness": 1 }
+    },
+    "right_option": {
+      "text": "留在兩三個熟人的小圈子裡，進行高質量的深聊",
+      "scores": { "insight": 2, "resilience": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_030",
+    "category": "exterior",
+    "core_question": "面對客戶或上司提出的不合理需求？",
+    "display_variants": {
+      "default": "當對方提出技術上幾乎不可能實現的要求時，你會？",
+      "after_resilience": "面對不合理的壓迫，你會？",
+      "transition": "當接到極不合理的訴求時，你會？"
+    },
+    "left_option": {
+      "text": "當場義正嚴詞地說明困難點，直接拒絕要求",
+      "scores": { "resilience": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "先表面答應下來，再透過迂迴方式引導對方修改需求",
+      "scores": { "flexibility": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_031",
+    "category": "exterior",
+    "core_question": "在旅行或休閒時的行程精細度？",
+    "display_variants": {
+      "default": "規劃一趟期待已久的假期旅行時，你的行程表會是？",
+      "after_flex": "規劃私人行程時，你習慣？",
+      "transition": "談到排定休閒行程，你會？"
+    },
+    "left_option": {
+      "text": "精細到每小時的交通、景點與備用美食清單",
+      "scores": { "resilience": 2, "insight": 1 }
+    },
+    "right_option": {
+      "text": "只訂好住宿與大方向，每天睡醒再決定去哪裡",
+      "scores": { "flexibility": 2, "uniqueness": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_032",
+    "category": "exterior",
+    "core_question": "面對突如其來的讚賞或公眾表揚？",
+    "display_variants": {
+      "default": "在全公司大會上突然被點名讚賞時，你的外在反應是？",
+      "after_ext": "獲得公開表揚的時刻，你會？",
+      "transition": "當受到眾人矚目讚賞時，你會？"
+    },
+    "left_option": {
+      "text": "自信且大方地收下稱讚，並順勢展現幽默",
+      "scores": { "action": 2, "uniqueness": 1 }
+    },
+    "right_option": {
+      "text": "謙遜回應，迅速把功勞歸因於團隊共同努力",
+      "scores": { "resilience": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_033",
+    "category": "exterior",
+    "core_question": "在團隊中擔任決策者時的風格？",
+    "display_variants": {
+      "default": "當你需要為整個專案做最終定奪時，你的決策作風是？",
+      "after_work": "作為團隊的最後決策者，你會？",
+      "transition": "當決策的重擔在你身上時，你會？"
+    },
+    "left_option": {
+      "text": "快速拍板，承擔風險，用高執行力帶動大家",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "反覆交叉比對數據與極端情況，確保萬無一失",
+      "scores": { "insight": 2, "resilience": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_034",
+    "category": "exterior",
+    "core_question": "面對朋友間的誤會或爭執時的態度？",
+    "display_variants": {
+      "default": "得知朋友對你有誤會且在背後議論時，你會？",
+      "after_ext": "面對朋友間的誤會，你會？",
+      "transition": "當人際關係出現誤會時，你會？"
+    },
+    "left_option": {
+      "text": "約對方出來開誠布公當面講清楚，當天解決",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "給彼此空間沉澱，找時間透過訊息溫和釐清",
+      "scores": { "flexibility": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_035",
+    "category": "exterior",
+    "core_question": "對於個人作品或簡報視覺的打磨程度？",
+    "display_variants": {
+      "default": "製作一份準備對外公開的簡報或作品時，你會？",
+      "after_uniqueness": "打磨個人作品時，你會？",
+      "transition": "在呈現個人成果時，你會？"
+    },
+    "left_option": {
+      "text": "加入強烈的個人視覺配色與排版，讓人一眼難忘",
+      "scores": { "uniqueness": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "使用標準簡潔的邏輯框架，確保資訊清晰易讀",
+      "scores": { "resilience": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_036",
+    "category": "exterior",
+    "core_question": "面對環境規則或制度的態度？",
+    "display_variants": {
+      "default": "發現現有的規則嚴重限制了工作效率，你會？",
+      "after_work": "面對不合理的既有規則，你會？",
+      "transition": "當體制規則造成阻礙時，你會？"
+    },
+    "left_option": {
+      "text": "公開挑戰規則，發起變革甚至先斬後奏",
+      "scores": { "uniqueness": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "在規則許可的灰色地帶靈活游走，達到目的即可",
+      "scores": { "flexibility": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_037",
+    "category": "exterior",
+    "core_question": "在談判商務場合的發言策略？",
+    "display_variants": {
+      "default": "商務談判桌上，你的開場策略傾向於？",
+      "after_insight": "進入談判場合時，你的作風是？",
+      "transition": "談到商務談判的策略，你會？"
+    },
+    "left_option": {
+      "text": "先發制人，提出明確底線與強勢訴求主導戰局",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "後發制人，先聽取對方籌碼再尋求盲點反擊",
+      "scores": { "insight": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_038",
+    "category": "exterior",
+    "core_question": "面對陌生領域的專家演講時？",
+    "display_variants": {
+      "default": "參加一場高深莫測的跨領域研討會時，你會？",
+      "after_ext": "聆聽專業演講時，你的表現是？",
+      "transition": "在吸收新知識的場合，你會？"
+    },
+    "left_option": {
+      "text": "踴躍舉手發問，提出具挑戰性的問題互動",
+      "scores": { "action": 2, "uniqueness": 1 }
+    },
+    "right_option": {
+      "text": "默默做筆記，會後自己找資料深度消化",
+      "scores": { "insight": 2, "resilience": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_039",
+    "category": "exterior",
+    "core_question": "對於購物與消費決策的外在表現？",
+    "display_variants": {
+      "default": "買高單價商品（如筆電、手機）時，你的決策過程是？",
+      "after_action": "進行重大消費決策時，你會？",
+      "transition": "聊到消費購物時，你會？"
+    },
+    "left_option": {
+      "text": "看準喜歡就立刻下單，享受當下的衝動與快樂",
+      "scores": { "action": 2, "flexibility": 1 }
+    },
+    "right_option": {
+      "text": "做足規格功課、規格評測與跨平台比價才購買",
+      "scores": { "insight": 2, "resilience": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_040",
+    "category": "exterior",
+    "core_question": "在社群平台上的發文與互動頻率？",
+    "display_variants": {
+      "default": "你在 IG、FB 等社群平台上的公開狀態是？",
+      "after_uniqueness": "關於社群媒體的使用，你傾向？",
+      "transition": "聊到社群平台上的展現，你會？"
+    },
+    "left_option": {
+      "text": "經常發送動態，分享獨特生活美學與即時想法",
+      "scores": { "uniqueness": 2, "flexibility": 1 }
+    },
+    "right_option": {
+      "text": "潛水居多，極少公開發文，僅私訊互動",
+      "scores": { "resilience": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_027",
+    "category": "interior",
+    "core_question": "內心對「時間效率」的隱性強迫感？",
+    "display_variants": {
+      "default": "當一天行程出現完全沒預期的空白時，你內心？",
+      "after_int": "面對突如其來的空檔，你內心會？",
+      "transition": "當時間空下來的時候，你的內心會？"
+    },
+    "left_option": {
+      "text": "感到虛度光陰的焦慮，想找些有產值的事做",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "感到極度放鬆，享受這種難得的無所事事",
+      "scores": { "flexibility": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_028",
+    "category": "interior",
+    "core_question": "內心對於自我防禦與 vulnerability 的拿捏？",
+    "display_variants": {
+      "default": "要在他人面前展現自己的軟弱與傷口，你內心？",
+      "after_resilience": "關於向他人展現脆弱，你內心？",
+      "transition": "當需要暴露脆弱的一面時，你會？"
+    },
+    "left_option": {
+      "text": "極度艱難，傾向穿上堅硬的盔甲獨自消化",
+      "scores": { "resilience": 2, "uniqueness": 1 }
+    },
+    "right_option": {
+      "text": "相對坦然，認為展現真實的脆弱是深層連結的開始",
+      "scores": { "flexibility": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_029",
+    "category": "interior",
+    "core_question": "對於人生意義的核心哲學假設？",
+    "display_variants": {
+      "default": "深夜思考「人生的意義」時，你內心更認同？",
+      "after_insight": "探索生命的本質，你內心認為？",
+      "transition": "思考人生的意義時，你覺得？"
+    },
+    "left_option": {
+      "text": "人生本無意義，因此可以自由體驗與定義",
+      "scores": { "flexibility": 2, "uniqueness": 1 }
+    },
+    "right_option": {
+      "text": "人生有其使命，需要透過努力去尋找與實現",
+      "scores": { "resilience": 2, "action": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_030",
+    "category": "interior",
+    "core_question": "內心面對他人嫉妒或敵意時的反應？",
+    "display_variants": {
+      "default": "感覺到身邊有人對你抱有微小的嫉妒時，你內心？",
+      "after_int": "察覺到隱含的敵意時，你內心會？",
+      "transition": "當感受到他人的嫉妒時，你會？"
+    },
+    "left_option": {
+      "text": "完全無視，覺得別人的情緒是對方自己的功課",
+      "scores": { "resilience": 2, "uniqueness": 1 }
+    },
+    "right_option": {
+      "text": "保持警惕，並適度低調以保護自己",
+      "scores": { "insight": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_031",
+    "category": "interior",
+    "core_question": "內心深處對「完美選擇」的執念？",
+    "display_variants": {
+      "default": "面臨兩個都有瑕疵的選擇時，你內心會？",
+      "after_resilience": "面對不完美的選擇，你內心會？",
+      "transition": "當兩個選項都有缺憾時，你會？"
+    },
+    "left_option": {
+      "text": "反覆拉扯，試圖找出第三種能兼顧的完美方案",
+      "scores": { "uniqueness": 2, "insight": 1 }
+    },
+    "right_option": {
+      "text": "果斷抓大放小，選擇整體效益較高者並承受後果",
+      "scores": { "action": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_032",
+    "category": "interior",
+    "core_question": "獨處時對於「美與藝術」的感官敏感度？",
+    "display_variants": {
+      "default": "當你獨自看到絕美的夕陽或藝術品時，你內心？",
+      "after_uniqueness": "面對美好的事物，你內心會？",
+      "transition": "當沉浸在美感經驗中時，你會？"
+    },
+    "left_option": {
+      "text": "產生強烈的震撼與情緒共鳴，甚至起雞皮疙瘩",
+      "scores": { "uniqueness": 2, "insight": 1 }
+    },
+    "right_option": {
+      "text": "靜靜欣賞，將其視為平靜生活中的一種美好滋養",
+      "scores": { "resilience": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_033",
+    "category": "interior",
+    "core_question": "內心對「被理解」的渴望強度？",
+    "display_variants": {
+      "default": "如果全世界都沒有人能完全理解你的想法，你內心？",
+      "after_int": "關於是否被他人理解，你內心覺得？",
+      "transition": "面對無人理解的孤獨感，你的內心會？"
+    },
+    "left_option": {
+      "text": "沒關係，獨特性本來就是孤獨的",
+      "scores": { "uniqueness": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "會感到些許落寞，仍會不斷嘗試表達",
+      "scores": { "insight": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_034",
+    "category": "interior",
+    "core_question": "面對個人短板時的內心焦慮？",
+    "display_variants": {
+      "default": "當發現身邊的人在你在意的領域遠超越你時，你內心？",
+      "after_action": "面對強大的競爭對手，你內心會？",
+      "transition": "當感受到能力差距時，你會？"
+    },
+    "left_option": {
+      "text": "激起鬥志，將其視為必須超越的標竿",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "承認差距，並轉向發掘自己獨一無二的優勢",
+      "scores": { "uniqueness": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_035",
+    "category": "interior",
+    "core_question": "對於「秩序與規則」的心靈依賴？",
+    "display_variants": {
+      "default": "生活在高度規範且有秩序的環境中，你內心覺得？",
+      "after_resilience": "面對高度規範的體制，你內心覺得？",
+      "transition": "談到秩序與規範，你的心靈傾向？"
+    },
+    "left_option": {
+      "text": "極具安全感，清晰的邊界讓人放鬆",
+      "scores": { "resilience": 2, "insight": 1 }
+    },
+    "right_option": {
+      "text": "感到壓抑，隨時想要打破框架尋求自由",
+      "scores": { "uniqueness": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_036",
+    "category": "interior",
+    "core_question": "內心處理「疚責感」的機制？",
+    "display_variants": {
+      "default": "當因為自己的無心之過導致他人受損時，你內心？",
+      "after_int": "面對內心的愧疚感，你會？",
+      "transition": "當內心產生負咎感時，你會？"
+    },
+    "left_option": {
+      "text": "長久陷入自我譴責與反省中，難以快速釋懷",
+      "scores": { "insight": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "專注於當下的補救行動，用補償代替無謂的疚責",
+      "scores": { "action": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_019",
+    "category": "pikmin_bloom",
+    "core_question": "遊戲中對於「地圖散步軌跡」的偏好？",
+    "display_variants": {
+      "default": "打開 Pikmin Bloom 的地圖看著每天的走路軌跡時，你會？",
+      "after_pkm": "觀察自己的地圖軌跡時，你偏向？",
+      "transition": "在瀏覽遊戲地圖時，你會？"
+    },
+    "left_option": {
+      "text": "喜歡嘗試不同路線，努力把地圖上的迷霧全部開亮",
+      "scores": { "uniqueness": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "偏好熟悉的固定路線，看著熟悉道路被花朵填滿",
+      "scores": { "resilience": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_020",
+    "category": "pikmin_bloom",
+    "core_question": "對於遊戲內「精華（Nectar）」的存量管理？",
+    "display_variants": {
+      "default": "當特殊精華（如白色或黃色鬱金香精華）快爆滿時，你會？",
+      "after_pkm": "面對即將爆滿的精華容量，你會？",
+      "transition": "管理遊戲內的精華資源時，你會？"
+    },
+    "left_option": {
+      "text": "立刻找皮克敏餵掉，絕不浪費任何補充進來的精華",
+      "scores": { "action": 2, "flexibility": 1 }
+    },
+    "right_option": {
+      "text": "升級背包擴充上限，保持安全儲備量",
+      "scores": { "resilience": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_021",
+    "category": "pikmin_bloom",
+    "core_question": "在遊戲中「花盆（Planter Plan）」的孵化策略？",
+    "display_variants": {
+      "default": "同時擁有普通 1000 步苗與巨大 10000 步苗時，你會？",
+      "after_action": "選擇放入花盆的花苗時，你會？",
+      "transition": "當選擇要孵化的花苗時，你會？"
+    },
+    "left_option": {
+      "text": "優先孵化 10000 步苗，快點把大工程解掉",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "先孵化 1000 步短途苗，快速清空花盆空間",
+      "scores": { "flexibility": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_022",
+    "category": "pikmin_bloom",
+    "core_question": "面對「飾品皮克敏」重複時的處理方式？",
+    "display_variants": {
+      "default": "當孵出已經擁有過的同款式飾品皮克敏時，你會？",
+      "after_pkm": "遇到重複的飾品皮克敏，你會？",
+      "transition": "當拿到重複的皮克敏時，你會？"
+    },
+    "left_option": {
+      "text": "毫不留情放生野放，騰出隊伍空間",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "只要有地方就留著，覺得每一隻都是獨一無二的",
+      "scores": { "uniqueness": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_023",
+    "category": "pikmin_bloom",
+    "core_question": "在旅遊景點開啟「探測器」的習慣？",
+    "display_variants": {
+      "default": "難得去到特別的觀光景點（如機場、美術館），你會？",
+      "after_uniqueness": "到了特殊的景點旅行時，你會？",
+      "transition": "在特別的地標景點時，你會？"
+    },
+    "left_option": {
+      "text": "花費金幣額外購買探測器，爆發式刷出當地限定苗",
+      "scores": { "action": 2, "uniqueness": 1 }
+    },
+    "right_option": {
+      "text": "用免費的次數按一下，有拿到算幸運，重在旅遊本身",
+      "scores": { "flexibility": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_024",
+    "category": "pikmin_bloom",
+    "core_question": "對於「皮克敏花朵餵食」的儀式感？",
+    "display_variants": {
+      "default": "每天給皮克敏隊伍餵精華摘花朵時，你的作風是？",
+      "after_pkm": "餵食皮克敏時，你傾向？",
+      "transition": "聊到給皮克敏餵食花瓣，你會？"
+    },
+    "left_option": {
+      "text": "滑動快速連續投餵，追求高效率迅速摘完花瓣",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "一隻隻點擊看反應，享受溫馨的互動互動過程",
+      "scores": { "insight": 2, "uniqueness": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_041",
+    "category": "exterior",
+    "core_question": "面對突發的公關危機或團隊失誤？",
+    "display_variants": {
+      "default": "當團隊爆發嚴重失誤導致客戶抗議，你會？",
+      "after_work": "面對緊急危機，你的處置是？",
+      "transition": "當嚴重失誤發生時，你會？"
+    },
+    "left_option": {
+      "text": "親自站在第一線承擔責任，提出補救賠償方案",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "冷靜還原過程找漏洞，編寫嚴密的說明報告",
+      "scores": { "insight": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_042",
+    "category": "exterior",
+    "core_question": "在跨界合作項目中的表現？",
+    "display_variants": {
+      "default": "與完全不同專業背景的團隊合作時，你會？",
+      "after_flex": "面對跨界合作，你會？",
+      "transition": "進行跨領域合作時，你會？"
+    },
+    "left_option": {
+      "text": "積極尋找彼此交集，靈活調整溝通語言與流程",
+      "scores": { "flexibility": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "堅守己方專業領域，確保產出品質不打折",
+      "scores": { "resilience": 2, "uniqueness": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_037",
+    "category": "interior",
+    "core_question": "內心對「孤獨終老」的可能性態度？",
+    "display_variants": {
+      "default": "思考到長遠的未來可能必須獨自生活時，你內心？",
+      "after_int": "面對一個人生活的可能性，你內心？",
+      "transition": "談到獨自一人的長遠未來，你會？"
+    },
+    "left_option": {
+      "text": "完全充實自得，自己就是最好的伴侶",
+      "scores": { "uniqueness": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "會感到孤寂，仍會努力經營有溫度的連結",
+      "scores": { "insight": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_038",
+    "category": "interior",
+    "core_question": "內心深處對於「權力與影響力」的渴望？",
+    "display_variants": {
+      "default": "若有機會獲得更高的職位與影響力，你內心核心動機是？",
+      "after_action": "追求更大的影響力時，你的內心動機是？",
+      "transition": "對於權力與影響力，你內心最看重？"
+    },
+    "left_option": {
+      "text": "獲得資源配置權，實現更大範圍的變革與目標",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "證明自己的智慧與能力，獲得思想上的認同",
+      "scores": { "insight": 2, "uniqueness": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_025",
+    "category": "pikmin_bloom",
+    "core_question": "對於遊戲內「明信片」的收藏分類？",
+    "display_variants": {
+      "default": "面對背包裡滿滿的明信片，你會？",
+      "after_pkm": "整理明信片時，你的習慣是？",
+      "transition": "聊到遊戲裡的明信片管理，你會？"
+    },
+    "left_option": {
+      "text": "刪除重複或普通風景，只保留精美與特殊地標",
+      "scores": { "insight": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "全盤接收，把它們視為足跡與回憶紀錄",
+      "scores": { "flexibility": 2, "uniqueness": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_026",
+    "category": "pikmin_bloom",
+    "core_question": "在遊戲中對於「金幣」的消費習慣？",
+    "display_variants": {
+      "default": "靠種花慢慢累積起來的金幣，你通常用來買什麼？",
+      "after_action": "使用遊戲內積攢的金幣時，你會？",
+      "transition": "當要花費遊戲金幣時，你會？"
+    },
+    "left_option": {
+      "text": "購買限定服裝或酷炫飾品，展現個人特色",
+      "scores": { "uniqueness": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "購買擴充背包容量或槽位，提升遊戲功能性",
+      "scores": { "resilience": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_043",
+    "category": "exterior",
+    "core_question": "面對團隊分工不均時的反應？",
+    "display_variants": {
+      "default": "發現團隊裡有人偷懶，導致工作量全壓在你身上時？",
+      "after_resilience": "面對不公的分工，你會？",
+      "transition": "當分工出現不公時，你會？"
+    },
+    "left_option": {
+      "text": "開誠布公點出問題，要求重新分配工作",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "先扛下來完成，事後尋求體制內制度優化",
+      "scores": { "insight": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_044",
+    "category": "exterior",
+    "core_question": "在派對場合中的社交能量運用？",
+    "display_variants": {
+      "default": "參加大型派對時，你的社交模式是？",
+      "after_ext": "在派對氛圍中，你會？",
+      "transition": "參加派對聚會時，你會？"
+    },
+    "left_option": {
+      "text": "穿梭在不同人群之間，結交各種新朋友",
+      "scores": { "flexibility": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "尋找舒服的角落，與一兩個知心好友聊整晚",
+      "scores": { "insight": 2, "resilience": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_039",
+    "category": "interior",
+    "core_question": "內心對「失敗」的歸因偏向？",
+    "display_variants": {
+      "default": "當一個努力許久的目標宣告失敗時，你內心？",
+      "after_int": "面對失敗的挫折，你內心會？",
+      "transition": "當經歷重大失敗時，你會？"
+    },
+    "left_option": {
+      "text": "深刻自省，檢討自己的策略與執行力盲點",
+      "scores": { "insight": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "接納極限，明白這是環境與運氣多方影響的結果",
+      "scores": { "flexibility": 2, "resilience": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_040",
+    "category": "interior",
+    "core_question": "內心深處對「真理」與「和諧」的取捨？",
+    "display_variants": {
+      "default": "當說出真相會破壞團體和諧時，你內心？",
+      "after_insight": "面對真相與和諧的衝突，你偏向？",
+      "transition": "當真相與和諧無法兼得時，你會？"
+    },
+    "left_option": {
+      "text": "真相高於一切，假裝的和諧沒有價值",
+      "scores": { "uniqueness": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "維護和諧，有時善意的隱瞞是必須的",
+      "scores": { "flexibility": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_027",
+    "category": "pikmin_bloom",
+    "core_question": "在遊戲中「散步路線」的重覆性？",
+    "display_variants": {
+      "default": "每天開啟遊戲散步時，你對路線的偏好是？",
+      "after_pkm": "選擇散步路線時，你會？",
+      "transition": "決定散步路線時，你會？"
+    },
+    "left_option": {
+      "text": "探索沒走過的小巷，尋找地圖未知的角落",
+      "scores": { "uniqueness": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "行走精算好的最佳步數路線，有效率地累積",
+      "scores": { "insight": 2, "resilience": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_028",
+    "category": "pikmin_bloom",
+    "core_question": "對於「皮克敏貼紙（Sticker）」的態度？",
+    "display_variants": {
+      "default": "孵出帶有路邊貼紙（Sticker）的皮克敏時，你覺得？",
+      "after_pkm": "面對普通貼紙皮克敏，你會？",
+      "transition": "聊到帶貼紙的普通皮克敏，你會？"
+    },
+    "left_option": {
+      "text": "覺得有些平淡，期待孵出更特別的飾品造型",
+      "scores": { "uniqueness": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "依然覺得很可愛，按照地名標籤好好留存",
+      "scores": { "resilience": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_045",
+    "category": "exterior",
+    "core_question": "面對任務需求快速變更的應變力？",
+    "display_variants": {
+      "default": "專案需求一天改了三次，你的外在應對是？",
+      "after_flex": "面對需求不斷變動，你會？",
+      "transition": "當需求頻繁更動時，你會？"
+    },
+    "left_option": {
+      "text": "順水推舟，快速調整設計並靈活產出新版",
+      "scores": { "flexibility": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "拉回討論，要求確定終版規格後再統一動工",
+      "scores": { "resilience": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_046",
+    "category": "exterior",
+    "core_question": "在團體活動中的氛圍帶動？",
+    "display_variants": {
+      "default": "聚會氣氛有點冷淡時，你會？",
+      "after_ext": "面對冷清的氣氛，你會？",
+      "transition": "當現場需要熱絡氣氛時，你會？"
+    },
+    "left_option": {
+      "text": "提議玩互動遊戲或帶頭開玩笑，炒熱氣氛",
+      "scores": { "action": 2, "flexibility": 1 }
+    },
+    "right_option": {
+      "text": "貼心地關注旁邊落單的人，主動找他私下聊天",
+      "scores": { "insight": 2, "resilience": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_041",
+    "category": "interior",
+    "core_question": "內心對「變革」與「傳統」的傾向？",
+    "display_variants": {
+      "default": "對於熟悉且運作已久的舊習慣，你內心？",
+      "after_int": "看待舊傳統與新變革，你傾向？",
+      "transition": "當面對習慣與變革時，你內心會？"
+    },
+    "left_option": {
+      "text": "渴望推翻舊體制，嘗試全新且創新的可能",
+      "scores": { "uniqueness": 2, "action": 1 }
+    },
+    "right_option": {
+      "text": "尊重既有智慧，在舊框架中尋求微調優化",
+      "scores": { "resilience": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_042",
+    "category": "interior",
+    "core_question": "內心處理「不確定性」的情緒承載力？",
+    "display_variants": {
+      "default": "當人生處於高度不確定的轉折點時，你內心？",
+      "after_resilience": "面對強大的不確定性，你內心會？",
+      "transition": "當未來充滿不確定時，你會？"
+    },
+    "left_option": {
+      "text": "感到焦慮，需要透過行動與學習填補不安全感",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "坦然擁抱，將不確定性視為無限可能的開端",
+      "scores": { "flexibility": 2, "uniqueness": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_029",
+    "category": "pikmin_bloom",
+    "core_question": "在遊戲中「探險明信片」的發送對象？",
+    "display_variants": {
+      "default": "拿到了張極其搞笑或特別的地標明信片，你會？",
+      "after_pkm": "發送特別的明信片時，你會？",
+      "transition": "當拿到有趣的明信片時，你會？"
+    },
+    "left_option": {
+      "text": "特地挑選最懂這個梗的好友寄給他",
+      "scores": { "uniqueness": 2, "insight": 1 }
+    },
+    "right_option": {
+      "text": "隨機發送給最近有互動的好友分享快樂",
+      "scores": { "flexibility": 2, "action": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_030",
+    "category": "pikmin_bloom",
+    "core_question": "面對遊戲營運「突發維修」的心態？",
+    "display_variants": {
+      "default": "預計要出門散步種花，遊戲卻突發維修無法登入，你會？",
+      "after_resilience": "面對遊戲維修中斷，你會？",
+      "transition": "當遊戲突然維修時，你會？"
+    },
+    "left_option": {
+      "text": "照樣出門散步，純粹享受沒有手機幹擾的行走",
+      "scores": { "resilience": 2, "insight": 1 }
+    },
+    "right_option": {
+      "text": "改變計畫，等維修結束後再找時間把步數補回來",
+      "scores": { "flexibility": 2, "action": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_047",
+    "category": "exterior",
+    "core_question": "面對公眾場合的意外突發事件？",
+    "display_variants": {
+      "default": "活動進行到一半設備突然斷電失靈，你會？",
+      "after_action": "面對現場的突發意外，你會？",
+      "transition": "當現場出現突發狀況時，你會？"
+    },
+    "left_option": {
+      "text": "立刻站出來主持大局，口頭引導現場秩序",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "默默前往後台，協助技術人員快速排查問題",
+      "scores": { "insight": 2, "flexibility": 1 }
+    }
+  },
+  {
+    "id": "CORE_EXT_048",
+    "category": "exterior",
+    "core_question": "在社交圈中訊息回覆的習慣？",
+    "display_variants": {
+      "default": "收到朋友或同事的非緊急聊天訊息時，你會？",
+      "after_ext": "對於日常訊息回覆，你的作風是？",
+      "transition": "聊到訊息回覆的習慣，你會？"
+    },
+    "left_option": {
+      "text": "看到就秒回，保持流暢且豐富的對話感",
+      "scores": { "action": 2, "flexibility": 1 }
+    },
+    "right_option": {
+      "text": "忙完再統一處理，確保回覆內容有質量",
+      "scores": { "resilience": 2, "insight": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_043",
+    "category": "interior",
+    "core_question": "內心對於自我能力的認同來源？",
+    "display_variants": {
+      "default": "評估自己是否具備能力時，你內心最看重？",
+      "after_int": "審視自身的實力，你內心依據？",
+      "transition": "談到對自己能力的信心，你會？"
+    },
+    "left_option": {
+      "text": "實質的客觀戰績與可量化的數據結果",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "內心對知識底層邏輯的通透理解",
+      "scores": { "insight": 2, "uniqueness": 1 }
+    }
+  },
+  {
+    "id": "CORE_INT_044",
+    "category": "interior",
+    "core_question": "獨處時內心對「孤寂感」的轉化？",
+    "display_variants": {
+      "default": "深夜一人感到微小孤寂時，你內心會？",
+      "after_uniqueness": "面對深沉的寂靜，你內心會？",
+      "transition": "當孤寂感襲來時，你的內心會？"
+    },
+    "left_option": {
+      "text": "將其轉化為靈感，進行寫作、閱讀或創作",
+      "scores": { "uniqueness": 2, "insight": 1 }
+    },
+    "right_option": {
+      "text": "尋找一部好電影或聽音樂，放鬆沉浸其中",
+      "scores": { "flexibility": 2, "resilience": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_031",
+    "category": "pikmin_bloom",
+    "core_question": "對於「皮克敏隊伍」的視覺美學偏好？",
+    "display_variants": {
+      "default": "跟隨你散步的 40 隻皮克敏隊伍，你喜歡讓牠們？",
+      "after_pkm": "組建散步皮克敏隊伍時，你偏好？",
+      "transition": "在挑選跟隨的皮克敏時，你會？"
+    },
+    "left_option": {
+      "text": "統一穿戴相同種類的飾品（如全隊壽司造型）",
+      "scores": { "uniqueness": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "各種五顏六色的飾品混搭，充滿熱鬧多樣感",
+      "scores": { "flexibility": 2, "action": 1 }
+    }
+  },
+  {
+    "id": "CORE_PKM_032",
+    "category": "pikmin_bloom",
+    "core_question": "在遊戲中「每日萬步」目標未達成時的心態？",
+    "display_variants": {
+      "default": "晚上 11 點發現今天只走了 8000 步，你會？",
+      "after_action": "面對未達標的步數，你會？",
+      "transition": "當步數差一點達標時，你會？"
+    },
+    "left_option": {
+      "text": "穿上鞋子出門或在客廳原地踏步補滿 10000 步",
+      "scores": { "action": 2, "resilience": 1 }
+    },
+    "right_option": {
+      "text": "沒關係，今天已經運動到了，安心上床休息",
+      "scores": { "flexibility": 2, "insight": 1 }
+    }
+  }
+]
