@@ -63,8 +63,6 @@
       animation: slideOutLeft 0.25s cubic-bezier(0.5, 0, 0.75, 0) forwards;
     }
   </style>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2923852880816796"
-     crossorigin="anonymous"></script>
 </head>
 <body class="text-wood font-sans antialiased min-h-screen flex flex-col items-center justify-between p-4 sm:p-6">
 
@@ -187,38 +185,38 @@
       </div>
 
       <!-- 🌙 下半部：內在皮克敏 (旋轉 180 度) -->
-      <section id="inner-section" class="inner-section transform rotate-180 pt-2 transition-all duration-300 rounded-2xl p-3">
+      <section id="inner-section" class="inner-section transform rotate-180 pt-4 pb-4 transition-all duration-300 rounded-2xl p-4 bg-slate-900 border border-indigo-900/50 shadow-inner">
         <div class="flex justify-between items-center mb-3">
-          <span id="inner-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-colors">
+          <span id="inner-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-colors bg-purple-950/80 text-purple-300 border border-purple-700/50 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
             🌙 內在皮克敏 (深層靈魂)
           </span>
-          <span id="inner-code" class="text-xs font-mono font-bold opacity-80">#003_BLUE</span>
+          <span id="inner-code" class="text-xs font-mono font-bold text-indigo-300/70">#003_BLUE</span>
         </div>
 
         <div class="text-center mb-4">
-          <p id="inner-title" class="text-xs font-bold tracking-wide mb-1 opacity-80"></p>
-          <h1 id="inner-name" class="text-2xl font-extrabold tracking-tight"></h1>
+          <p id="inner-title" class="text-xs font-bold tracking-wide mb-1 text-purple-300/80"></p>
+          <h1 id="inner-name" class="text-2xl font-extrabold tracking-tight drop-shadow-[0_2px_8px_rgba(255,255,255,0.2)]"></h1>
         </div>
 
         <div class="w-full h-44 relative mb-4 flex justify-center items-center">
           <canvas id="innerRadarChart"></canvas>
         </div>
 
-        <div id="inner-desc-box" class="p-3.5 rounded-2xl border mb-4 transition-colors">
-          <h3 id="inner-desc-title" class="text-xs font-bold mb-1">🔮 隱藏內在詳細解析</h3>
-          <p id="inner-desc" class="text-xs leading-relaxed text-wood/90"></p>
+        <div id="inner-desc-box" class="p-3.5 rounded-2xl border mb-4 transition-colors bg-indigo-950/40 border-indigo-800/40 backdrop-blur-sm">
+          <h3 id="inner-desc-title" class="text-xs font-bold mb-1 text-purple-300">🔮 隱藏內在詳細解析</h3>
+          <p id="inner-desc" class="text-xs leading-relaxed text-indigo-100/90"></p>
         </div>
 
         <div class="grid grid-cols-2 gap-2 text-xs">
           <div id="inner-soulmate-card" class="p-2.5 rounded-xl border transition-colors duration-300">
             <div id="inner-soulmate-title" class="font-bold mb-0.5">🍀 最佳拍檔</div>
-            <div id="inner-soulmate" class="font-bold text-wood"></div>
-            <p id="inner-soulmate-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight"></p>
+            <div id="inner-soulmate" class="font-bold"></div>
+            <p id="inner-soulmate-desc" class="text-[10px] opacity-80 mt-0.5 leading-tight"></p>
           </div>
           <div id="inner-enemy-card" class="p-2.5 rounded-xl border transition-colors duration-300">
             <div id="inner-enemy-title" class="font-bold mb-0.5">⚡ 相剋隊友</div>
-            <div id="inner-enemy" class="font-bold text-wood"></div>
-            <p id="inner-enemy-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight"></p>
+            <div id="inner-enemy" class="font-bold"></div>
+            <p id="inner-enemy-desc" class="text-[10px] opacity-80 mt-0.5 leading-tight"></p>
           </div>
         </div>
       </section>
@@ -297,7 +295,7 @@
       ["處理積壓已久嘅 Email 時", "一口氣全部點開快速處理晒", "分類建檔標籤，按優先次序覆", "揀標題吸引嘅覆，其餘隨緣"],
       ["去超級市場買一個星期食材時", "拎完常見食材快速結帳走人", "對照購物清單，精確計算份量同優惠", "見到新品或奇特食材就想買嚟試"],
       ["準備公開 Presentation 前", "上台大方臨場發揮帶熱氣氛", "將講稿同 Slide 反覆校對到零失誤", "加啲自創搞笑梗同觀眾互動"],
-      ["遇到嚴重交通大塞車時", "果斷落車改搭地鐵或轉路線", "靜落嚟聽路況並估算預計遲到時間", "打發時間觀察隔離車輛同乘客"],
+      ["遇到嚴重的交通大塞車時", "果斷落車改搭地鐵或轉路線", "靜落嚟聽路況並估算預計遲到時間", "打發時間觀察隔離車輛同乘客"],
       ["面對新加入團隊嘅 Partner", "熱情主動帶對方熟悉環境同工作", "保持禮貌並觀察對方嘅做事風格", "分享團隊冇人知嘅搞笑冷知識"],
       ["參加 Hand-made 工作坊時", "照住範例快速上手做出一件成品", "嚴格跟說明書步驟精確測量", "完全唔按牌理出牌，自由創作造型"],
       ["賣二手嘢時", "平賣求售，最緊要最快 speed 賣出", "精算成本同二手市場均價定價", "寫一段超搞笑文案令件嘢變有趣"],
@@ -331,7 +329,7 @@
 
     const intScenariosZh = [
       ["強烈嘅孤獨感襲來時", "用忙碌同挑戰充實自己轉移注意力", "靜落嚟解析孤獨由來與內心需求", "享受呢份孤獨，沉浸喺自我奇幻世界"],
-      ["面對未知嘅未來產生恐懼時", "主動出擊做點嘢消除唔確定感", "理性分析最壞打算並做好萬全防禦", "相信船到橋頭自然直，順其自然"],
+      ["面對未知嘅未來產生恐懼時", "主動出擊做點嘢消除唔確定感", "理性分析最壞打算並做好萬全防衛", "相信船到橋頭自然直，順其自然"],
       ["產生自我懷疑嘅低潮時刻", "透過完成小目標重新找回掌控感", "客觀審視自己嘅優缺點並進行修正", "接受自己嘅唔完美，話比自己聽獨一無二"],
       ["思考生命價值與成功時", "能留下令人矚目嘅具體戰績與突破", "擁有看透事物本質嘅智慧與從容", "能無拘無束咁體驗世間各種奇妙事物"],
       ["當感覺自己同周圍環境格格不入時", "主動改變環境或創造屬於自己嘅優勢", "靜靜觀察他人，尋找融入嘅最佳切入點", "坦然接受差異，繼續保持自己嘅獨特步調"],
@@ -425,49 +423,89 @@
     // 皮克敏完整檔案
     const pikminProfiles = {
       zh: {
-        red: { code: "#001_RED", name: "🔴 紅色皮克敏", title: "「永不退縮嘅直球衝鋒隊」", color: "#E65100", desc: "你係團隊中不可或缺嘅堅韌先鋒。面對困難，你非常少退縮或優柔寡斷，習慣直接用行動破局。你嘅熱情與直率極具感染力，常能帶動身邊人一起前進。", soulmate: "🔵 藍色皮克敏", soulmateDesc: "一個冷靜觀察防守，一個向前衝刺破局。", enemy: "🟡 黃色皮克敏", enemyDesc: "覺得對方天馬行空、缺乏接地氣嘅執行力。" },
-        blue: { code: "#003_BLUE", name: "🔵 藍色皮克敏", title: "「深謀遠慮嘅冷靜觀察家」", color: "#0288D1", desc: "你擁有如水一般嘅冷靜與包容力。即使喺極度混亂嘅環境，你都可以抽離情緒，迅速梳理出問題本質。你做事穩健、講求邏輯與全局觀，總喺關鍵時刻比到最可靠支援。", soulmate: "🔴 紅色皮克敏", soulmateDesc: "互補防守與進攻，提供內在絕對安全感。", enemy: "🌸 羽翅皮克敏", enemyDesc: "頂唔順對方太過隨性同缺乏秩序嘅步調。" },
-        yellow: { code: "#002_YELLOW", name: "🟡 黃色皮克敏", title: "「天馬行空嘅靈感發電機」", color: "#F57F17", desc: "你腦袋裡裝滿無數奇思妙想，充滿活力且彈性極佳。你不喜歡被固有的框架同規則束縛，遇到問題總能從意想不到嘅角度搵到妙招。", soulmate: "🪨 岩石皮克敏", soulmateDesc: "能將你天馬行空嘅點子穩穩落地實現。", enemy: "🔴 紅色皮克敏", enemyDesc: "覺得對方太過莽撞衝動、缺乏靈活變通。" },
-        purple: { code: "#004_PURPLE", name: "🟣 紫色皮克敏", title: "「力挽狂瀾嘅絕對核心」", color: "#7B1FA2", desc: "你具備無可比擬嘅氣場與強大執行力，一個人就能扛起數倍重任。你有極強責任感，習慣喺混亂中挺身而出主導局勢。", soulmate: "⚪ 白色皮克敏", soulmateDesc: "敏銳補位細節，讓你無後顧之憂集中輸出。", enemy: "🧊 冰霜皮克敏", enemyDesc: "覺得對方步調太慢、過於保守打亂節奏。" },
-        white: { code: "#005_WHITE", name: "⚪ 白色皮克敏", title: "「機警敏銳嘅隱形快手」", color: "#78909C", desc: "你直覺極其敏銳，擁有洞悉周遭環境微小變化嘅天賦。你討厭拖泥帶水同繁複社交套路，習慣用最高效精準方式處理事務。", soulmate: "🟣 紫色皮克敏", soulmateDesc: "大膽輸出同精細防護嘅黃金合作組合。", enemy: "🪨 岩石皮克敏", enemyDesc: "頂唔順對方太過沉悶固執、反應不夠靈敏。" },
-        rock: { code: "#006_ROCK", name: "🪨 岩石皮克敏", title: "「穩如泰山嘅鋼鐵盾牌」", color: "#424242", desc: "你係大家心中最可靠嘅定海神針。情緒穩定度極高，具有強大抗壓性，無論外界點動盪，你都能踏實守住底線。", soulmate: "🟡 黃色皮克敏", soulmateDesc: "為對方靈動嘅點子提供最堅實嘅落地支援。", enemy: "⚪ 白色皮克敏", enemyDesc: "覺得對方太過急躁捉摸不定、缺乏穩定度。" },
-        wing: { code: "#007_WING", name: "🌸 羽翅皮克敏", title: "「自由翱翔嘅跨界奇才」", color: "#EC407A", desc: "你天生帶有一種輕盈自由嘅氣質，討厭任何形式嘅約束。面對障礙，你不喜歡硬碰硬，擅長運用靈動思維直飛彼岸。", soulmate: "✨ 發光皮克敏", soulmateDesc: "靈動不設限，兩個人喺一齊能創造無限可能。", enemy: "🔵 藍色皮克敏", enemyDesc: "覺得對方規矩太多、個性過於嚴肅沉重。" },
-        ice: { code: "#008_ICE", name: "🧊 冰霜皮克敏", title: "「掌控全局嘅局勢凍結者」", color: "#00ACC1", desc: "你擁有強大局勢掌控力與極佳冷靜度。當場面失控時，你總能以冰冷精確嘅邏輯降溫場面，將複雜問題拆解並凍結風險。", soulmate: "🔵 藍色皮克敏", soulmateDesc: "雙重冷靜思考，共同打造無懈可擊嘅防線。", enemy: "🟣 紫色皮克敏", enemyDesc: "覺得對方衝勁過頭、缺乏周全控制規劃。" },
-        glow: { code: "#009_GLOW", name: "✨ 發光皮克敏", title: "「黑暗中嘅靈魂引路人」", color: "#7CB342", desc: "你本身就自帶獨特光芒與感染力。喺眾人迷茫或陷入低谷時，你總能憑藉強烈第六感，照亮一條大家都冇諗過嘅新路。", soulmate: "🌸 羽翅皮克敏", soulmateDesc: "靈魂高度共鳴，彼此相處輕鬆自在無壓力。", enemy: "🪨 岩石皮克敏", enemyDesc: "覺得對方太過保守墨守成規、缺乏變通樂趣。" }
+        red: { code: "#001_RED", name: "🔴 紅色皮克敏", title: "「永不退縮嘅直球衝鋒隊」", color: "#E65100", glowColor: "#FF6B6B", desc: "你係團隊中不可或缺嘅堅韌先鋒。面對困難，你非常少退縮或優柔寡斷，習慣直接用行動破局。你嘅熱情與直率極具感染力，常能帶動身邊人一起前進。", soulmate: "🔵 藍色皮克敏", soulmateDesc: "一個冷靜觀察防守，一個向前衝刺破局。", enemy: "🟡 黃色皮克敏", enemyDesc: "覺得對方天馬行空、缺乏接地氣嘅執行力。" },
+        blue: { code: "#003_BLUE", name: "🔵 藍色皮克敏", title: "「深謀慮嘅冷靜觀察家」", color: "#0288D1", glowColor: "#38BDF8", desc: "你擁有如水一般嘅冷靜與包容力。即使喺極度混亂嘅環境，你都可以抽離情緒，迅速梳理出問題本質。你做事穩健、講求邏輯與全局觀，總喺關鍵時刻比到最可靠支援。", soulmate: "🔴 紅色皮克敏", soulmateDesc: "互補防守與進攻，提供內在絕對安全感。", enemy: "🌸 羽翅皮克敏", enemyDesc: "頂唔順對方太過隨性同缺乏秩序嘅步調。" },
+        yellow: { code: "#002_YELLOW", name: "🟡 黃色皮克敏", title: "「天馬行空嘅靈感發電機」", color: "#F57F17", glowColor: "#FACC15", desc: "你腦袋裡裝滿無數奇思妙想，充滿活力且彈性極佳。你不喜歡被固有的框架同規則束縛，遇到問題總能從意想不到嘅角度搵到妙招。", soulmate: "🪨 岩石皮克敏", soulmateDesc: "能將你天馬行空嘅點子穩穩落地實現。", enemy: "🔴 紅色皮克敏", enemyDesc: "覺得對方太過莽撞衝動、缺乏靈活變通。" },
+        purple: { code: "#004_PURPLE", name: "🟣 紫色皮克敏", title: "「力挽狂瀾嘅絕對核心」", color: "#7B1FA2", glowColor: "#C084FC", desc: "你具備無可比擬嘅氣場與強大執行力，一個人就能扛起數倍重任。你有極強責任感，習慣喺混亂中挺身而出主導局勢。", soulmate: "⚪ 白色皮克敏", soulmateDesc: "敏銳補位細節，讓你無後顧之憂集中輸出。", enemy: "🧊 冰霜皮克敏", enemyDesc: "覺得對方步調太慢、過於保守打亂節奏。" },
+        white: { code: "#005_WHITE", name: "⚪ 白色皮克敏", title: "「機警敏銳嘅隱形快手」", color: "#78909C", glowColor: "#E2E8F0", desc: "你直覺極其敏銳，擁有洞悉周遭環境微小變化嘅天賦。你討厭拖泥帶水同繁複社交套路，習慣用最高效精準方式處理事務。", soulmate: "🟣 紫色皮克敏", soulmateDesc: "大膽輸出同精細防護嘅黃金合作組合。", enemy: "🪨 岩石皮克敏", enemyDesc: "頂唔順對方太過沉悶固執、反應不夠靈敏。" },
+        rock: { code: "#006_ROCK", name: "🪨 岩石皮克敏", title: "「穩如泰山嘅鋼鐵盾牌」", color: "#424242", glowColor: "#94A3B8", desc: "你係大家心中最可靠嘅定海神針。情緒穩定度極高，具有強大抗壓性，無論外界點動盪，你都能踏實守住底線。", soulmate: "🟡 黃色皮克敏", soulmateDesc: "為對方靈動嘅點子提供最堅實嘅落地支援。", enemy: "⚪ 白色皮克敏", enemyDesc: "覺得對方太過急躁捉摸不定、缺乏穩定度。" },
+        wing: { code: "#007_WING", name: "🌸 羽翅皮克敏", title: "「自由翱翔嘅跨界奇才」", color: "#EC407A", glowColor: "#F472B6", desc: "你天生帶有一種輕盈自由嘅氣質，討厭任何形式嘅約束。面對障礙，你不喜歡硬碰硬，擅長運用靈動思維直飛彼岸。", soulmate: "✨ 發光皮克敏", soulmateDesc: "靈動不設限，兩個人喺一齊能創造無限可能。", enemy: "🔵 藍色皮克敏", enemyDesc: "覺得對方規矩太多、個性過於嚴肅沉重。" },
+        ice: { code: "#008_ICE", name: "🧊 冰霜皮克敏", title: "「掌控全局嘅局勢凍結者」", color: "#00ACC1", glowColor: "#22D3EE", desc: "你擁有強大局勢掌控力與極佳冷靜度。當場面失控時，你總能以冰冷精確嘅邏輯降溫場面，將複雜問題拆解並凍結風險。", soulmate: "🔵 藍色皮克敏", soulmateDesc: "雙重冷靜思考，共同打造無懈可擊嘅防線。", enemy: "🟣 紫色皮克敏", enemyDesc: "覺得對方衝勁過頭、缺乏周全控制規劃。" },
+        glow: { code: "#009_GLOW", name: "✨ 發光皮克敏", title: "「黑暗中嘅靈魂引路人」", color: "#7CB342", glowColor: "#A3E635", desc: "你本身就自帶獨特光芒與感染力。喺眾人迷茫或陷入低谷時，你總能憑藉強烈第六感，照亮一條大家都冇諗過嘅新路。", soulmate: "🌸 羽翅皮克敏", soulmateDesc: "靈魂高度共鳴，彼此相處輕鬆自在無壓力。", enemy: "🪨 岩石皮克敏", enemyDesc: "覺得對方太過保守墨守成規、缺乏變通樂趣。" }
       },
       en: {
-        red: { code: "#001_RED", name: "🔴 Red Pikmin", title: "“Fearless Direct Striker”", color: "#E65100", desc: "An indispensable powerhouse in any team. When faced with challenges, you rarely hesitate. You prefer direct action to break through obstacles with high passion and contagiousness.", soulmate: "🔵 Blue Pikmin", soulmateDesc: "One analyzes defense, one charges forward to break bottlenecks.", enemy: "🟡 Yellow Pikmin", enemyDesc: "Finds them too whimsical and lacking practical grounded execution." },
-        blue: { code: "#003_BLUE", name: "🔵 Blue Pikmin", title: "“Strategic Calm Observer”", color: "#0288D1", desc: "Possesses water-like tranquility and resilience. Even in chaotic situations, you emotional-detach quickly to pinpoint core issues with logic and solid support.", soulmate: "🔴 Red Pikmin", soulmateDesc: "Perfect offense and defense balance for ultimate security.", enemy: "🌸 Winged Pikmin", enemyDesc: "Can't stand their overly casual, unpredictable rhythm." },
-        yellow: { code: "#002_YELLOW", name: "🟡 Yellow Pikmin", title: "“Unconventional Spark Generator”", color: "#F57F17", desc: "Your mind is packed with creative sparks. Energetic and highly flexible, you dislike rigid rules and always solve problems from unexpected angles.", soulmate: "🪨 Rock Pikmin", soulmateDesc: "Provides rock-solid execution to ground your wild ideas.", enemy: "🔴 Red Pikmin", enemyDesc: "Finds them too reckless and lacking strategic flexibility." },
-        purple: { code: "#004_PURPLE", name: "🟣 Purple Pikmin", title: "“Irreplaceable Heavyweight Anchor”", color: "#7B1FA2", desc: "Exudes unmatched presence and execution capability. You naturally take on heavy responsibilities and step up to take command during chaos.", soulmate: "⚪ White Pikmin", soulmateDesc: "Covers fine details so you can focus maximum output.", enemy: "🧊 Ice Pikmin", enemyDesc: "Finds them too slow-moving and overly conservative." },
-        white: { code: "#005_WHITE", name: "⚪ White Pikmin", title: "“Perceptive Stealth Operator”", color: "#78909C", desc: "Exceptionally sharp intuition with an eye for micro-changes around you. You hate fluff and empty social routine, preferring fast, efficient solutions.", soulmate: "🟣 Purple Pikmin", soulmateDesc: "A golden combination of heavy output and agile support.", enemy: "🪨 Rock Pikmin", enemyDesc: "Finds them too stubborn and slow in response time." },
-        rock: { code: "#006_ROCK", name: "🪨 Rock Pikmin", title: "“Unshakable Iron Shield”", color: "#424242", desc: "The ultimate dependable pillar of stability for everyone. Highly emotionally stable with incredible resilience, staying grounded no matter how turbulent things get.", soulmate: "🟡 Yellow Pikmin", soulmateDesc: "Provides practical grounding for their imaginative ideas.", enemy: "⚪ White Pikmin", enemyDesc: "Finds them too impatient, restless, and erratic." },
-        wing: { code: "#007_WING", name: "🌸 Winged Pikmin", title: "“Free-Spirited Maverick”", color: "#EC407A", desc: "Possesses a naturally light, free-spirited demeanor. You dislike rigid boundaries and prefer flying above obstacles rather than head-on confrontation.", soulmate: "✨ Glow Pikmin", soulmateDesc: "Unbounded minds creating infinite possibilities together.", enemy: "🔵 Blue Pikmin", enemyDesc: "Finds them overly strict, serious, and process-heavy." },
-        ice: { code: "#008_ICE", name: "🧊 Ice Pikmin", title: "“Master Risk Freezer”", color: "#00ACC1", desc: "Maintains intense situational control and composure. When panic strikes, you cool down the environment with crisp logic to freeze risk.", soulmate: "🔵 Blue Pikmin", soulmateDesc: "Double analytical power building an impenetrable line.", enemy: "🟣 Purple Pikmin", enemyDesc: "Finds them overly aggressive with insufficient planning." },
-        glow: { code: "#009_GLOW", name: "✨ Glow Pikmin", title: "“Guiding Light in Darkness”", color: "#7CB342", desc: "Possesses an inherent radiance and inspiring presence. When others feel lost, your strong sixth sense illuminates unexpected new paths.", soulmate: "🌸 Winged Pikmin", soulmateDesc: "Deep soul resonance with comfortable, effortless vibes.", enemy: "🪨 Rock Pikmin", enemyDesc: "Finds them too traditional and unwilling to adapt." }
+        red: { code: "#001_RED", name: "🔴 Red Pikmin", title: "“Fearless Direct Striker”", color: "#E65100", glowColor: "#FF6B6B", desc: "An indispensable powerhouse in any team. When faced with challenges, you rarely hesitate. You prefer direct action to break through obstacles with high passion and contagiousness.", soulmate: "🔵 Blue Pikmin", soulmateDesc: "One analyzes defense, one charges forward to break bottlenecks.", enemy: "🟡 Yellow Pikmin", enemyDesc: "Finds them too whimsical and lacking practical grounded execution." },
+        blue: { code: "#003_BLUE", name: "🔵 Blue Pikmin", title: "“Strategic Calm Observer”", color: "#0288D1", glowColor: "#38BDF8", desc: "Possesses water-like tranquility and resilience. Even in chaotic situations, you emotional-detach quickly to pinpoint core issues with logic and solid support.", soulmate: "🔴 Red Pikmin", soulmateDesc: "Perfect offense and defense balance for ultimate security.", enemy: "🌸 Winged Pikmin", enemyDesc: "Can't stand their overly casual, unpredictable rhythm." },
+        yellow: { code: "#002_YELLOW", name: "🟡 Yellow Pikmin", title: "“Unconventional Spark Generator”", color: "#F57F17", glowColor: "#FACC15", desc: "Your mind is packed with creative sparks. Energetic and highly flexible, you dislike rigid rules and always solve problems from unexpected angles.", soulmate: "🪨 Rock Pikmin", soulmateDesc: "Provides rock-solid execution to ground your wild ideas.", enemy: "🔴 Red Pikmin", enemyDesc: "Finds them too reckless and lacking strategic flexibility." },
+        purple: { code: "#004_PURPLE", name: "🟣 Purple Pikmin", title: "“Irreplaceable Heavyweight Anchor”", color: "#7B1FA2", glowColor: "#C084FC", desc: "Exudes unmatched presence and execution capability. You naturally take on heavy responsibilities and step up to take command during chaos.", soulmate: "⚪ White Pikmin", soulmateDesc: "Covers fine details so you can focus maximum output.", enemy: "🧊 Ice Pikmin", enemyDesc: "Finds them too slow-moving and overly conservative." },
+        white: { code: "#005_WHITE", name: "⚪ White Pikmin", title: "“Perceptive Stealth Operator”", color: "#78909C", glowColor: "#E2E8F0", desc: "Exceptionally sharp intuition with an eye for micro-changes around you. You hate fluff and empty social routine, preferring fast, efficient solutions.", soulmate: "🟣 Purple Pikmin", soulmateDesc: "A golden combination of heavy output and agile support.", enemy: "🪨 Rock Pikmin", enemyDesc: "Finds them too stubborn and slow in response time." },
+        rock: { code: "#006_ROCK", name: "🪨 Rock Pikmin", title: "“Unshakable Iron Shield”", color: "#424242", glowColor: "#94A3B8", desc: "The ultimate dependable pillar of stability for everyone. Highly emotionally stable with incredible resilience, staying grounded no matter how turbulent things get.", soulmate: "🟡 Yellow Pikmin", soulmateDesc: "Provides practical grounding for their imaginative ideas.", enemy: "⚪ White Pikmin", enemyDesc: "Finds them too impatient, restless, and erratic." },
+        wing: { code: "#007_WING", name: "🌸 Winged Pikmin", title: "“Free-Spirited Maverick”", color: "#EC407A", glowColor: "#F472B6", desc: "Possesses a naturally light, free-spirited demeanor. You dislike rigid boundaries and prefer flying above obstacles rather than head-on confrontation.", soulmate: "✨ Glow Pikmin", soulmateDesc: "Unbounded minds creating infinite possibilities together.", enemy: "🔵 Blue Pikmin", enemyDesc: "Finds them overly strict, serious, and process-heavy." },
+        ice: { code: "#008_ICE", name: "🧊 Ice Pikmin", title: "“Master Risk Freezer”", color: "#00ACC1", glowColor: "#22D3EE", desc: "Maintains intense situational control and composure. When panic strikes, you cool down the environment with crisp logic to freeze risk.", soulmate: "🔵 Blue Pikmin", soulmateDesc: "Double analytical power building an impenetrable line.", enemy: "🟣 Purple Pikmin", enemyDesc: "Finds them overly aggressive with insufficient planning." },
+        glow: { code: "#009_GLOW", name: "✨ Glow Pikmin", title: "“Guiding Light in Darkness”", color: "#7CB342", glowColor: "#A3E635", desc: "Possesses an inherent radiance and inspiring presence. When others feel lost, your strong sixth sense illuminates unexpected new paths.", soulmate: "🌸 Winged Pikmin", soulmateDesc: "Deep soul resonance with comfortable, effortless vibes.", enemy: "🪨 Rock Pikmin", enemyDesc: "Finds them too traditional and unwilling to adapt." }
       }
     };
 
-    // 色彩主題對應表 (包含配對/相剋卡片及完整版面樣式)
+    // 色彩主題對應表 (包含深色模式與色彩微調)
     const pikminColorThemeMap = {
-      '🔴': { bg: 'bg-rose-50/90', border: 'border-rose-200', text: 'text-rose-700', badge: 'bg-rose-100 text-rose-800 border-rose-300' },
-      '🔵': { bg: 'bg-sky-50/90', border: 'border-sky-200', text: 'text-sky-700', badge: 'bg-sky-100 text-sky-800 border-sky-300' },
-      '🟡': { bg: 'bg-amber-50/90', border: 'border-amber-200', text: 'text-amber-800', badge: 'bg-amber-100 text-amber-900 border-amber-300' },
-      '🟣': { bg: 'bg-purple-50/90', border: 'border-purple-200', text: 'text-purple-700', badge: 'bg-purple-100 text-purple-800 border-purple-300' },
-      '⚪': { bg: 'bg-slate-100/90', border: 'border-slate-300', text: 'text-slate-700', badge: 'bg-slate-200 text-slate-800 border-slate-300' },
-      '🪨': { bg: 'bg-stone-100/90', border: 'border-stone-300', text: 'text-stone-800', badge: 'bg-stone-200 text-stone-900 border-stone-400' },
-      '🌸': { bg: 'bg-pink-50/90', border: 'border-pink-200', text: 'text-pink-700', badge: 'bg-pink-100 text-pink-800 border-pink-300' },
-      '🧊': { bg: 'bg-cyan-50/90', border: 'border-cyan-200', text: 'text-cyan-700', badge: 'bg-cyan-100 text-cyan-800 border-cyan-300' },
-      '✨': { bg: 'bg-lime-50/90', border: 'border-lime-200', text: 'text-lime-800', badge: 'bg-lime-100 text-lime-900 border-lime-300' }
+      '🔴': { 
+        bg: 'bg-rose-50/90', border: 'border-rose-200', text: 'text-rose-700', badge: 'bg-rose-100 text-rose-800 border-rose-300',
+        innerBg: 'bg-slate-950/95', innerBorder: 'border-rose-900/60', innerBadge: 'bg-rose-950/80 text-rose-300 border-rose-700/50 shadow-[0_0_10px_rgba(244,63,94,0.3)]',
+        innerCardBg: 'bg-rose-950/40', innerCardBorder: 'border-rose-800/40', innerTitle: 'text-rose-300', innerText: 'text-rose-100'
+      },
+      '🔵': { 
+        bg: 'bg-sky-50/90', border: 'border-sky-200', text: 'text-sky-700', badge: 'bg-sky-100 text-sky-800 border-sky-300',
+        innerBg: 'bg-slate-950/95', innerBorder: 'border-sky-900/60', innerBadge: 'bg-sky-950/80 text-sky-300 border-sky-700/50 shadow-[0_0_10px_rgba(56,189,248,0.3)]',
+        innerCardBg: 'bg-sky-950/40', innerCardBorder: 'border-sky-800/40', innerTitle: 'text-sky-300', innerText: 'text-sky-100'
+      },
+      '🟡': { 
+        bg: 'bg-amber-50/90', border: 'border-amber-200', text: 'text-amber-800', badge: 'bg-amber-100 text-amber-900 border-amber-300',
+        innerBg: 'bg-slate-950/95', innerBorder: 'border-amber-900/60', innerBadge: 'bg-amber-950/80 text-amber-300 border-amber-700/50 shadow-[0_0_10px_rgba(250,204,21,0.3)]',
+        innerCardBg: 'bg-amber-950/40', innerCardBorder: 'border-amber-800/40', innerTitle: 'text-amber-300', innerText: 'text-amber-100'
+      },
+      '🟣': { 
+        bg: 'bg-purple-50/90', border: 'border-purple-200', text: 'text-purple-700', badge: 'bg-purple-100 text-purple-800 border-purple-300',
+        innerBg: 'bg-slate-950/95', innerBorder: 'border-purple-900/60', innerBadge: 'bg-purple-950/80 text-purple-300 border-purple-700/50 shadow-[0_0_10px_rgba(168,85,247,0.3)]',
+        innerCardBg: 'bg-purple-950/40', innerCardBorder: 'border-purple-800/40', innerTitle: 'text-purple-300', innerText: 'text-purple-100'
+      },
+      '⚪': { 
+        bg: 'bg-slate-100/90', border: 'border-slate-300', text: 'text-slate-700', badge: 'bg-slate-200 text-slate-800 border-slate-300',
+        innerBg: 'bg-slate-950/95', innerBorder: 'border-slate-700/60', innerBadge: 'bg-slate-800/80 text-slate-200 border-slate-600/50 shadow-[0_0_10px_rgba(226,232,240,0.2)]',
+        innerCardBg: 'bg-slate-900/60', innerCardBorder: 'border-slate-700/50', innerTitle: 'text-slate-200', innerText: 'text-slate-100'
+      },
+      '🪨': { 
+        bg: 'bg-stone-100/90', border: 'border-stone-300', text: 'text-stone-800', badge: 'bg-stone-200 text-stone-900 border-stone-400',
+        innerBg: 'bg-slate-950/95', innerBorder: 'border-stone-700/60', innerBadge: 'bg-stone-900/80 text-stone-300 border-stone-600/50 shadow-[0_0_10px_rgba(148,163,184,0.2)]',
+        innerCardBg: 'bg-stone-900/60', innerCardBorder: 'border-stone-700/50', innerTitle: 'text-stone-300', innerText: 'text-stone-100'
+      },
+      '🌸': { 
+        bg: 'bg-pink-50/90', border: 'border-pink-200', text: 'text-pink-700', badge: 'bg-pink-100 text-pink-800 border-pink-300',
+        innerBg: 'bg-slate-950/95', innerBorder: 'border-pink-900/60', innerBadge: 'bg-pink-950/80 text-pink-300 border-pink-700/50 shadow-[0_0_10px_rgba(244,114,182,0.3)]',
+        innerCardBg: 'bg-pink-950/40', innerCardBorder: 'border-pink-800/40', innerTitle: 'text-pink-300', innerText: 'text-pink-100'
+      },
+      '🧊': { 
+        bg: 'bg-cyan-50/90', border: 'border-cyan-200', text: 'text-cyan-700', badge: 'bg-cyan-100 text-cyan-800 border-cyan-300',
+        innerBg: 'bg-slate-950/95', innerBorder: 'border-cyan-900/60', innerBadge: 'bg-cyan-950/80 text-cyan-300 border-cyan-700/50 shadow-[0_0_10px_rgba(34,211,238,0.3)]',
+        innerCardBg: 'bg-cyan-950/40', innerCardBorder: 'border-cyan-800/40', innerTitle: 'text-cyan-300', innerText: 'text-cyan-100'
+      },
+      '✨': { 
+        bg: 'bg-lime-50/90', border: 'border-lime-200', text: 'text-lime-800', badge: 'bg-lime-100 text-lime-900 border-lime-300',
+        innerBg: 'bg-slate-950/95', innerBorder: 'border-lime-900/60', innerBadge: 'bg-lime-950/80 text-lime-300 border-lime-700/50 shadow-[0_0_10px_rgba(163,230,53,0.3)]',
+        innerCardBg: 'bg-lime-950/40', innerCardBorder: 'border-lime-800/40', innerTitle: 'text-lime-300', innerText: 'text-lime-100'
+      }
     };
 
-    // 為小卡片 (拍檔/相剋) 獨立套用配色
-    function applyCardColor(cardId, titleId, targetPikminName) {
+    // 為小卡片 (拍檔/相剋) 獨立套用與具體皮克敏品種呼應之配色
+    function applyCardColor(cardId, titleId, nameId, targetPikminName) {
       const cardEl = document.getElementById(cardId);
       const titleEl = document.getElementById(titleId);
+      const nameEl = document.getElementById(nameId);
       if (!cardEl || !titleEl) return;
 
-      let theme = { bg: 'bg-emerald-50/80', border: 'border-emerald-200', text: 'text-emerald-700' };
+      let theme = { 
+        bg: 'bg-emerald-50/80', border: 'border-emerald-200', text: 'text-emerald-700',
+        innerCardBg: 'bg-emerald-950/40', innerCardBorder: 'border-emerald-800/40', innerTitle: 'text-emerald-300', innerText: 'text-emerald-100'
+      };
 
       for (const [key, t] of Object.entries(pikminColorThemeMap)) {
         if (targetPikminName.includes(key)) {
@@ -476,23 +514,47 @@
         }
       }
 
-      cardEl.className = `p-2.5 rounded-xl border transition-all duration-300 ${theme.bg} ${theme.border}`;
-      titleEl.className = `font-bold mb-0.5 ${theme.text}`;
+      // 判斷是否為內在皮克敏小卡，套用相對應品種的夜光微醺主題配色
+      if (cardId.startsWith('inner')) {
+        cardEl.className = `p-2.5 rounded-xl border transition-all duration-300 ${theme.innerCardBg} ${theme.innerCardBorder}`;
+        titleEl.className = `font-bold mb-0.5 ${theme.innerTitle}`;
+        if (nameEl) nameEl.className = `font-bold ${theme.innerText}`;
+      } else {
+        cardEl.className = `p-2.5 rounded-xl border transition-all duration-300 ${theme.bg} ${theme.border}`;
+        titleEl.className = `font-bold mb-0.5 ${theme.text}`;
+        if (nameEl) nameEl.className = `font-bold text-wood`;
+      }
     }
 
-    // 為整區塊 (外顯 / 內在) 套用一致主題配色
+    // 為整區塊 (外顯 / 內在) 套用一致且配合品種的主題配色
     function applySectionTheme(sectionId, badgeId, descBoxId, targetPikminName) {
       const sectionEl = document.getElementById(sectionId);
       const badgeEl = document.getElementById(badgeId);
       const descBoxEl = document.getElementById(descBoxId);
 
-      let theme = { bg: 'bg-emerald-50/90', border: 'border-emerald-200', text: 'text-emerald-700', badge: 'bg-emerald-100 text-emerald-800 border-emerald-300' };
+      let theme = { 
+        bg: 'bg-emerald-50/90', 
+        border: 'border-emerald-200', 
+        text: 'text-emerald-700', 
+        badge: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+        innerBg: 'bg-slate-950/95', 
+        innerBorder: 'border-purple-900/60', 
+        innerBadge: 'bg-purple-950/80 text-purple-300 border-purple-700/50 shadow-[0_0_10px_rgba(168,85,247,0.3)]'
+      };
 
       for (const [key, t] of Object.entries(pikminColorThemeMap)) {
         if (targetPikminName.includes(key)) {
           theme = t;
           break;
         }
+      }
+
+      // 如果是內在區域，套用融合該品種色調的深沉夜空主題
+      if (sectionId === 'inner-section') {
+        if (sectionEl) sectionEl.className = `inner-section transform rotate-180 pt-4 pb-4 transition-all duration-300 rounded-2xl p-4 ${theme.innerBg} border ${theme.innerBorder} shadow-inner`;
+        if (badgeEl) badgeEl.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${theme.innerBadge}`;
+        if (descBoxEl) descBoxEl.className = `p-3.5 rounded-2xl border mb-4 transition-colors ${theme.innerCardBg} ${theme.innerCardBorder} backdrop-blur-sm`;
+        return;
       }
 
       if (badgeEl) badgeEl.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${theme.badge}`;
@@ -512,7 +574,6 @@
 
     const TOTAL_QUESTIONS_TO_ASK = 20;
 
-    // 安全的洗牌，防止重複與無效複製
     function getRandomItemsWithoutReplacement(sourceArray, count) {
       const pool = [...sourceArray];
       const picked = [];
@@ -572,11 +633,9 @@
       const outerPool = extSource.map((q, idx) => ({ id: `EXT_${idx}`, isOuter: true, text: q.q, options: q.opts }));
       const innerPool = intSource.map((q, idx) => ({ id: `INT_${idx}`, isOuter: false, text: q.q, options: q.opts }));
 
-      // 嚴格非重複隨機抽取各 10 題
       const pickedOuter = getRandomItemsWithoutReplacement(outerPool, 10);
       const pickedInner = getRandomItemsWithoutReplacement(innerPool, 10);
 
-      // 混洗題目並確保剛好 20 題
       selectedQuestions = shuffleArray([...pickedOuter, ...pickedInner]);
 
       document.getElementById('quiz-screen').classList.remove('hidden');
@@ -692,14 +751,14 @@
         document.getElementById('outer-enemy-desc').innerText = outerP.enemyDesc;
 
         applySectionTheme('outer-section', 'outer-badge', 'outer-desc-box', outerP.name);
-        applyCardColor('outer-soulmate-card', 'outer-soulmate-title', outerP.soulmate);
-        applyCardColor('outer-enemy-card', 'outer-enemy-title', outerP.enemy);
+        applyCardColor('outer-soulmate-card', 'outer-soulmate-title', 'outer-soulmate', outerP.soulmate);
+        applyCardColor('outer-enemy-card', 'outer-enemy-title', 'outer-enemy', outerP.enemy);
 
-        // 2. 內在數據渲染
+        // 2. 內在數據渲染（包含小卡片配色與品種的顏色對應）
         document.getElementById('inner-code').innerText = innerP.code;
         document.getElementById('inner-title').innerText = innerP.title;
         document.getElementById('inner-name').innerText = innerP.name;
-        document.getElementById('inner-name').style.color = innerP.color;
+        document.getElementById('inner-name').style.color = innerP.glowColor;
         document.getElementById('inner-desc').innerText = innerP.desc;
         document.getElementById('inner-soulmate').innerText = innerP.soulmate;
         document.getElementById('inner-soulmate-desc').innerText = innerP.soulmateDesc;
@@ -707,11 +766,11 @@
         document.getElementById('inner-enemy-desc').innerText = innerP.enemyDesc;
 
         applySectionTheme('inner-section', 'inner-badge', 'inner-desc-box', innerP.name);
-        applyCardColor('inner-soulmate-card', 'inner-soulmate-title', innerP.soulmate);
-        applyCardColor('inner-enemy-card', 'inner-enemy-title', innerP.enemy);
+        applyCardColor('inner-soulmate-card', 'inner-soulmate-title', 'inner-soulmate', innerP.soulmate);
+        applyCardColor('inner-enemy-card', 'inner-enemy-title', 'inner-enemy', innerP.enemy);
 
-        // 3. 繪製色彩一致的雷達圖
-        renderRadarCharts(userScores.outer, outerP.color, userScores.inner, innerP.color);
+        // 3. 繪製雷達圖
+        renderRadarCharts(userScores.outer, outerP.color, userScores.inner, innerP.glowColor);
       }, 1200);
     }
 
@@ -774,7 +833,7 @@
               borderColor: innerColor,
               borderWidth: 2.5,
               pointBackgroundColor: innerColor,
-              pointBorderColor: '#FFFFFF',
+              pointBorderColor: '#0F172A',
               pointRadius: 4,
             }
           ]
@@ -784,9 +843,9 @@
           maintainAspectRatio: false,
           scales: {
             r: {
-              angleLines: { color: '#EFEAE1' },
-              grid: { color: '#EFEAE1' },
-              pointLabels: { font: { family: 'Noto Sans TC', size: 10, weight: 'bold' }, color: '#3A332C' },
+              angleLines: { color: 'rgba(255, 255, 255, 0.15)' },
+              grid: { color: 'rgba(255, 255, 255, 0.15)' },
+              pointLabels: { font: { family: 'Noto Sans TC', size: 10, weight: 'bold' }, color: '#E2E8F0' },
               ticks: { display: false },
               suggestedMin: 0
             }
@@ -795,7 +854,7 @@
             legend: {
               display: true,
               position: 'top',
-              labels: { boxWidth: 10, padding: 6, font: { family: 'Noto Sans TC', size: 10, weight: 'bold' }, color: '#8C6D58' }
+              labels: { boxWidth: 10, padding: 6, font: { family: 'Noto Sans TC', size: 10, weight: 'bold' }, color: innerColor }
             }
           }
         }
