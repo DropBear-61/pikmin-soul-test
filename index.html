@@ -331,7 +331,11 @@
       ["強烈嘅孤獨感襲來時", "用忙碌同挑戰充實自己轉移注意力", "靜落嚟解析孤獨由來與內心需求", "享受呢份孤獨，沉浸喺自我奇幻世界"],
       ["面對未知嘅未來產生恐懼時", "主動出擊做點嘢消除唔確定感", "理性分析最壞打算並做好萬全防禦", "相信船到橋頭自然直，順其自然"],
       ["產生自我懷疑嘅低潮時刻", "透過完成小目標重新找回掌控感", "客觀審視自己嘅優缺點並進行修正", "接受自己嘅唔完美，話比自己聽獨一無二"],
-      ["思考生命價值與成功時", "能留下令人矚目嘅具體戰績與突破", "擁有看透事物本質嘅智慧與從容", "能無拘無束咁體驗世間各種奇妙事物"]
+      ["思考生命價值與成功時", "能留下令人矚目嘅具體戰績與突破", "擁有看透事物本質嘅智慧與從容", "能無拘無束咁體驗世間各種奇妙事物"],
+      ["當感覺自己同周圍環境格格不入時", "主動改變環境或創造屬於自己嘅優勢", "靜靜觀察他人，尋找融入嘅最佳切入點", "坦然接受差異，繼續保持自己嘅獨特步調"],
+      ["面對突如其來嘅失敗或打擊時", "迅速檢討，化不甘為力量重頭再嚟", "拆解失敗原因，將其視為改進嘅數據資料", "一笑置之，認為這不過是人生嘅奇妙插曲"],
+      ["喺深夜感到精神特別充沛時", "抓緊時間規劃未來或處理延宕工作", "安靜地看書或思考哲學與人生方向", "開啟創作模式，畫畫、寫字或沉浸愛好"],
+      ["獲得重大成就與讚賞嘅瞬間", "思考下一個更高嘅巔峰目標喺邊", "內心平靜，認為這只是累積嘅必然結果", "感到有趣，並探索這份成就帶來嘅新奇可能"]
     ];
 
     intScenariosZh.forEach((sc) => {
@@ -398,7 +402,11 @@
       ["hit by a sudden wave of deep loneliness", "fill your time with tasks and physical challenges", "analyze where the loneliness stems from logically", "embrace the solitude and retreat into your inner fantasy"],
       ["feeling anxious about an uncertain future", "take active steps immediately to regain control", "rationally map out worst-case scenarios and safety nets", "trust things will work out naturally in due time"],
       ["struck by self-doubt in low moments", "achieve small quick wins to rebuild confidence", "examine strengths and weaknesses objectively to improve", "accept imperfection and remind yourself you are unique"],
-      ["contemplating personal life purpose", "leaving behind concrete, remarkable accomplishments", "gaining deep wisdom to see through the noise of life", "freely experiencing all quirkiness the world has to offer"]
+      ["contemplating personal life purpose", "leaving behind concrete, remarkable accomplishments", "gaining deep wisdom to see through the noise of life", "freely experiencing all quirkiness the world has to offer"],
+      ["feeling totally out of place in your surroundings", "take initiative to reshape the space or build your edge", "observe quietly to find the subtle entry point", "embrace the difference and keep your unique rhythm"],
+      ["facing a sudden, unexpected setback", "review fast and channel frustration into starting over", "deconstruct root causes as helpful diagnostic data", "laugh it off as just another quirky episode in life"],
+      ["feeling strangely burst of energy late at night", "seize time to map future plans or complete pending work", "read quietly and ponder deeper philosophical questions", "jump into creative mode: draw, write, or indulge hobbies"],
+      ["receiving major success or praise", "think about where the next higher peak goal lies", "feel peaceful, viewing it as a natural result of buildup", "find it intriguing and explore new possibilities it opens"]
     ];
 
     intScenariosEn.forEach((sc) => {
@@ -502,6 +510,17 @@
 
     const TOTAL_QUESTIONS_TO_ASK = 20;
 
+    // 安全的洗牌，防止重複與無效複製
+    function getRandomItemsWithoutReplacement(sourceArray, count) {
+      const pool = [...sourceArray];
+      const picked = [];
+      for (let i = 0; i < count && pool.length > 0; i++) {
+        const randomIndex = Math.floor(Math.random() * pool.length);
+        picked.push(pool.splice(randomIndex, 1)[0]);
+      }
+      return picked;
+    }
+
     function shuffleArray(arr) {
       const array = [...arr];
       for (let i = array.length - 1; i > 0; i--) {
@@ -548,15 +567,14 @@
       const extSource = currentLang === 'en' ? rawExtQuestionsEn : rawExtQuestionsZh;
       const intSource = currentLang === 'en' ? rawIntQuestionsEn : rawIntQuestionsZh;
 
-      const outerPool = [];
-      extSource.forEach((q, idx) => outerPool.push({ id: `EXT_${idx}`, isOuter: true, text: q.q, options: q.opts }));
+      const outerPool = extSource.map((q, idx) => ({ id: `EXT_${idx}`, isOuter: true, text: q.q, options: q.opts }));
+      const innerPool = intSource.map((q, idx) => ({ id: `INT_${idx}`, isOuter: false, text: q.q, options: q.opts }));
 
-      const innerPool = [];
-      intSource.forEach((q, idx) => innerPool.push({ id: `INT_${idx}`, isOuter: false, text: q.q, options: q.opts }));
+      // 嚴格非重複隨機抽取各 10 題
+      const pickedOuter = getRandomItemsWithoutReplacement(outerPool, 10);
+      const pickedInner = getRandomItemsWithoutReplacement(innerPool, 10);
 
-      const pickedOuter = shuffleArray(outerPool).slice(0, 10);
-      const pickedInner = shuffleArray(innerPool).slice(0, 10);
-
+      // 混洗題目並確保剛好 20 題
       selectedQuestions = shuffleArray([...pickedOuter, ...pickedInner]);
 
       document.getElementById('quiz-screen').classList.remove('hidden');
@@ -619,7 +637,7 @@
 
       setTimeout(() => {
         currentIndex++;
-        if (currentIndex < selectedQuestions.length) {
+        if (currentIndex < TOTAL_QUESTIONS_TO_ASK) {
           renderQuestion();
         } else {
           showResult();
