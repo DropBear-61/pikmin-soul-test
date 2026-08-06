@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-HK">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +7,9 @@
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js (繪製雷達圖) -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- html2canvas (一鍵圖片繪製與分享) -->
+  <!-- html2canvas -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -45,7 +45,6 @@
       overflow-x: hidden;
     }
 
-    /* 卡片橫向滑動動畫 */
     @keyframes slideInRight {
       from { opacity: 0; transform: translateX(40px); }
       to { opacity: 1; transform: translateX(0); }
@@ -67,10 +66,42 @@
 </head>
 <body class="text-wood font-sans antialiased min-h-screen flex flex-col items-center justify-between p-4 sm:p-6">
 
+  <!-- ==================== 0. 開始頁面 (Start Screen) ==================== -->
+  <div id="start-screen" class="w-full max-w-md flex flex-col items-center justify-between min-h-[85vh] py-8">
+    <header class="text-center space-y-2">
+      <span class="px-3 py-1 bg-forest/10 text-forest text-xs font-bold rounded-full border border-forest/20">🌱 心理測驗 | Personality Test</span>
+      <h1 class="text-2xl sm:text-3xl font-black text-wood tracking-tight">皮克敏雙核靈魂屬性測驗</h1>
+      <p class="text-xs text-earth">Pikmin Dual-Soul Personality Quiz</p>
+    </header>
+
+    <main class="w-full my-auto text-center px-4">
+      <div class="bg-cardBg border-2 border-[#EFEAE1] rounded-3xl p-6 shadow-paper relative overflow-hidden space-y-4">
+        <div class="text-6xl my-2 animate-bounce">🌱🌿🍃</div>
+        <h2 class="text-lg font-bold text-wood">你平時戴住咩面具？<br>內心又藏住邊隻皮克敏？</h2>
+        <p class="text-xs text-earth leading-relaxed">
+          Uncover your true inner & outer Pikmin traits!<br>
+          答 20 條直覺選擇題，即刻幫你拔出你嘅<b>外顯</b>同<b>內在</b>皮克敏！
+        </p>
+      </div>
+    </main>
+
+    <footer class="w-full space-y-3">
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="beginQuiz('zh')" class="w-full py-4 px-4 bg-forest hover:bg-forestHover text-white font-bold text-sm rounded-2xl shadow-paper transition-all active:scale-[0.98] flex items-center justify-center gap-1.5">
+          <span>🚀 開始測驗 (廣東話)</span>
+        </button>
+        <button onclick="beginQuiz('en')" class="w-full py-4 px-4 bg-wood hover:bg-earth text-white font-bold text-sm rounded-2xl shadow-paper transition-all active:scale-[0.98] flex items-center justify-center gap-1.5">
+          <span>🚀 Start (English)</span>
+        </button>
+      </div>
+      <p id="landing-hint" class="text-[11px] text-center text-earth/70">🍃 憑第一直覺揀就最準！/ Go with your first instinct!</p>
+    </footer>
+  </div>
+
   <!-- ==================== 1. 測驗答題區塊 (Quiz Screen) ==================== -->
-  <div id="quiz-screen" class="w-full max-w-md flex flex-col items-center justify-between min-h-[90vh]">
+  <div id="quiz-screen" class="w-full max-w-md hidden flex-col items-center justify-between min-h-[90vh]">
     <header class="w-full text-center pt-4 pb-2">
-      <h1 class="text-xl font-bold tracking-wide text-wood">探索你的皮克敏靈魂屬性</h1>
+      <h1 id="quiz-header-title" class="text-xl font-bold tracking-wide text-wood">探索你嘅皮克敏靈魂屬性</h1>
     </header>
 
     <main class="w-full my-4 flex-1 flex flex-col justify-center">
@@ -91,7 +122,7 @@
 
         <div class="min-h-[80px] flex items-center mb-6">
           <h2 id="question-text" class="text-base sm:text-lg font-bold text-wood leading-relaxed">
-            載入題目中...
+            Loading...
           </h2>
         </div>
 
@@ -100,176 +131,187 @@
     </main>
 
     <footer class="w-full text-center py-2 text-xs text-earth/70">
-      <p>🍃 憑第一直覺選擇，測驗結果會更加精準</p>
+      <p id="quiz-footer-hint">🍃 憑第一直覺揀，結果會最精準！</p>
     </footer>
   </div>
 
   <!-- ==================== 2. 結果頁區塊 (Result Screen) ==================== -->
   <div id="result-screen" class="w-full max-w-md hidden flex-col items-center">
     
-    <!-- 雙核結果卡片 (支援下半部 180 度顛倒) -->
-    <main id="result-card" class="w-full bg-cardBg border-2 border-[#EFEAE1] rounded-3xl p-6 shadow-paper relative overflow-hidden my-4">
+    <main id="result-card" class="w-full bg-cardBg border-2 border-[#EFEAE1] rounded-3xl p-5 sm:p-6 shadow-paper relative overflow-hidden my-4">
       
-      <!-- ☀️ 上半部：外顯皮克敏 (正向朝上) -->
-      <section class="outer-section pb-6 border-b-2 border-dashed border-[#EFEAE1]">
+      <!-- ☀️ 上半部：外顯皮克敏 -->
+      <section id="outer-section" class="outer-section pb-6 border-b-2 border-dashed border-[#EFEAE1] transition-all duration-300 rounded-2xl p-3">
         <div class="flex justify-between items-center mb-3">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold">
+          <span id="outer-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-colors">
             ☀️ 外顯皮克敏 (社交與行動)
           </span>
-          <span id="outer-code" class="text-xs text-earth/70 font-mono">#001_RED</span>
+          <span id="outer-code" class="text-xs font-mono font-bold opacity-80">#001_RED</span>
         </div>
 
         <div class="text-center mb-4">
-          <p id="outer-title" class="text-xs font-bold text-earth tracking-wide mb-1">「永不退縮的直球衝鋒隊」</p>
-          <h1 id="outer-name" class="text-2xl font-extrabold text-wood">🔴 紅色皮克敏</h1>
+          <p id="outer-title" class="text-xs font-bold tracking-wide mb-1 opacity-80"></p>
+          <h1 id="outer-name" class="text-2xl font-extrabold tracking-tight"></h1>
         </div>
 
-        <!-- 外顯專屬雷達圖 -->
         <div class="w-full h-44 relative mb-4 flex justify-center items-center">
           <canvas id="radarChart"></canvas>
         </div>
 
-        <div class="bg-paper p-3.5 rounded-2xl border border-[#EFEAE1] mb-4">
-          <h3 class="text-xs font-bold text-earth mb-1">📖 外顯性格詳細解析</h3>
-          <p id="outer-desc" class="text-xs text-wood leading-relaxed">解析載入中...</p>
+        <div id="outer-desc-box" class="p-3.5 rounded-2xl border mb-4 transition-colors">
+          <h3 id="outer-desc-title" class="text-xs font-bold mb-1">📖 外顯性格詳細解析</h3>
+          <p id="outer-desc" class="text-xs leading-relaxed text-wood/90"></p>
         </div>
 
-        <!-- 外顯搭檔：幸運與相剋併排 -->
         <div class="grid grid-cols-2 gap-2 text-xs">
           <div id="outer-soulmate-card" class="p-2.5 rounded-xl border transition-colors duration-300">
-            <div id="outer-soulmate-title" class="font-bold mb-0.5">🍀 幸運搭檔</div>
-            <div id="outer-soulmate" class="font-bold text-wood">藍色皮克敏</div>
-            <p id="outer-soulmate-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight">一個冷靜觀察防守，一個向前衝刺破局。</p>
+            <div id="outer-soulmate-title" class="font-bold mb-0.5">🍀 最佳拍檔</div>
+            <div id="outer-soulmate" class="font-bold text-wood"></div>
+            <p id="outer-soulmate-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight"></p>
           </div>
           <div id="outer-enemy-card" class="p-2.5 rounded-xl border transition-colors duration-300">
             <div id="outer-enemy-title" class="font-bold mb-0.5">⚡ 相剋隊友</div>
-            <div id="outer-enemy" class="font-bold text-wood">黃色皮克敏</div>
-            <p id="outer-enemy-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight">覺得對方天馬行空不接地氣。</p>
+            <div id="outer-enemy" class="font-bold text-wood"></div>
+            <p id="outer-enemy-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight"></p>
           </div>
         </div>
       </section>
 
       <!-- ↺ 翻轉提示語 ↺ -->
       <div class="py-6 text-center select-none">
-        <div class="inline-block px-4 py-2 bg-paper border border-[#EFEAE1] rounded-full text-xs font-bold text-forest shadow-sm animate-pulse">
-          ↺ 請將電話旋轉 180 度閱讀內在皮克敏 ↺
+        <div id="rotate-hint" class="inline-block px-4 py-2 bg-paper border border-[#EFEAE1] rounded-full text-xs font-bold text-forest shadow-sm animate-pulse">
+          ↺ 轉一轉個電話 180 度，睇埋內在皮克敏！ ↺
         </div>
       </div>
 
-      <!-- 🌙 下半部：內在皮克敏 (旋轉 180 度倒置) -->
-      <section class="inner-section transform rotate-180 pt-2">
+      <!-- 🌙 下半部：內在皮克敏 (旋轉 180 度) -->
+      <section id="inner-section" class="inner-section transform rotate-180 pt-2 transition-all duration-300 rounded-2xl p-3">
         <div class="flex justify-between items-center mb-3">
-          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs font-bold">
+          <span id="inner-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-colors">
             🌙 內在皮克敏 (深層靈魂)
           </span>
-          <span id="inner-code" class="text-xs text-earth/70 font-mono">#003_BLUE</span>
+          <span id="inner-code" class="text-xs font-mono font-bold opacity-80">#003_BLUE</span>
         </div>
 
         <div class="text-center mb-4">
-          <p id="inner-title" class="text-xs font-bold text-earth tracking-wide mb-1">「深謀慮的冷靜觀察家」</p>
-          <h1 id="inner-name" class="text-2xl font-extrabold text-wood">🔵 藍色皮克敏</h1>
+          <p id="inner-title" class="text-xs font-bold tracking-wide mb-1 opacity-80"></p>
+          <h1 id="inner-name" class="text-2xl font-extrabold tracking-tight"></h1>
         </div>
 
-        <!-- 內在專屬雷達圖 -->
         <div class="w-full h-44 relative mb-4 flex justify-center items-center">
           <canvas id="innerRadarChart"></canvas>
         </div>
 
-        <div class="bg-paper p-3.5 rounded-2xl border border-[#EFEAE1] mb-4">
-          <h3 class="text-xs font-bold text-earth mb-1">🔮 隱藏內在詳細解析</h3>
-          <p id="inner-desc" class="text-xs text-wood leading-relaxed">解析載入中...</p>
+        <div id="inner-desc-box" class="p-3.5 rounded-2xl border mb-4 transition-colors">
+          <h3 id="inner-desc-title" class="text-xs font-bold mb-1">🔮 隱藏內在詳細解析</h3>
+          <p id="inner-desc" class="text-xs leading-relaxed text-wood/90"></p>
         </div>
 
-        <!-- 內在搭檔：幸運與相剋併排 -->
         <div class="grid grid-cols-2 gap-2 text-xs">
           <div id="inner-soulmate-card" class="p-2.5 rounded-xl border transition-colors duration-300">
-            <div id="inner-soulmate-title" class="font-bold mb-0.5">🍀 幸運搭檔</div>
-            <div id="inner-soulmate" class="font-bold text-wood">紅色皮克敏</div>
-            <p id="inner-soulmate-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight">互補防守與進攻，提供內在絕對安全感。</p>
+            <div id="inner-soulmate-title" class="font-bold mb-0.5">🍀 最佳拍檔</div>
+            <div id="inner-soulmate" class="font-bold text-wood"></div>
+            <p id="inner-soulmate-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight"></p>
           </div>
           <div id="inner-enemy-card" class="p-2.5 rounded-xl border transition-colors duration-300">
             <div id="inner-enemy-title" class="font-bold mb-0.5">⚡ 相剋隊友</div>
-            <div id="inner-enemy" class="font-bold text-wood">羽翅皮克敏</div>
-            <p id="inner-enemy-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight">受不了對方過於隨性與無秩序的節奏。</p>
+            <div id="inner-enemy" class="font-bold text-wood"></div>
+            <p id="inner-enemy-desc" class="text-[10px] text-earth/90 mt-0.5 leading-tight"></p>
           </div>
         </div>
       </section>
 
     </main>
 
-    <!-- 操作按鈕 -->
     <div class="w-full space-y-3 mb-6">
       <button id="share-btn" onclick="generateAndShareImage()" class="w-full py-3.5 px-4 bg-forest hover:bg-forestHover text-white font-bold rounded-2xl shadow-paper flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
-        <span>🖼️ 儲存你的皮克敏屬性</span>
+        <span id="save-btn-text">🖼️ 儲存你嘅皮克敏屬性卡</span>
       </button>
       <button onclick="restartQuiz()" class="w-full py-3 px-4 bg-white border border-[#EFEAE1] text-earth hover:text-wood font-medium rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
-        <span>🔄 重新測驗</span>
+        <span id="restart-btn-text">🔄 再測一次</span>
       </button>
     </div>
   </div>
 
-  <!-- ==================== 3. JavaScript 邏輯引擎 ==================== -->
+  <!-- ==================== 3. JavaScript 邏輯與雙語引擎 ==================== -->
   <script>
-    // 建立 100 題獨一無二且選項不重覆的完整問題庫
-    const rawExtQuestions = [
-      { q: "打開 Pikmin Bloom 準備散步種花時，你通常會如何安排路線？", opts: [{ t: "鎖定花苞地標衝刺，用最快速度種開花！", s: { action: 10, resilience: 8 } }, { t: "仔細規劃能最大化覆蓋景點的效率路線。", s: { insight: 10, resilience: 6 } }, { t: "隨心所欲亂晃，專挑沒走過的奇妙小巷弄探索。", s: { uniqueness: 10, flexibility: 8 } }] },
-      { q: "當團隊突然面臨緊急危機，大家一片混亂時，你的第一反應是？", opts: [{ t: "立刻捲起袖子直球破局，做了再調整！", s: { action: 10, resilience: 8 } }, { t: "保持冷靜，深呼吸觀察釐清核心問題。", s: { insight: 10, resilience: 6 } }, { t: "跳脫常規，提出大家都沒想過的奇特新點子。", s: { uniqueness: 10, flexibility: 8 } }] },
-      { q: "在路上看到巨大的蘑菇需要大家協力挑戰時，你通常會？", opts: [{ t: "毫不猶豫立刻加入！先打了再說。", s: { action: 8, resilience: 8 } }, { t: "先看隊友戰力與皮克敏屬性，評估最佳回報。", s: { insight: 10, flexibility: 6 } }, { t: "挑選身上裝飾最特別、最搞怪的皮克敏出戰。", s: { flexibility: 10, uniqueness: 8 } }] },
-      { q: "和朋友約好聚會，但對方臨時改時間，你會？", opts: [{ t: "主動主導，幫大家重新規劃一個更好的新地點。", s: { action: 10, resilience: 6 } }, { t: "冷靜評估新時間是否會影響後面其他行程。", s: { insight: 8, resilience: 8 } }, { t: "無所謂！順便改去另一個想去的地方玩。", s: { flexibility: 10, uniqueness: 6 } }] },
-      { q: "去一家沒去過的餐廳點餐，你傾向於？", opts: [{ t: "點招牌或店員推薦，最快最不容易踩雷。", s: { action: 8, resilience: 8 } }, { t: "認真研究評論與菜單配料，挑出 CP 值最高的。", s: { insight: 10, resilience: 6 } }, { t: "專門點名字最怪、最罕見的限定隱藏料理。", s: { uniqueness: 10, flexibility: 8 } }] },
-      { q: "參加朋友多的社交派對時，你通常扮演什麼角色？", opts: [{ t: "主動開話題帶動氣氛，成為全場焦點。", s: { action: 10, flexibility: 6 } }, { t: "角落安靜觀察大家，偶爾精準吐嘈。", s: { insight: 10, uniqueness: 6 } }, { t: "到處穿梭跟不同圈子聊天，靈活切換。", s: { flexibility: 10, uniqueness: 8 } }] },
-      { q: "收到一份全新的複雜任務時，你第一步會怎麼做？", opts: [{ t: "先動手做看看，遇到問題再見招拆招。", s: { action: 10, resilience: 8 } }, { t: "先把整體步驟跟流程圖劃清楚再開始。", s: { insight: 10, resilience: 6 } }, { t: "想想有沒有更省力、打破傳統的新方法。", s: { uniqueness: 10, flexibility: 8 } }] },
-      { q: "出國旅遊時，你最喜歡哪種行程安排？", opts: [{ t: "行程塞滿滿，把所有地標跑遍才過癮！", s: { action: 10, resilience: 8 } }, { t: "規劃完善的時間表，連備案都準備好。", s: { insight: 10, resilience: 6 } }, { t: "只訂機票飯店，每天醒來再決定去哪。", s: { flexibility: 10, uniqueness: 8 } }] },
-      { q: "與人發生意見分歧時，你對外的反應通常是？", opts: [{ t: "直接提出論點，據理力爭論出結果。", s: { action: 10, resilience: 8 } }, { t: "條理清晰地分析優缺點，用數據說服對方。", s: { insight: 10, resilience: 6 } }, { t: "尋求折衷或繞過爭議的第三種可能性。", s: { flexibility: 10, uniqueness: 8 } }] },
-      { q: "當身邊朋友向你傾訴遭遇的挫折時，你會？", opts: [{ t: "立刻幫對方想出具體的解決方案與行動步驟。", s: { action: 10, resilience: 6 } }, { t: "冷靜分析整件事的原因，幫對方理清思緒。", s: { insight: 10, resilience: 8 } }, { t: "用幽默創意的視角安撫對方，轉移注意力。", s: { flexibility: 10, uniqueness: 8 } }] }
+    let currentLang = 'zh'; 
+
+    const uiText = {
+      zh: {
+        headerTitle: "探索你嘅皮克敏靈魂屬性",
+        quizTag: "🌱 靈魂探索",
+        quizFooter: "🍃 憑第一直覺揀，結果會最精準！",
+        loadingText: "正在拔起屬於你嘅外顯與內在皮克敏...",
+        loadingSub: "分析雙核靈魂數據中",
+        outerBadge: "☀️ 外顯皮克敏 (社交與行動)",
+        innerBadge: "🌙 內在皮克敏 (深層靈魂)",
+        outerDescTitle: "📖 外顯性格詳細解析",
+        innerDescTitle: "🔮 隱藏內在詳細解析",
+        soulmateTitle: "🍀 最佳拍檔",
+        enemyTitle: "⚡ 相剋隊友",
+        rotateHint: "↺ 轉一轉個電話 180 度，睇埋內在皮克敏！ ↺",
+        saveBtn: "🖼️ 儲存你嘅皮克敏屬性卡",
+        restartBtn: "🔄 再測一次",
+        radarOuterLabel: "☀️ 外顯靈魂屬性",
+        radarInnerLabel: "🌙 內在靈魂屬性",
+        chartTraits: ['執行力', '洞察力', '韌性', '彈性', '獨特性']
+      },
+      en: {
+        headerTitle: "Explore Your Pikmin Soul Traits",
+        quizTag: "🌱 Soul Discovery",
+        quizFooter: "🍃 Go with your first intuition for best accuracy!",
+        loadingText: "Plucking your Outer & Inner Pikmin...",
+        loadingSub: "Analyzing dual-soul parameters...",
+        outerBadge: "☀️ Outer Pikmin (Social & Action)",
+        innerBadge: "🌙 Inner Pikmin (Deep Soul)",
+        outerDescTitle: "📖 Outer Personality Analysis",
+        innerDescTitle: "🔮 Hidden Inner Analysis",
+        soulmateTitle: "🍀 Best Match",
+        enemyTitle: "⚡ Clash Match",
+        rotateHint: "↺ Rotate phone 180° to view Inner Pikmin! ↺",
+        saveBtn: "🖼️ Save Your Pikmin Result Card",
+        restartBtn: "🔄 Take Test Again",
+        radarOuterLabel: "☀️ Outer Soul Traits",
+        radarInnerLabel: "🌙 Inner Soul Traits",
+        chartTraits: ['Action', 'Insight', 'Resilience', 'Flexibility', 'Uniqueness']
+      }
+    };
+
+    // 中文題庫
+    const rawExtQuestionsZh = [
+      { q: "開 Pikmin Bloom 準備散步種花，你平時會點揀路線？", opts: [{ t: "鎖定花苞地標衝刺，用最快速度種開花！", s: { action: 10, resilience: 8 } }, { t: "仔細規劃路線，行得最貼目的地又有效率。", s: { insight: 10, resilience: 6 } }, { t: "隨心所欲亂行，專揀冇走過嘅神奇巷仔探索。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "當團隊突然遇到緊急突發狀況，大家都好亂，你第一反應係？", opts: [{ t: "即刻捲起袖子直球破局，做咗再算！", s: { action: 10, resilience: 8 } }, { t: "保持冷靜，深呼吸觀察釐清核心問題。", s: { insight: 10, resilience: 6 } }, { t: "跳脫常規，提出大家都冇諗過嘅奇特新諗法。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "喺路邊見到巨型蘑菇要大家一齊打，你通常會？", opts: [{ t: "完全唔諗即刻加入！打了先算。", s: { action: 8, resilience: 8 } }, { t: "先睇隊友戰力同皮克敏屬性，評估回報率。", s: { insight: 10, flexibility: 6 } }, { t: "揀身上裝飾最特別、最搞笑嘅皮克敏出戰。", s: { flexibility: 10, uniqueness: 8 } }] },
+      { q: "同朋友約好聚會，但對方臨時改時間，你會？", opts: [{ t: "主動主導，幫大家重新規劃一個更好嘅地點。", s: { action: 10, resilience: 6 } }, { t: "冷靜評估新時間會唔會影響後面其他行程。", s: { insight: 8, resilience: 8 } }, { t: "無所謂啦！順便去另一個一直想去嘅地方。", s: { flexibility: 10, uniqueness: 6 } }] },
+      { q: "去未去過嘅餐廳嗌嘢食，你傾向？", opts: [{ t: "點招牌或店員推薦，最快最唔會踩雷。", s: { action: 8, resilience: 8 } }, { t: "認真睇 OpenRice 食評，揀 CP 值最高嘅。", s: { insight: 10, resilience: 6 } }, { t: "專揀名字最怪、最罕見嘅限定隱藏料理。", s: { uniqueness: 10, flexibility: 8 } }] }
     ];
 
-    // 擴展外顯獨立情境題目，保證題幹與選項絕不重複
-    const extScenarios = [
-      ["開會討論許久沒有共識時", "主動拍板下決定推動流程", "冷靜整理各方利弊做出分析表", "拋出一個顛覆性的新方向重新討論"],
-      ["組隊玩合作遊戲時", "擔任前鋒帶頭衝鋒開路", "擔任後援掌控全局戰況與資源", "隨興探索地圖尋找隱藏彩蛋"],
-      ["挑選日常生活用品時", "看到合眼緣的就快速下單", "仔細比價並查看多平台使用者評價", "偏好設計怪異或限量聯名款"],
-      ["遇到路邊宣傳推銷時", "果斷伸手拒絕或快速離開", "停下聽對方講完並理性評估需求", "帶著好奇心跟對方聊些不相關話題"],
-      ["處理積壓已久的電子郵件時", "一口氣全部點開快速處理完畢", "分類建檔標籤，按優先順序回覆", "只挑標題吸引人的回，其餘隨緣"],
-      ["去超市採買一週食材時", "拿了常見食材快速結帳離開", "對照備忘錄，精確計算份量與折扣", "看到新品或奇特食材就想買來試"],
-      ["準備公開簡報演講前", "上台大方臨場發揮帶熱氣氛", "把講稿與背板投影片反覆校對精確", "加入自創的梗或互動遊戲驚豔全場"],
-      ["遭遇嚴重交通大堵塞時", "果斷下車改搭地鐵或換路線", "靜下心收聽路況並估算預計延誤", "打發時間觀察旁邊車輛與乘客動作"],
-      ["面對新加入團隊的夥伴", "熱情主動帶對方熟悉環境與工作", "保持禮貌並觀察對方的做事風格", "分享團隊沒人知道的搞笑冷知識"],
-      ["參加手作體驗課程時", "照著範例快速上手做出一成品", "嚴格按照說明書步驟精確測量", "完全不按牌理出牌，自由創作造型"],
-      ["拍賣二手物品時", "降價求售，務求用最快速度賣掉", "精算成本與二手市場均價定價", "寫一段超搞笑文案讓商品變有趣"],
-      ["公園公共設施故障時", "尋找臨時替代方案繼續運動", "拍照並上網通報相關單位處理", "思考這個故障設施能發明什麼新玩法"],
-      ["排隊等候排隊名店時", "拉著朋友聊天讓時間快速過去", "計算前面的消化速度估算精確時間", "觀察店面的裝潢與客人動作打發時間"],
-      ["參觀藝術展覽館時", "快速掃視全文並挑重點展品看", "戴上語音導覽仔細了解每幅畫背景", "專注於無人注意的細節並展開幻想"],
-      ["朋友邀請挑戰極限運動", "毫不猶豫立刻答應參加", "評估安全裝備與防護措施後決定", "提出更古怪或刺激的變體玩法"],
-      ["收到不合心意的禮物時", "爽朗感謝對方並直接尋找用途", "禮貌收下並研究該物品的二手價值", "發揮創意將禮物改造為奇特裝飾"],
-      ["規劃週末一日遊時", "排滿戶外極限活動體驗", "精確訂好每個景點的停留時間", "隨性搭上一班公車，到哪算哪"],
-      ["晚餐不知道吃什麼時", "直接決定第一家看到的餐廳", "打開美食 App 查看評價與人氣榜", "把所有選項寫成籤筒抽籤決定"],
-      ["買新手機或電子產品時", "上市第一天立刻排隊搶購最新款", "比較各家規格參數與 CP 值再入手", "選擇顏色最罕見或特殊造型款式"],
-      ["團隊成員開會遲到時", "直接開始會議，事後要求對方補進度", "記錄遲到時間並優化後續時間安排", "用搞笑方式調侃對方緩和尷尬氣氛"],
-      ["參加線上研習課程時", "開兩倍速快速聽完重點", "認真做筆記並整理成心智圖", "邊聽邊在旁邊視窗探索其他感興趣議題"],
-      ["租屋挑選房間時", "採光通風好就立刻簽約", "精算房租水電與通勤時間成本", "注重空間有沒有特殊的隱密小角落"],
-      ["突然遇到暴雨沒帶傘時", "頂著大雨一口氣跑回目的地", "走騎樓避雨並冷靜等待雨勢變小", "買一把顏色最誇張的傘順便逛街"],
-      ["被指派擔任活動主持人時", "掌控全場節奏，炒熱現場氣氛", "嚴格照著流程表與講稿進行", "脫稿演出，加進許多臨場笑料"],
-      ["面對不熟的遠房親戚時", "大方主動打招呼並寒暄", "保持禮貌距離，問什麼答什麼", "開些奇妙話題讓氣氛變得奇特有趣"],
-      ["逛熱鬧夜市時", "鎖定排隊名店一口氣吃完離場", "從頭走一遍比較價格與美味度再買", "專挑從沒見過的新奇小吃嘗試"],
-      ["發現自己買貴東西時", "算了！當作花錢買經驗", "找出發票研究退差價或退貨規則", "自我安慰這東西有其他特殊的價值"],
-      ["辦公桌整理風格", "東西隨手放，但要用時能快速抓到", "物品分類歸位，井然有序", "擺滿各種怪異模型與公仔飾品"],
-      ["去 KTV 唱歌時", "搶先點歌並帶頭高唱帶動氣氛", "默默幫大家點餐分分食物", "專點極度冷門或搞笑迷因歌曲"],
-      ["面對客戶不合理要求時", "直接正面談判溝通底線", "提出合約條款與數據分析回應", "提出跳脫框架的替代方案化解解解"],
-      ["收到臨時出差通知時", "快速打包行李，提早出發", "條理列出清單，一件不漏打包", "把出差當旅行，尋找當地隱藏美食"],
-      ["朋友借錢求助時", "評估交情，能幫就直接轉帳", "明確釐清借款原因與還款計劃", "提供不花錢就能解決對方困境的怪招"],
-      ["挑選健身運動項目時", "選擇高強度的重訓或高爆發運動", "選擇能記錄心率數據的規律訓練", "選擇有趣不枯燥的跳舞或極限運動"],
-      ["生活用品快用完時", "用到最後一刻立刻跑超商買", "定期檢查存量，雙十一大批補貨", "嘗試尋找替代品發揮DIY精神"],
-      ["團購邀約襲來時", "覺得划算就立刻喊 +1", "算單價與折扣後再決定是否加入", "只對包裝奇特或稀有進口貨有興趣"],
-      ["參加變裝派對時", "穿上最吸睛爆笑的英雄裝", "精緻還原經典動漫角色的細節", "扮演大家完全意想不到的無關物品"],
-      ["原定計畫被臨時取消時", "立刻轉移陣地去找別的樂子", "利用多出來的時間規劃後續工作", "順勢找個安靜地方發呆探索想像"],
-      ["信箱收到大量垃圾郵件", "一口氣全選刪除清空", "設定自動過濾規則以防漏信", "挑幾封標題荒謬的信點開笑一笑"],
-      ["決定假期住宿地點時", "挑離景點最近、交通最快的地方", "仔細看負評並比較各平台房價", "選擇樹屋、露營車等特殊住宿體驗"],
-      ["去主題樂園玩設施時", "衝第一個排最刺激的雲霄飛車", "研究 App 通關攻略，最大化設施數", "專門逛周邊商品店與找吉祥物拍照"]
+    const extScenariosZh = [
+      ["開會討論咗好耐都冇共識時", "主動拍板做決定推動流程", "冷靜整理各方利弊做個分析表", "拋出一個顛覆性嘅新方向重新討論"],
+      ["組隊玩合作 Game 時", "做前鋒帶頭衝鋒開路", "做後援掌控全局戰況與資源", "隨性探索地圖搵隱藏彩蛋"],
+      ["揀日常生活用品時", "睇中眼緣就即刻 Buy It Now", "仔細比價並睇埋多個平台用家評價", "偏好設計怪異或限量聯乘款"],
+      ["遇到路邊推銷時", "果斷伸手拒絕或快速走開", "停低聽對方講完並理性評估需求", "帶著好奇心同對方傾下其他嘢"],
+      ["處理積壓已久嘅 Email 時", "一口氣全部點開快速處理晒", "分類建檔標籤，按優先次序覆", "揀標題吸引嘅覆，其餘隨緣"],
+      ["去超級市場買一個星期食材時", "拎完常見食材快速結帳走人", "對照購物清單，精確計算份量同優惠", "見到新品或奇特食材就想買嚟試"],
+      ["準備公開 Presentation 前", "上台大方臨場發揮帶熱氣氛", "將講稿同 Slide 反覆校對到零失誤", "加啲自創搞笑梗同觀眾互動"],
+      ["遇到嚴重交通大塞車時", "果斷落車改搭地鐵或轉路線", "靜落嚟聽路況並估算預計遲到時間", "打發時間觀察隔離車輛同乘客"],
+      ["面對新加入團隊嘅 Partner", "熱情主動帶對方熟悉環境同工作", "保持禮貌並觀察對方嘅做事風格", "分享團隊冇人知嘅搞笑冷知識"],
+      ["參加 Hand-made 工作坊時", "照住範例快速上手做出一件成品", "嚴格跟說明書步驟精確測量", "完全唔按牌理出牌，自由創作造型"],
+      ["賣二手嘢時", "平賣求售，最緊要最快 speed 賣出", "精算成本同二手市場均價定價", "寫一段超搞笑文案令件嘢變有趣"],
+      ["公園設施壞咗時", "搵替代方案繼續運動", "影相並上網通報相關單位處理", "諗下呢個壞設施可以發明咩新玩法"],
+      ["排隊等候排隊名店時", "拉住朋友傾計令時間過得快啲", "計算前面消化速度估算精確時間", "觀察店面裝修同客人打發時間"],
+      ["睇藝術展覽時", "快速掃視全文並揀重點展品睇", "戴上語音導覽仔細了解每幅畫背景", "專注於無人注意嘅細節並展開幻想"],
+      ["朋友邀請挑戰極限運動", "毫不猶豫即刻答應參加", "評估安全裝備與防護措施後決定", "提出更古怪或刺激嘅新玩法"],
+      ["收到唔合心意嘅禮物時", "爽朗感謝對方並直接搵用途", "禮貌收下並研究該物品二手價值", "發揮創意將禮物改造做奇特裝飾"],
+      ["規劃週末一日遊時", "排滿戶外極限活動體驗", "精確訂好每個景點嘅停留時間", "隨性搭上一班巴士，去到邊算到邊"],
+      ["晚餐唔知食咩好時", "直接決定第一間見到嘅餐廳", "打開 App 睇評價同人氣榜", "將所有選項寫成籤筒抽籤決定"],
+      ["買新手機或電子產品時", "上市第一天即刻排隊搶購最新款", "比較各家規格參數同 CP 值再入手", "揀顏色最罕見或特殊造型款式"],
+      ["團隊成員開會遲到時", "直接開始會議，事後要對方補進度", "記錄遲到時間並優化後續時間安排", "用搞笑方式調侃對方緩和尷尬氣氛"]
     ];
 
-    extScenarios.forEach((sc, idx) => {
-      rawExtQuestions.push({
+    extScenariosZh.forEach((sc) => {
+      rawExtQuestionsZh.push({
         q: `當你在日常生活中【${sc[0]}】，你通常會？`,
         opts: [
           { t: sc[1], s: { action: 10, resilience: 7 } },
@@ -279,66 +321,22 @@
       });
     });
 
-    const rawIntQuestions = [
-      { q: "獨自一人面對極度高壓且長期的考驗時，你內心真實狀態是？", opts: [{ t: "越有挑戰性越興奮，咬緊牙關證明自己！", s: { resilience: 10, action: 8 } }, { t: "抽離情緒冷靜評估，尋求最節省資源的路徑。", s: { insight: 8, flexibility: 8 } }, { t: "維持專屬的奇妙節奏，不受外界焦慮影響。", s: { uniqueness: 10, resilience: 6 } }] },
-      { q: "夜晚獨自看著隊伍裡的皮克敏睡覺時，你內心最真實的感受是？", opts: [{ t: "明天一定要帶著它們衝更遠、解更多任務！", s: { action: 10, resilience: 6 } }, { t: "思考今天種了多少花，對明天的佈局做總結。", s: { insight: 10, resilience: 8 } }, { t: "覺得這些小傢伙好療癒，享受屬於自己的安靜時光。", s: { uniqueness: 10, flexibility: 8 } }] },
-      { q: "當深夜獨自一人沈思時，你最常浮現的想法是？", opts: [{ t: "還有哪些目標還沒達成？明天要更努力！", s: { action: 10, resilience: 8 } }, { t: "反思最近的決定是否正確，有沒有更好的選擇。", s: { insight: 10, resilience: 6 } }, { t: "天馬行空地幻想未來或各種奇妙的平行宇宙。", s: { uniqueness: 10, flexibility: 8 } }] },
-      { q: "對你而言，什麼事情最能讓你獲得內心的安全感？", opts: [{ t: "掌控生活主導權，不被任何人事物擺佈。", s: { resilience: 10, action: 8 } }, { t: "萬事皆在預料之中，有條不紊的穩定感。", s: { insight: 10, resilience: 8 } }, { t: "擁有完全自由的空間，不受任何規則約束。", s: { uniqueness: 10, flexibility: 10 } }] },
-      { q: "當你感到能量耗盡時，你最有效的充電方式是？", opts: [{ t: "去運動或做有成就感的事，重新燃起熱情。", s: { action: 10, resilience: 8 } }, { t: "獨處看書、整理房間，理清混亂的思緒。", s: { insight: 10, resilience: 6 } }, { t: "沉浸在個人興趣創作裡，完全切斷外界打擾。", s: { uniqueness: 10, flexibility: 8 } }] },
-      { q: "在內心深處，你最害怕自己變成什麼樣的人？", opts: [{ t: "軟弱無能、遇到困難只會逃避的人。", s: { resilience: 10, action: 8 } }, { t: "糊里糊塗、被情緒綁架缺乏智慧的人。", s: { insight: 10, resilience: 8 } }, { t: "隨波逐流、失去個人獨特特色的普通人。", s: { uniqueness: 10, flexibility: 8 } }] },
-      { q: "當計劃被徹底打亂，無法按原定方向進行時，你內心的真實感受？", opts: [{ t: "燃起不服輸的鬥志，一定要把方向導正！", s: { resilience: 10, action: 8 } }, { t: "快速調整心態，重新評估現有條件尋找新路。", s: { insight: 8, flexibility: 10 } }, { t: "覺得沒關係，搞不好這樣會帶來意外的驚喜。", s: { flexibility: 10, uniqueness: 8 } }] },
-      { q: "如果可以擁有一種超能力，你內心最渴望的是？", opts: [{ t: "無堅不摧的防禦力與無窮無盡的力量。", s: { resilience: 10, action: 8 } }, { t: "看穿一切真相與預知未來的洞察力。", s: { insight: 10, resilience: 6 } }, { t: "隨意穿梭時空與改變形態的自由度。", s: { uniqueness: 10, flexibility: 10 } }] },
-      { q: "對於別人的評價與眼光，你內心真正的想法是？", opts: [{ t: "用實力與成果說話，讓所有質疑的人閉嘴。", s: { action: 10, resilience: 10 } }, { t: "理性客觀看待，有參考價值的吸取，無用的忽略。", s: { insight: 10, resilience: 6 } }, { t: "完全不在意，我本來就是獨一無二的存在。", s: { uniqueness: 10, flexibility: 8 } }] },
-      { q: "在理想狀態下，你希望自己的生活節奏是？", opts: [{ t: "充滿挑戰與突破，每天都精彩充實。", s: { action: 10, resilience: 8 } }, { t: "規律有序，一切皆在掌握與計畫之中。", s: { insight: 10, resilience: 8 } }, { t: "隨興所至，充滿驚喜與不被定義的彈性。", s: { flexibility: 10, uniqueness: 10 } }] }
+    const rawIntQuestionsZh = [
+      { q: "獨自一人面對極高壓同長期考驗，你內心真實狀態係？", opts: [{ t: "越有挑戰性越興奮，咬緊牙關證明自己！", s: { resilience: 10, action: 8 } }, { t: "抽離情緒冷靜評估，搵最慳資源嘅路。", s: { insight: 8, flexibility: 8 } }, { t: "維持專屬嘅奇妙節奏，不受外界焦慮影響。", s: { uniqueness: 10, resilience: 6 } }] },
+      { q: "夜晚獨自睇住隊伍裡嘅皮克敏瞓覺，你內心最真實感受係？", opts: [{ t: "明天一定要帶佢哋衝更遠、解更多任務！", s: { action: 10, resilience: 6 } }, { t: "思考今日種咗幾多花，對聽日嘅佈局做總結。", s: { insight: 10, resilience: 8 } }, { t: "覺得呢班小傢伙好療癒，享受屬於自己嘅安靜時間。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "當深夜獨自一人深思，你最常浮現嘅諗法係？", opts: [{ t: "仲有哪些目標未達成？明日要更努力！", s: { action: 10, resilience: 8 } }, { t: "反思最近嘅決定是否正確，有冇更好嘅選擇。", s: { insight: 10, resilience: 6 } }, { t: "天馬行空咁幻想未來或各種奇妙嘅平行宇宙。", s: { uniqueness: 10, flexibility: 8 } }] }
     ];
 
-    // 擴展內在獨立情境題目
-    const intScenarios = [
-      ["強烈的孤獨感襲來時", "用忙碌與挑戰充實自己轉移注意力", "靜下心解析孤獨的由來與內心需求", "享受這份孤獨，沉浸在自我奇幻世界"],
-      ["面對未知的未來產生恐懼時", "主動出擊做點什麼來消除不確定感", "理性分析最壞打算並做好萬全防禦", "相信船到橋頭自然直，順其自然"],
-      ["產生自我懷疑的低潮時刻", "透過完成小目標重新找回掌控感", "客觀審視自己的優缺點並進行修正", "接受自己的不完美，告訴自己獨一無二"],
-      ["思考生命的價值與成功時", "能留下令人矚目的具體戰績與突破", "擁有看透事物本質的智慧與從容", "能無拘無束地體驗世間各種奇妙事物"],
-      ["面對一段關係的離別時", "果斷前看，感謝相遇並邁向新階段", "深思這段關係帶給自己的成長與課題", "順其自然，相信有緣終究會再重逢"],
-      ["深夜獨處消化負面情緒時", "透過運動或宣洩把情緒代謝掉", "像心理醫生般客觀剖析情緒根源", "聽音樂或畫畫將情緒轉化為靈感"],
-      ["當自由與規則發生衝突時", "用強大實力打破不合理的舊規則", "在規則許可的範圍內尋求最大效率", "無視規則，走出屬於自己的新道路"],
-      ["維護內心最堅定的信念時", "勇往直前，絕不向任何壓力妥協", "條理分明地捍衛立場並用邏輯說明", "默默堅守，不需要向任何人證明"],
-      ["面對無法挽回的遺憾時", "總結教訓，發誓下次絕不再犯", "理性接受事實，將其整理為人生經驗", "轉化視角，相信一切都是最好的安排"],
-      ["看待自己性格上的缺點時", "積極改善，想辦法將其修復或克服", "客觀接受，並尋求互補的機制或夥伴", "視為個人特色，甚至覺得有點可愛"],
-      ["渴望獲得怎樣的理解", "認同我的能力與付出的努力", "懂我的思考邏輯與深層考量", "接納我古怪但真實的內在靈魂"],
-      ["面對徹底失敗的打擊時", "燃起鬥志，在哪裡跌倒就在哪裡站起來", "冷靜檢討敗因，重新制定精準策略", "拍拍灰塵，換個全新賽道重新開始"],
-      ["靈魂感到最放鬆的時刻", "揮灑汗水完成挑戰後的征服感", "一切盡在掌握中的秩序與安寧感", "無人在意的角落自由發呆的時刻"],
-      ["對完美主義的態度", "追求極致，要做就要做到最好", "精確衡量，在完美與效率間取得平衡", "比起完美，有趣與獨特更加重要"],
-      ["面對嫉妒情緒時", "化嫉妒為動力，發誓要超越對方", "分析對方成功的要素並學習優點", "意識到每個人賽道不同，無須比較"],
-      ["最珍視的精神財產", "永不言敗的勇氣與執行力", "獨立思考與敏銳的洞察力", "源源不絕的想像力與自由靈魂"],
-      ["面對時間流逝與老去", "積極保持狀態，讓每個階段都精彩", "坦然接受自然規律，積累智慧底蘊", "保持一顆童心，永遠對世界好奇"],
-      ["面對重大選擇拉扯時", "選擇最困難但回報最大的道路", "選擇風險最低、邏輯最通順的路", "選擇最有趣、最不平凡的道路"],
-      ["面對承諾與責任時", "一諾千金，咬牙也會扛到最後", "審慎評估，確認能做到才給予承諾", "靈活應變，隨情況調整履行方式"],
-      ["探索內心小宇宙時", "充滿熱情地將想法轉化為實際行動", "建立一套完整的內在價值與思維體系", "構建一個天馬行空、色彩繽紛的世界"],
-      ["面對善意的謊言時", "寧可面對殘酷的真相，也不要虛假", "理解謊言背後的動機並理性處理", "不在意真假，只關心當下的感受"],
-      ["面對信任危機時", "直球對決，當面把話說清楚", "保持距離，用時間與行動觀察對方", "隨緣面對，不強求任何人的停留"],
-      ["對熱情的持久度", "爆發力極強，認準目標就全力衝刺", "穩定輸出，像水滴石穿般持久細水長流", "隨興所至，靈感來時全情投入"],
-      ["內心對和平的追求", "用強大力量止息紛爭維護秩序", "用溝通與智慧化解摩擦與誤解", "保持適當距離，各過各的互不打擾"],
-      ["面對名利與自我時", "用名利證明自己的能力與地位", "名利只是附帶品，追求真理更重要", "做真實的自己，名利如浮雲"],
-      ["享受孤獨的程度", "不太喜歡孤獨，更喜歡團體作戰", "能很好地處理孤獨，視為思考時機", "極度享受孤獨，那是靈魂飛翔的時間"],
-      ["面對環境大變革時", "主動引領變革，成為弄潮兒", "快速理解新規則並找到最佳定位", "保持彈性，在哪裡都能找到生活樂趣"],
-      ["看待命運與努力", "命運掌握在自己手裡，人定勝天", "尊重客觀規律，在有限條件下努力", "人生是一場體驗，享受過程最重要"],
-      ["渴望的愛情型態", "並肩作戰、轟轟烈烈的強強聯手", "心照不宣、理性成熟的精神共鳴", "靈魂契合、輕鬆自在的奇幻冒險"],
-      ["依賴直覺還是邏輯", "相信行動與實戰中產生的直覺", "嚴格依賴邏輯推理與數據分析", "相信靈光一閃的神秘第六感"],
-      ["面對犯下的過錯時", "勇於承擔責任並立刻進行補償", "深刻自省並找出邏輯漏洞避免再犯", "寬恕自己，將其視為成長的養分"],
-      ["物質與精神的權衡", "兩者都要，用物質支撐精神追求", "物質夠用即可，精神豐富才是根本", "精神自由高於一切，物質只是道具"],
-      ["最崇尚的性格品質", "敢作敢當、永不言棄的霸氣", "深謀慮、冷靜理智的智慧", "真實不做作、獨一無二的靈性"],
-      ["內心不安時的錨點", "專注於眼前具體能做的事", "梳理現狀，找到問題的確定性", "沉浸在喜歡的興趣世界中"],
-      ["對同理心與界線", "重情重義，朋友的事就是我的事", "保持清晰界線，理性給予建議", "給予對方充分自由，不強加干涉"],
-      ["思考問題的維度", "著重於如何落地與執行", "著重於結構、因果與邏輯關係", "著重於可能性、創意與隱喻"],
-      ["理想與現實的落差", "用行動把現實改變成理想的樣子", "調整理想，使其在現實中具體可行", "在心中保有理想，現實中靈活生存"],
-      ["對歸屬感的定義", "與夥伴共同征服目標的戰友情誼", "被深度理解與尊重智商的環境", "自由自在不受審判的安心空間"],
-      ["對命運隨機性的適應", "把隨機挑戰當成遊戲關卡來打", "建立風險備案以應對隨機變化", "擁抱隨機，將其視為驚喜的禮物"],
-      ["靈魂深處終極願望", "戰勝所有困難，實現極致自我", "洞察世界奧秘，獲得終極平靜", "自由探索宇宙，活出獨特色彩"]
+    const intScenariosZh = [
+      ["強烈嘅孤獨感襲來時", "用忙碌同挑戰充實自己轉移注意力", "靜落嚟解析孤獨由來與內心需求", "享受呢份孤獨，沉浸喺自我奇幻世界"],
+      ["面對未知嘅未來產生恐懼時", "主動出擊做點嘢消除唔確定感", "理性分析最壞打算並做好萬全防禦", "相信船到橋頭自然直，順其自然"],
+      ["產生自我懷疑嘅低潮時刻", "透過完成小目標重新找回掌控感", "客觀審視自己嘅優缺點並進行修正", "接受自己嘅唔完美，話比自己聽獨一無二"],
+      ["思考生命價值與成功時", "能留下令人矚目嘅具體戰績與突破", "擁有看透事物本質嘅智慧與從容", "能無拘無束咁體驗世間各種奇妙事物"]
     ];
 
-    intScenarios.forEach((sc, idx) => {
-      rawIntQuestions.push({
-        q: `當你探索內心深處【${sc[0]}】，你最真實的反應是？`,
+    intScenariosZh.forEach((sc) => {
+      rawIntQuestionsZh.push({
+        q: `當你探索內心深處【${sc[0]}】，你最真實嘅反應係？`,
         opts: [
           { t: sc[1], s: { resilience: 10, action: 7 } },
           { t: sc[2], s: { insight: 10, resilience: 7 } },
@@ -347,71 +345,150 @@
       });
     });
 
-    // 彙整 100 題完整問題庫（50 外顯、50 內在）
-    const masterQuestionBank = [];
-    
-    rawExtQuestions.forEach((q, idx) => {
-      masterQuestionBank.push({
-        id: `EXT_${idx + 1}`,
-        isOuter: true,
-        text: q.q,
-        options: q.opts
+    // 英文題庫
+    const rawExtQuestionsEn = [
+      { q: "When opening Pikmin Bloom for a flower walk, how do you choose your route?", opts: [{ t: "Target Big Flowers directly and bloom them ASAP!", s: { action: 10, resilience: 8 } }, { t: "Carefully plan an efficient route that hits all spots.", s: { insight: 10, resilience: 6 } }, { t: "Wander freely into unfamiliar alleys to explore.", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "When an unexpected emergency hits your team, what is your first reaction?", opts: [{ t: "Roll up sleeves and take charge right away!", s: { action: 10, resilience: 8 } }, { t: "Stay calm and observe to identify root causes.", s: { insight: 10, resilience: 6 } }, { t: "Think outside the box and offer unconventional ideas.", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "Seeing a giant mushroom on the road, what do you usually do?", opts: [{ t: "Join the battle immediately without second thoughts!", s: { action: 8, resilience: 8 } }, { t: "Evaluate squad strength and Pikmin types for best ROI.", s: { insight: 10, flexibility: 6 } }, { t: "Send out your Pikmin with the most hilarious Decor.", s: { flexibility: 10, uniqueness: 8 } }] },
+      { q: "A friend changes meet-up plans last minute. You will...", opts: [{ t: "Proactively organize a better alternative spot.", s: { action: 10, resilience: 6 } }, { t: "Check how it affects your schedule before deciding.", s: { insight: 8, resilience: 8 } }, { t: "No problem! Take the chance to check out a new place.", s: { flexibility: 10, uniqueness: 6 } }] },
+      { q: "Ordering at a new restaurant for the first time, you tend to:", opts: [{ t: "Order the signature dish for a quick, safe win.", s: { action: 8, resilience: 8 } }, { t: "Read reviews online to find the highest value dish.", s: { insight: 10, resilience: 6 } }, { t: "Pick the weirdest or most unique special on the menu.", s: { uniqueness: 10, flexibility: 8 } }] }
+    ];
+
+    const extScenariosEn = [
+      ["a meeting gets stuck with no consensus", "take initiative to make a call and drive forward", "summarize pros and cons objectively in a chart", "pitch a wild new perspective to reset the talk"],
+      ["playing a co-op team game", "charge forward as the aggressive vanguard", "stay back to manage team resources and strategy", "explore off the beaten path for hidden easter eggs"],
+      ["buying daily necessities", "buy immediately if it catches your eye", "compare prices and read cross-platform reviews", "prefer quirky, limited-edition or odd designs"],
+      ["approached by a street promoter", "firmly decline or walk away swiftly", "listen politely and rationally evaluate the offer", "chat curiously about random unrelated topics"],
+      ["clearing out a backed-up inbox", "speed through and process them all at once", "categorize, tag, and reply by order of priority", "reply to fun titles and leave the rest to fate"],
+      ["grocery shopping for the week", "grab standard items and checkout quickly", "stick to a checklist and calculate best discounts", "pick up quirky or novel ingredients to experiment"],
+      ["preparing for a public presentation", "improvise dynamically to fire up the audience", "proofread slides and script to ensure perfection", "add self-deprecating jokes to engage the room"],
+      ["trapped in a massive traffic jam", "decide quickly to hop off and switch to subway", "listen to traffic updates and recalculate ETA", "pass time observing nearby cars and people"],
+      ["welcoming a new team member", "warmly show them around and introduce the work", "be polite while observing their working style", "share quirky insider trivia about the team"],
+      ["joining a DIY craft workshop", "follow demo quickly to complete a product", "follow manual instructions with precision", "ignore rules completely and create a unique piece"],
+      ["selling second-hand items", "price low to sell as fast as possible", "calculate costs and market averages precisely", "write a funny story to make the item stand out"],
+      ["finding broken public park gear", "find alternative ways to keep working out", "photo and report to local authorities via app", "brainstorm fun new ways to use the broken gear"],
+      ["waiting in line at a famous cafe", "chat actively with friends to pass time", "calculate turn rates to estimate exact wait time", "observe interior design and crowd watch"],
+      ["visiting an art gallery", "scan quickly and focus on highlighted pieces", "use audio guide to learn background of each art", "focus on ignored subtle details and daydream"],
+      ["invited to try an extreme sport", "say yes instantly without hesitation", "evaluate safety gear and risks before deciding", "suggest even wilder or weirder challenge variations"],
+      ["receiving an unwanted gift", "thank cheerfully and find a practical use for it", "accept politely and research its resale value", "upcycle it creatively into quirky room decor"],
+      ["planning a weekend day trip", "pack it full of high-energy outdoor activities", "schedule every destination stop precisely", "hop on a random bus and see where it goes"],
+      ["deciding what to eat for dinner", "pick the very first restaurant you walk past", "check review apps for top-rated spots nearby", "write options on paper slips and draw at random"],
+      ["buying a new gadget or phone", "queue up on launch day to get it immediately", "compare full specs and price-to-performance ratio", "choose the rarest color or most unique body shape"],
+      ["a teammate arrives late to a meeting", "start immediately and catch them up afterwards", "note the delay and optimize future meeting timing", "make lighthearted jokes to ease the awkwardness"]
+    ];
+
+    extScenariosEn.forEach((sc) => {
+      rawExtQuestionsEn.push({
+        q: `When ${sc[0]} in daily life, you usually:`,
+        opts: [
+          { t: sc[1], s: { action: 10, resilience: 7 } },
+          { t: sc[2], s: { insight: 10, resilience: 7 } },
+          { t: sc[3], s: { uniqueness: 10, flexibility: 8 } }
+        ]
       });
     });
 
-    rawIntQuestions.forEach((q, idx) => {
-      masterQuestionBank.push({
-        id: `INT_${idx + 1}`,
-        isOuter: false,
-        text: q.q,
-        options: q.opts
+    const rawIntQuestionsEn = [
+      { q: "Facing long-term high pressure completely alone, your inner state is:", opts: [{ t: "The tougher it gets, the more motivated I am!", s: { resilience: 10, action: 8 } }, { t: "Detach emotionally and find the most resource-efficient path.", s: { insight: 8, flexibility: 8 } }, { t: "Maintain my unique rhythm unaffected by external noise.", s: { uniqueness: 10, resilience: 6 } }] },
+      { q: "Watching your Pikmin sleep late at night, your true thought is:", opts: [{ t: "Tomorrow I'll lead them further to tackle bigger challenges!", s: { action: 10, resilience: 6 } }, { t: "Reviewing today's progress and planning tomorrow's strategy.", s: { insight: 10, resilience: 8 } }, { t: "Feeling peaceful and enjoying quiet time with these little ones.", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "Reflecting quietly in late night solitude, what comes to mind?", opts: [{ t: "What goals are left? I must push harder tomorrow!", s: { action: 10, resilience: 8 } }, { t: "Analyzing recent decisions to see if better choices existed.", s: { insight: 10, resilience: 6 } }, { t: "Wandering into wild daydreams about parallel worlds.", s: { uniqueness: 10, flexibility: 8 } }] }
+    ];
+
+    const intScenariosEn = [
+      ["hit by a sudden wave of deep loneliness", "fill your time with tasks and physical challenges", "analyze where the loneliness stems from logically", "embrace the solitude and retreat into your inner fantasy"],
+      ["feeling anxious about an uncertain future", "take active steps immediately to regain control", "rationally map out worst-case scenarios and safety nets", "trust things will work out naturally in due time"],
+      ["struck by self-doubt in low moments", "achieve small quick wins to rebuild confidence", "examine strengths and weaknesses objectively to improve", "accept imperfection and remind yourself you are unique"],
+      ["contemplating personal life purpose", "leaving behind concrete, remarkable accomplishments", "gaining deep wisdom to see through the noise of life", "freely experiencing all quirkiness the world has to offer"]
+    ];
+
+    intScenariosEn.forEach((sc) => {
+      rawIntQuestionsEn.push({
+        q: `When ${sc[0]}, your genuine inner reaction is:`,
+        opts: [
+          { t: sc[1], s: { resilience: 10, action: 7 } },
+          { t: sc[2], s: { insight: 10, resilience: 7 } },
+          { t: sc[3], s: { uniqueness: 10, flexibility: 8 } }
+        ]
       });
     });
 
-    // 皮克敏屬性 Profile
+    // 皮克敏完整檔案
     const pikminProfiles = {
-      red: { code: "#001_RED", name: "🔴 紅色皮克敏", title: "「永不退縮的直球衝鋒隊」", color: "#E65100", desc: "你是團隊中不可或缺的堅韌先鋒。面對困難與未知，你很少退縮或優柔寡斷，習慣直接用行動破局。你的熱情與直率極具感染力，常能帶動身邊的人一起前進。", soulmate: "藍色皮克敏", soulmateDesc: "一個冷靜觀察防守，一個向前衝刺破局。", enemy: "黃色皮克敏", enemyDesc: "覺得對方天馬行空、缺乏接地氣的執行力。" },
-      blue: { code: "#003_BLUE", name: "🔵 藍色皮克敏", title: "「深謀慮的冷靜觀察家」", color: "#0288D1", desc: "你擁有如水一般的冷靜與包容力。即使在極度混亂的環境中，你也能抽離情緒，迅速梳理出問題的本質與秩序。你做事穩健、講求邏輯與全局觀，總是能在關鍵時刻給予最可靠的支援。", soulmate: "紅色皮克敏", soulmateDesc: "互補防守與進攻，提供內在絕對安全感。", enemy: "羽翅皮克敏", enemyDesc: "受不了對方過於隨性與缺乏秩序的步調。" },
-      yellow: { code: "#002_YELLOW", name: "🟡 黃色皮克敏", title: "「天馬行空的靈感發電機」", color: "#F57F17", desc: "你的腦袋裡裝滿了無數奇思妙想，充滿活力且彈性極佳。你不喜歡被固有的框架與規則束縛，遇到問題時總是能從意想不到的角度找到妙招。你是大家的開心果與靈感源泉。", soulmate: "岩石皮克敏", soulmateDesc: "能把你天馬行空的點子穩穩落地實現。", enemy: "紅色皮克敏", enemyDesc: "覺得對方太過莽撞衝動、缺乏靈活變通。" },
-      purple: { code: "#004_PURPLE", name: "🟣 紫色皮克敏", title: "「力挽狂瀾的絕對核心」", color: "#7B1FA2", desc: "你具備無可比擬的氣場與強大執行力，一個人就能扛起數倍於常人的重任。你具有極強的責任感與掌控力，習慣在混亂中挺身而出擔任主導角色。你的存在給人極高的安全感。", soulmate: "白色皮克敏", soulmateDesc: "敏銳補位細節，讓你無後顧之憂集中輸出。", enemy: "冰霜皮克敏", enemyDesc: "覺得對方步調太慢、過於保守而打亂節奏。" },
-      white: { code: "#005_WHITE", name: "⚪ 白色皮克敏", title: "「機警敏銳的隱形快手」", color: "#78909C", desc: "你的直覺極其敏銳，擁有洞悉周遭環境微小變化的天賦。你討厭拖泥帶水與繁複的社交套路，習慣以最有效率且精準的方式處理事務。雖然看起來有些高冷，但總能一瞬間點出關鍵。", soulmate: "紫色皮克敏", soulmateDesc: "大膽輸出與精細防護的黃金合作組合。", enemy: "岩石皮克敏", enemyDesc: "受不了對方過於沉悶固執、反應不夠靈敏。" },
-      rock: { code: "#006_ROCK", name: "🪨 岩石皮克敏", title: "「穩如泰山的鋼鐵盾牌」", color: "#424242", desc: "你是大家心中最可靠的定海神針。情緒穩定度極高，具有強大的抗壓性與原則性，無論外界如何動盪，你都能踏實地守住底線。你做事一步一腳印，絕不投機取巧。", soulmate: "黃色皮克敏", soulmateDesc: "為對方靈動的點子提供最堅實的落地支援。", enemy: "白色皮克敏", enemyDesc: "覺得對方太過急躁捉摸不定、缺乏穩定度。" },
-      wing: { code: "#007_WING", name: "🌸 羽翅皮克敏", title: "「自由翱翔的跨界奇才」", color: "#EC407A", desc: "你天生帶有一種輕盈自由的氣質，討厭任何形式的約束與繁文縟節。面對障礙，你不喜歡硬碰硬，而是擅長運用靈動的思維直飛彼岸。你具備極佳的適應力與跨界想像力。", soulmate: "發光皮克敏", soulmateDesc: "靈動不設限，兩人在一起能創造無限可能。", enemy: "藍色皮克敏", enemyDesc: "覺得對方規矩太多、個性過於嚴肅沉重。" },
-      ice: { code: "#008_ICE", name: "🧊 冰霜皮克敏", title: "「掌控全局的局勢凍結者」", color: "#00ACC1", desc: "你擁有強大的局勢掌控力與極佳的冷靜度。當場面失控時，你總能以冰冷精確的邏輯降溫場面，將複雜問題一步步拆解並逐步凍結風險。你極具戰略眼光，行動俐落。", soulmate: "藍色皮克敏", soulmateDesc: "雙重冷靜思考，共同打造無懈可擊的防線。", enemy: "紫色皮克敏", enemyDesc: "覺得對方衝勁過頭、缺乏周全的控制規劃。" },
-      glow: { code: "#009_GLOW", name: "✨ 發光皮克敏", title: "「黑暗中的靈魂引路人」", color: "#7CB342", desc: "你本身就自帶獨特的光芒與感染力。在眾人迷茫或陷入黑暗低谷時，你總能憑藉極強的第六感與信念，照亮一條大家都沒想過的新路。你的靈魂獨立而純粹，不隨波逐流。", soulmate: "羽翅皮克敏", soulmateDesc: "靈魂高度共鳴，彼此相處輕鬆自在無壓力。", enemy: "岩石皮克敏", enemyDesc: "覺得對方太過保守墨守成規、缺乏變通樂趣。" }
+      zh: {
+        red: { code: "#001_RED", name: "🔴 紅色皮克敏", title: "「永不退縮嘅直球衝鋒隊」", color: "#E65100", desc: "你係團隊中不可或缺嘅堅韌先鋒。面對困難，你非常少退縮或優柔寡斷，習慣直接用行動破局。你嘅熱情與直率極具感染力，常能帶動身邊人一起前進。", soulmate: "🔵 藍色皮克敏", soulmateDesc: "一個冷靜觀察防守，一個向前衝刺破局。", enemy: "🟡 黃色皮克敏", enemyDesc: "覺得對方天馬行空、缺乏接地氣嘅執行力。" },
+        blue: { code: "#003_BLUE", name: "🔵 藍色皮克敏", title: "「深謀遠慮嘅冷靜觀察家」", color: "#0288D1", desc: "你擁有如水一般嘅冷靜與包容力。即使喺極度混亂嘅環境，你都可以抽離情緒，迅速梳理出問題本質。你做事穩健、講求邏輯與全局觀，總喺關鍵時刻比到最可靠支援。", soulmate: "🔴 紅色皮克敏", soulmateDesc: "互補防守與進攻，提供內在絕對安全感。", enemy: "🌸 羽翅皮克敏", enemyDesc: "頂唔順對方太過隨性同缺乏秩序嘅步調。" },
+        yellow: { code: "#002_YELLOW", name: "🟡 黃色皮克敏", title: "「天馬行空嘅靈感發電機」", color: "#F57F17", desc: "你腦袋裡裝滿無數奇思妙想，充滿活力且彈性極佳。你不喜歡被固有的框架同規則束縛，遇到問題總能從意想不到嘅角度搵到妙招。", soulmate: "🪨 岩石皮克敏", soulmateDesc: "能將你天馬行空嘅點子穩穩落地實現。", enemy: "🔴 紅色皮克敏", enemyDesc: "覺得對方太過莽撞衝動、缺乏靈活變通。" },
+        purple: { code: "#004_PURPLE", name: "🟣 紫色皮克敏", title: "「力挽狂瀾嘅絕對核心」", color: "#7B1FA2", desc: "你具備無可比擬嘅氣場與強大執行力，一個人就能扛起數倍重任。你有極強責任感，習慣喺混亂中挺身而出主導局勢。", soulmate: "⚪ 白色皮克敏", soulmateDesc: "敏銳補位細節，讓你無後顧之憂集中輸出。", enemy: "🧊 冰霜皮克敏", enemyDesc: "覺得對方步調太慢、過於保守打亂節奏。" },
+        white: { code: "#005_WHITE", name: "⚪ 白色皮克敏", title: "「機警敏銳嘅隱形快手」", color: "#78909C", desc: "你直覺極其敏銳，擁有洞悉周遭環境微小變化嘅天賦。你討厭拖泥帶水同繁複社交套路，習慣用最高效精準方式處理事務。", soulmate: "🟣 紫色皮克敏", soulmateDesc: "大膽輸出同精細防護嘅黃金合作組合。", enemy: "🪨 岩石皮克敏", enemyDesc: "頂唔順對方太過沉悶固執、反應不夠靈敏。" },
+        rock: { code: "#006_ROCK", name: "🪨 岩石皮克敏", title: "「穩如泰山嘅鋼鐵盾牌」", color: "#424242", desc: "你係大家心中最可靠嘅定海神針。情緒穩定度極高，具有強大抗壓性，無論外界點動盪，你都能踏實守住底線。", soulmate: "🟡 黃色皮克敏", soulmateDesc: "為對方靈動嘅點子提供最堅實嘅落地支援。", enemy: "⚪ 白色皮克敏", enemyDesc: "覺得對方太過急躁捉摸不定、缺乏穩定度。" },
+        wing: { code: "#007_WING", name: "🌸 羽翅皮克敏", title: "「自由翱翔嘅跨界奇才」", color: "#EC407A", desc: "你天生帶有一種輕盈自由嘅氣質，討厭任何形式嘅約束。面對障礙，你不喜歡硬碰硬，擅長運用靈動思維直飛彼岸。", soulmate: "✨ 發光皮克敏", soulmateDesc: "靈動不設限，兩個人喺一齊能創造無限可能。", enemy: "🔵 藍色皮克敏", enemyDesc: "覺得對方規矩太多、個性過於嚴肅沉重。" },
+        ice: { code: "#008_ICE", name: "🧊 冰霜皮克敏", title: "「掌控全局嘅局勢凍結者」", color: "#00ACC1", desc: "你擁有強大局勢掌控力與極佳冷靜度。當場面失控時，你總能以冰冷精確嘅邏輯降溫場面，將複雜問題拆解並凍結風險。", soulmate: "🔵 藍色皮克敏", soulmateDesc: "雙重冷靜思考，共同打造無懈可擊嘅防線。", enemy: "🟣 紫色皮克敏", enemyDesc: "覺得對方衝勁過頭、缺乏周全控制規劃。" },
+        glow: { code: "#009_GLOW", name: "✨ 發光皮克敏", title: "「黑暗中嘅靈魂引路人」", color: "#7CB342", desc: "你本身就自帶獨特光芒與感染力。喺眾人迷茫或陷入低谷時，你總能憑藉強烈第六感，照亮一條大家都冇諗過嘅新路。", soulmate: "🌸 羽翅皮克敏", soulmateDesc: "靈魂高度共鳴，彼此相處輕鬆自在無壓力。", enemy: "🪨 岩石皮克敏", enemyDesc: "覺得對方太過保守墨守成規、缺乏變通樂趣。" }
+      },
+      en: {
+        red: { code: "#001_RED", name: "🔴 Red Pikmin", title: "“Fearless Direct Striker”", color: "#E65100", desc: "An indispensable powerhouse in any team. When faced with challenges, you rarely hesitate. You prefer direct action to break through obstacles with high passion and contagiousness.", soulmate: "🔵 Blue Pikmin", soulmateDesc: "One analyzes defense, one charges forward to break bottlenecks.", enemy: "🟡 Yellow Pikmin", enemyDesc: "Finds them too whimsical and lacking practical grounded execution." },
+        blue: { code: "#003_BLUE", name: "🔵 Blue Pikmin", title: "“Strategic Calm Observer”", color: "#0288D1", desc: "Possesses water-like tranquility and resilience. Even in chaotic situations, you emotional-detach quickly to pinpoint core issues with logic and solid support.", soulmate: "🔴 Red Pikmin", soulmateDesc: "Perfect offense and defense balance for ultimate security.", enemy: "🌸 Winged Pikmin", enemyDesc: "Can't stand their overly casual, unpredictable rhythm." },
+        yellow: { code: "#002_YELLOW", name: "🟡 Yellow Pikmin", title: "“Unconventional Spark Generator”", color: "#F57F17", desc: "Your mind is packed with creative sparks. Energetic and highly flexible, you dislike rigid rules and always solve problems from unexpected angles.", soulmate: "🪨 Rock Pikmin", soulmateDesc: "Provides rock-solid execution to ground your wild ideas.", enemy: "🔴 Red Pikmin", enemyDesc: "Finds them too reckless and lacking strategic flexibility." },
+        purple: { code: "#004_PURPLE", name: "🟣 Purple Pikmin", title: "“Irreplaceable Heavyweight Anchor”", color: "#7B1FA2", desc: "Exudes unmatched presence and execution capability. You naturally take on heavy responsibilities and step up to take command during chaos.", soulmate: "⚪ White Pikmin", soulmateDesc: "Covers fine details so you can focus maximum output.", enemy: "🧊 Ice Pikmin", enemyDesc: "Finds them too slow-moving and overly conservative." },
+        white: { code: "#005_WHITE", name: "⚪ White Pikmin", title: "“Perceptive Stealth Operator”", color: "#78909C", desc: "Exceptionally sharp intuition with an eye for micro-changes around you. You hate fluff and empty social routine, preferring fast, efficient solutions.", soulmate: "🟣 Purple Pikmin", soulmateDesc: "A golden combination of heavy output and agile support.", enemy: "🪨 Rock Pikmin", enemyDesc: "Finds them too stubborn and slow in response time." },
+        rock: { code: "#006_ROCK", name: "🪨 Rock Pikmin", title: "“Unshakable Iron Shield”", color: "#424242", desc: "The ultimate dependable pillar of stability for everyone. Highly emotionally stable with incredible resilience, staying grounded no matter how turbulent things get.", soulmate: "🟡 Yellow Pikmin", soulmateDesc: "Provides practical grounding for their imaginative ideas.", enemy: "⚪ White Pikmin", enemyDesc: "Finds them too impatient, restless, and erratic." },
+        wing: { code: "#007_WING", name: "🌸 Winged Pikmin", title: "“Free-Spirited Maverick”", color: "#EC407A", desc: "Possesses a naturally light, free-spirited demeanor. You dislike rigid boundaries and prefer flying above obstacles rather than head-on confrontation.", soulmate: "✨ Glow Pikmin", soulmateDesc: "Unbounded minds creating infinite possibilities together.", enemy: "🔵 Blue Pikmin", enemyDesc: "Finds them overly strict, serious, and process-heavy." },
+        ice: { code: "#008_ICE", name: "🧊 Ice Pikmin", title: "“Master Risk Freezer”", color: "#00ACC1", desc: "Maintains intense situational control and composure. When panic strikes, you cool down the environment with crisp logic to freeze risk.", soulmate: "🔵 Blue Pikmin", soulmateDesc: "Double analytical power building an impenetrable line.", enemy: "🟣 Purple Pikmin", enemyDesc: "Finds them overly aggressive with insufficient planning." },
+        glow: { code: "#009_GLOW", name: "✨ Glow Pikmin", title: "“Guiding Light in Darkness”", color: "#7CB342", desc: "Possesses an inherent radiance and inspiring presence. When others feel lost, your strong sixth sense illuminates unexpected new paths.", soulmate: "🌸 Winged Pikmin", soulmateDesc: "Deep soul resonance with comfortable, effortless vibes.", enemy: "🪨 Rock Pikmin", enemyDesc: "Finds them too traditional and unwilling to adapt." }
+      }
     };
 
+    // 色彩主題對應表 (包含配對/相剋卡片及完整版面樣式)
     const pikminColorThemeMap = {
-      '紅': { bg: 'bg-rose-50/80', border: 'border-rose-200', title: 'text-rose-600' },
-      '藍': { bg: 'bg-blue-50/80', border: 'border-blue-200', title: 'text-blue-600' },
-      '黃': { bg: 'bg-amber-50/80', border: 'border-amber-200', title: 'text-amber-600' },
-      '紫': { bg: 'bg-purple-50/80', border: 'border-purple-200', title: 'text-purple-600' },
-      '白': { bg: 'bg-slate-100/80', border: 'border-slate-300', title: 'text-slate-600' },
-      '岩': { bg: 'bg-stone-100/80', border: 'border-stone-300', title: 'text-stone-700' },
-      '羽': { bg: 'bg-pink-50/80', border: 'border-pink-200', title: 'text-pink-600' },
-      '冰': { bg: 'bg-cyan-50/80', border: 'border-cyan-200', title: 'text-cyan-600' },
-      '發光': { bg: 'bg-lime-50/80', border: 'border-lime-200', title: 'text-lime-600' }
+      '🔴': { bg: 'bg-rose-50/90', border: 'border-rose-200', text: 'text-rose-700', badge: 'bg-rose-100 text-rose-800 border-rose-300' },
+      '🔵': { bg: 'bg-sky-50/90', border: 'border-sky-200', text: 'text-sky-700', badge: 'bg-sky-100 text-sky-800 border-sky-300' },
+      '🟡': { bg: 'bg-amber-50/90', border: 'border-amber-200', text: 'text-amber-800', badge: 'bg-amber-100 text-amber-900 border-amber-300' },
+      '🟣': { bg: 'bg-purple-50/90', border: 'border-purple-200', text: 'text-purple-700', badge: 'bg-purple-100 text-purple-800 border-purple-300' },
+      '⚪': { bg: 'bg-slate-100/90', border: 'border-slate-300', text: 'text-slate-700', badge: 'bg-slate-200 text-slate-800 border-slate-300' },
+      '🪨': { bg: 'bg-stone-100/90', border: 'border-stone-300', text: 'text-stone-800', badge: 'bg-stone-200 text-stone-900 border-stone-400' },
+      '🌸': { bg: 'bg-pink-50/90', border: 'border-pink-200', text: 'text-pink-700', badge: 'bg-pink-100 text-pink-800 border-pink-300' },
+      '🧊': { bg: 'bg-cyan-50/90', border: 'border-cyan-200', text: 'text-cyan-700', badge: 'bg-cyan-100 text-cyan-800 border-cyan-300' },
+      '✨': { bg: 'bg-lime-50/90', border: 'border-lime-200', text: 'text-lime-800', badge: 'bg-lime-100 text-lime-900 border-lime-300' }
     };
 
+    // 為小卡片 (拍檔/相剋) 獨立套用配色
     function applyCardColor(cardId, titleId, targetPikminName) {
       const cardEl = document.getElementById(cardId);
       const titleEl = document.getElementById(titleId);
       if (!cardEl || !titleEl) return;
 
-      let selectedTheme = { bg: 'bg-emerald-50/80', border: 'border-emerald-200', title: 'text-emerald-600' };
+      let theme = { bg: 'bg-emerald-50/80', border: 'border-emerald-200', text: 'text-emerald-700' };
 
-      for (const [key, theme] of Object.entries(pikminColorThemeMap)) {
+      for (const [key, t] of Object.entries(pikminColorThemeMap)) {
         if (targetPikminName.includes(key)) {
-          selectedTheme = theme;
+          theme = t;
           break;
         }
       }
 
-      cardEl.className = `p-2.5 rounded-xl border transition-colors duration-300 ${selectedTheme.bg} ${selectedTheme.border}`;
-      titleEl.className = `font-bold mb-0.5 ${selectedTheme.title}`;
+      cardEl.className = `p-2.5 rounded-xl border transition-all duration-300 ${theme.bg} ${theme.border}`;
+      titleEl.className = `font-bold mb-0.5 ${theme.text}`;
     }
 
-    // State 變數
+    // 為整區塊 (外顯 / 內在) 套用一致主題配色
+    function applySectionTheme(sectionId, badgeId, descBoxId, targetPikminName) {
+      const sectionEl = document.getElementById(sectionId);
+      const badgeEl = document.getElementById(badgeId);
+      const descBoxEl = document.getElementById(descBoxId);
+
+      let theme = { bg: 'bg-emerald-50/90', border: 'border-emerald-200', text: 'text-emerald-700', badge: 'bg-emerald-100 text-emerald-800 border-emerald-300' };
+
+      for (const [key, t] of Object.entries(pikminColorThemeMap)) {
+        if (targetPikminName.includes(key)) {
+          theme = t;
+          break;
+        }
+      }
+
+      if (badgeEl) badgeEl.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${theme.badge}`;
+      if (descBoxEl) descBoxEl.className = `p-3.5 rounded-2xl border mb-4 transition-colors ${theme.bg} ${theme.border}`;
+    }
+
     let selectedQuestions = [];
     let currentIndex = 0;
     let questionStartTime = 0;
@@ -425,7 +502,6 @@
 
     const TOTAL_QUESTIONS_TO_ASK = 20;
 
-    // Fisher-Yates 洗牌演算法
     function shuffleArray(arr) {
       const array = [...arr];
       for (let i = array.length - 1; i > 0; i--) {
@@ -435,6 +511,33 @@
       return array;
     }
 
+    function beginQuiz(lang) {
+      currentLang = lang;
+      applyLanguageUI();
+
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('start-screen').classList.remove('flex');
+      startQuiz();
+    }
+
+    function applyLanguageUI() {
+      const t = uiText[currentLang];
+      document.getElementById('quiz-header-title').innerText = t.headerTitle;
+      document.getElementById('q-tag').innerText = t.quizTag;
+      document.getElementById('quiz-footer-hint').innerText = t.quizFooter;
+      document.getElementById('outer-badge').innerText = t.outerBadge;
+      document.getElementById('inner-badge').innerText = t.innerBadge;
+      document.getElementById('outer-desc-title').innerText = t.outerDescTitle;
+      document.getElementById('inner-desc-title').innerText = t.innerDescTitle;
+      document.getElementById('outer-soulmate-title').innerText = t.soulmateTitle;
+      document.getElementById('inner-soulmate-title').innerText = t.soulmateTitle;
+      document.getElementById('outer-enemy-title').innerText = t.enemyTitle;
+      document.getElementById('inner-enemy-title').innerText = t.enemyTitle;
+      document.getElementById('rotate-hint').innerText = t.rotateHint;
+      document.getElementById('save-btn-text').innerText = t.saveBtn;
+      document.getElementById('restart-btn-text').innerText = t.restartBtn;
+    }
+
     function startQuiz() {
       currentIndex = 0;
       userScores = {
@@ -442,14 +545,18 @@
         inner: { action: 0, insight: 0, resilience: 0, flexibility: 0, uniqueness: 0 }
       };
 
-      // 嚴格分流：取 10 題外顯 + 10 題內在，並確保絕對不重覆
-      const outerPool = masterQuestionBank.filter(q => q.isOuter);
-      const innerPool = masterQuestionBank.filter(q => !q.isOuter);
+      const extSource = currentLang === 'en' ? rawExtQuestionsEn : rawExtQuestionsZh;
+      const intSource = currentLang === 'en' ? rawIntQuestionsEn : rawIntQuestionsZh;
+
+      const outerPool = [];
+      extSource.forEach((q, idx) => outerPool.push({ id: `EXT_${idx}`, isOuter: true, text: q.q, options: q.opts }));
+
+      const innerPool = [];
+      intSource.forEach((q, idx) => innerPool.push({ id: `INT_${idx}`, isOuter: false, text: q.q, options: q.opts }));
 
       const pickedOuter = shuffleArray(outerPool).slice(0, 10);
       const pickedInner = shuffleArray(innerPool).slice(0, 10);
 
-      // 隨機交錯混合這 20 題
       selectedQuestions = shuffleArray([...pickedOuter, ...pickedInner]);
 
       document.getElementById('quiz-screen').classList.remove('hidden');
@@ -478,13 +585,11 @@
       container.innerHTML = '';
 
       const optionLabels = ['A', 'B', 'C'];
-      // 選項洗牌，打破固定答案位置
       const shuffledOptions = shuffleArray(q.options);
 
       shuffledOptions.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.className = "w-full text-left p-4 rounded-2xl border-2 border-[#EFEAE1] bg-paper hover:border-forest hover:bg-white hover:shadow-sm active:scale-[0.99] transition-all duration-200 group flex items-start gap-3.5 cursor-pointer";
-        // 修正：使用 opt.s 與 opt.t 對應資料屬性
         btn.onclick = () => selectOption(opt.s, q.isOuter);
         btn.innerHTML = `
           <span class="flex-shrink-0 w-6 h-6 rounded-full bg-earth/10 text-earth group-hover:bg-forest group-hover:text-white flex items-center justify-center text-xs font-bold transition-colors">
@@ -525,12 +630,13 @@
     function showResult() {
       const quizScreen = document.getElementById('quiz-screen');
       const resultScreen = document.getElementById('result-screen');
+      const t = uiText[currentLang];
 
       quizScreen.innerHTML = `
         <div class="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center">
           <div class="text-5xl animate-bounce">🌱</div>
-          <h2 class="text-lg font-bold text-wood">正在拔起屬於你的外顯與內在皮克敏...</h2>
-          <p class="text-xs text-earth">分析雙核靈魂數據中</p>
+          <h2 class="text-lg font-bold text-wood">${t.loadingText}</h2>
+          <p class="text-xs text-earth">${t.loadingSub}</p>
         </div>
       `;
 
@@ -549,10 +655,12 @@
         const outerKey = getPikminKey(userScores.outer);
         const innerKey = getPikminKey(userScores.inner);
 
-        const outerP = pikminProfiles[outerKey];
-        const innerP = pikminProfiles[innerKey];
+        const currentProfiles = pikminProfiles[currentLang];
 
-        // 1. 渲染 外顯皮克敏資訊
+        const outerP = currentProfiles[outerKey];
+        const innerP = currentProfiles[innerKey];
+
+        // 1. 外顯數據渲染
         document.getElementById('outer-code').innerText = outerP.code;
         document.getElementById('outer-title').innerText = outerP.title;
         document.getElementById('outer-name').innerText = outerP.name;
@@ -563,10 +671,11 @@
         document.getElementById('outer-enemy').innerText = outerP.enemy;
         document.getElementById('outer-enemy-desc').innerText = outerP.enemyDesc;
 
+        applySectionTheme('outer-section', 'outer-badge', 'outer-desc-box', outerP.name);
         applyCardColor('outer-soulmate-card', 'outer-soulmate-title', outerP.soulmate);
         applyCardColor('outer-enemy-card', 'outer-enemy-title', outerP.enemy);
 
-        // 2. 渲染 內在皮克敏資訊
+        // 2. 內在數據渲染
         document.getElementById('inner-code').innerText = innerP.code;
         document.getElementById('inner-title').innerText = innerP.title;
         document.getElementById('inner-name').innerText = innerP.name;
@@ -577,29 +686,31 @@
         document.getElementById('inner-enemy').innerText = innerP.enemy;
         document.getElementById('inner-enemy-desc').innerText = innerP.enemyDesc;
 
+        applySectionTheme('inner-section', 'inner-badge', 'inner-desc-box', innerP.name);
         applyCardColor('inner-soulmate-card', 'inner-soulmate-title', innerP.soulmate);
         applyCardColor('inner-enemy-card', 'inner-enemy-title', innerP.enemy);
 
-        // 3. 繪製雷達圖
+        // 3. 繪製色彩一致的雷達圖
         renderRadarCharts(userScores.outer, outerP.color, userScores.inner, innerP.color);
       }, 1200);
     }
 
     function renderRadarCharts(outerScores, outerColor, innerScores, innerColor) {
+      const t = uiText[currentLang];
       const ctxOuter = document.getElementById('radarChart').getContext('2d');
       if (chartInstance) chartInstance.destroy();
 
       chartInstance = new Chart(ctxOuter, {
         type: 'radar',
         data: {
-          labels: ['執行力', '洞察力', '韌性', '彈性', '獨特性'],
+          labels: t.chartTraits,
           datasets: [
             {
-              label: '☀️ 外顯靈魂屬性',
+              label: t.radarOuterLabel,
               data: [outerScores.action, outerScores.insight, outerScores.resilience, outerScores.flexibility, outerScores.uniqueness],
-              backgroundColor: outerColor + '40',
+              backgroundColor: outerColor + '35',
               borderColor: outerColor,
-              borderWidth: 2,
+              borderWidth: 2.5,
               pointBackgroundColor: outerColor,
               pointBorderColor: '#FFFFFF',
               pointRadius: 4,
@@ -634,14 +745,14 @@
       innerChartInstance = new Chart(ctxInner, {
         type: 'radar',
         data: {
-          labels: ['執行力', '洞察力', '韌性', '彈性', '獨特性'],
+          labels: t.chartTraits,
           datasets: [
             {
-              label: '🌙 內在靈魂屬性',
+              label: t.radarInnerLabel,
               data: [innerScores.action, innerScores.insight, innerScores.resilience, innerScores.flexibility, innerScores.uniqueness],
-              backgroundColor: innerColor + '40',
+              backgroundColor: innerColor + '35',
               borderColor: innerColor,
-              borderWidth: 2,
+              borderWidth: 2.5,
               pointBackgroundColor: innerColor,
               pointBorderColor: '#FFFFFF',
               pointRadius: 4,
@@ -675,7 +786,7 @@
       const card = document.getElementById('result-card');
       html2canvas(card, { scale: 2, useCORS: true }).then(canvas => {
         const link = document.createElement('a');
-        link.download = 'Pikmin-Soul-Result.png';
+        link.download = `Pikmin-Soul-Result-${currentLang}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
@@ -684,9 +795,6 @@
     function restartQuiz() {
       location.reload();
     }
-
-    // 啟動測驗
-    startQuiz();
   </script>
 </body>
 </html>
