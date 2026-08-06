@@ -200,7 +200,7 @@
     <!-- 操作按鈕 -->
     <div class="w-full space-y-3 mb-6">
       <button id="share-btn" onclick="generateAndShareImage()" class="w-full py-3.5 px-4 bg-forest hover:bg-forestHover text-white font-bold rounded-2xl shadow-paper flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
-        <span>🖼️ 儲存你的所屬皮克敏</span>
+        <span>🖼️ 儲存你的皮克敏屬性</span>
       </button>
       <button onclick="restartQuiz()" class="w-full py-3 px-4 bg-white border border-[#EFEAE1] text-earth hover:text-wood font-medium rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
         <span>🔄 重新測驗</span>
@@ -210,355 +210,175 @@
 
   <!-- ==================== 3. JavaScript 邏輯引擎 ==================== -->
   <script>
-    // 建立 100 題完整問題庫（50 題外顯、50 題內在，每題固定 3 選項）
+    // 建立 100 題獨一無二且選項不重覆的完整問題庫
+    const rawExtQuestions = [
+      { q: "打開 Pikmin Bloom 準備散步種花時，你通常會如何安排路線？", opts: [{ t: "鎖定花苞地標衝刺，用最快速度種開花！", s: { action: 10, resilience: 8 } }, { t: "仔細規劃能最大化覆蓋景點的效率路線。", s: { insight: 10, resilience: 6 } }, { t: "隨心所欲亂晃，專挑沒走過的奇妙小巷弄探索。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "當團隊突然面臨緊急危機，大家一片混亂時，你的第一反應是？", opts: [{ t: "立刻捲起袖子直球破局，做了再調整！", s: { action: 10, resilience: 8 } }, { t: "保持冷靜，深呼吸觀察釐清核心問題。", s: { insight: 10, resilience: 6 } }, { t: "跳脫常規，提出大家都沒想過的奇特新點子。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "在路上看到巨大的蘑菇需要大家協力挑戰時，你通常會？", opts: [{ t: "毫不猶豫立刻加入！先打了再說。", s: { action: 8, resilience: 8 } }, { t: "先看隊友戰力與皮克敏屬性，評估最佳回報。", s: { insight: 10, flexibility: 6 } }, { t: "挑選身上裝飾最特別、最搞怪的皮克敏出戰。", s: { flexibility: 10, uniqueness: 8 } }] },
+      { q: "和朋友約好聚會，但對方臨時改時間，你會？", opts: [{ t: "主動主導，幫大家重新規劃一個更好的新地點。", s: { action: 10, resilience: 6 } }, { t: "冷靜評估新時間是否會影響後面其他行程。", s: { insight: 8, resilience: 8 } }, { t: "無所謂！順便改去另一個想去的地方玩。", s: { flexibility: 10, uniqueness: 6 } }] },
+      { q: "去一家沒去過的餐廳點餐，你傾向於？", opts: [{ t: "點招牌或店員推薦，最快最不容易踩雷。", s: { action: 8, resilience: 8 } }, { t: "認真研究評論與菜單配料，挑出 CP 值最高的。", s: { insight: 10, resilience: 6 } }, { t: "專門點名字最怪、最罕見的限定隱藏料理。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "參加朋友多的社交派對時，你通常扮演什麼角色？", opts: [{ t: "主動開話題帶動氣氛，成為全場焦點。", s: { action: 10, flexibility: 6 } }, { t: "角落安靜觀察大家，偶爾精準吐嘈。", s: { insight: 10, uniqueness: 6 } }, { t: "到處穿梭跟不同圈子聊天，靈活切換。", s: { flexibility: 10, uniqueness: 8 } }] },
+      { q: "收到一份全新的複雜任務時，你第一步會怎麼做？", opts: [{ t: "先動手做看看，遇到問題再見招拆招。", s: { action: 10, resilience: 8 } }, { t: "先把整體步驟跟流程圖劃清楚再開始。", s: { insight: 10, resilience: 6 } }, { t: "想想有沒有更省力、打破傳統的新方法。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "出國旅遊時，你最喜歡哪種行程安排？", opts: [{ t: "行程塞滿滿，把所有地標跑遍才過癮！", s: { action: 10, resilience: 8 } }, { t: "規劃完善的時間表，連備案都準備好。", s: { insight: 10, resilience: 6 } }, { t: "只訂機票飯店，每天醒來再決定去哪。", s: { flexibility: 10, uniqueness: 8 } }] },
+      { q: "與人發生意見分歧時，你對外的反應通常是？", opts: [{ t: "直接提出論點，據理力爭論出結果。", s: { action: 10, resilience: 8 } }, { t: "條理清晰地分析優缺點，用數據說服對方。", s: { insight: 10, resilience: 6 } }, { t: "尋求折衷或繞過爭議的第三種可能性。", s: { flexibility: 10, uniqueness: 8 } }] },
+      { q: "當身邊朋友向你傾訴遭遇的挫折時，你會？", opts: [{ t: "立刻幫對方想出具體的解決方案與行動步驟。", s: { action: 10, resilience: 6 } }, { t: "冷靜分析整件事的原因，幫對方理清思緒。", s: { insight: 10, resilience: 8 } }, { t: "用幽默創意的視角安撫對方，轉移注意力。", s: { flexibility: 10, uniqueness: 8 } }] }
+    ];
+
+    // 擴展外顯獨立情境題目，保證題幹與選項絕不重複
+    const extScenarios = [
+      ["開會討論許久沒有共識時", "主動拍板下決定推動流程", "冷靜整理各方利弊做出分析表", "拋出一個顛覆性的新方向重新討論"],
+      ["組隊玩合作遊戲時", "擔任前鋒帶頭衝鋒開路", "擔任後援掌控全局戰況與資源", "隨興探索地圖尋找隱藏彩蛋"],
+      ["挑選日常生活用品時", "看到合眼緣的就快速下單", "仔細比價並查看多平台使用者評價", "偏好設計怪異或限量聯名款"],
+      ["遇到路邊宣傳推銷時", "果斷伸手拒絕或快速離開", "停下聽對方講完並理性評估需求", "帶著好奇心跟對方聊些不相關話題"],
+      ["處理積壓已久的電子郵件時", "一口氣全部點開快速處理完畢", "分類建檔標籤，按優先順序回覆", "只挑標題吸引人的回，其餘隨緣"],
+      ["去超市採買一週食材時", "拿了常見食材快速結帳離開", "對照備忘錄，精確計算份量與折扣", "看到新品或奇特食材就想買來試"],
+      ["準備公開簡報演講前", "上台大方臨場發揮帶熱氣氛", "把講稿與背板投影片反覆校對精確", "加入自創的梗或互動遊戲驚豔全場"],
+      ["遭遇嚴重交通大堵塞時", "果斷下車改搭地鐵或換路線", "靜下心收聽路況並估算預計延誤", "打發時間觀察旁邊車輛與乘客動作"],
+      ["面對新加入團隊的夥伴", "熱情主動帶對方熟悉環境與工作", "保持禮貌並觀察對方的做事風格", "分享團隊沒人知道的搞笑冷知識"],
+      ["參加手作體驗課程時", "照著範例快速上手做出一成品", "嚴格按照說明書步驟精確測量", "完全不按牌理出牌，自由創作造型"],
+      ["拍賣二手物品時", "降價求售，務求用最快速度賣掉", "精算成本與二手市場均價定價", "寫一段超搞笑文案讓商品變有趣"],
+      ["公園公共設施故障時", "尋找臨時替代方案繼續運動", "拍照並上網通報相關單位處理", "思考這個故障設施能發明什麼新玩法"],
+      ["排隊等候排隊名店時", "拉著朋友聊天讓時間快速過去", "計算前面的消化速度估算精確時間", "觀察店面的裝潢與客人動作打發時間"],
+      ["參觀藝術展覽館時", "快速掃視全文並挑重點展品看", "戴上語音導覽仔細了解每幅畫背景", "專注於無人注意的細節並展開幻想"],
+      ["朋友邀請挑戰極限運動", "毫不猶豫立刻答應參加", "評估安全裝備與防護措施後決定", "提出更古怪或刺激的變體玩法"],
+      ["收到不合心意的禮物時", "爽朗感謝對方並直接尋找用途", "禮貌收下並研究該物品的二手價值", "發揮創意將禮物改造為奇特裝飾"],
+      ["規劃週末一日遊時", "排滿戶外極限活動體驗", "精確訂好每個景點的停留時間", "隨性搭上一班公車，到哪算哪"],
+      ["晚餐不知道吃什麼時", "直接決定第一家看到的餐廳", "打開美食 App 查看評價與人氣榜", "把所有選項寫成籤筒抽籤決定"],
+      ["買新手機或電子產品時", "上市第一天立刻排隊搶購最新款", "比較各家規格參數與 CP 值再入手", "選擇顏色最罕見或特殊造型款式"],
+      ["團隊成員開會遲到時", "直接開始會議，事後要求對方補進度", "記錄遲到時間並優化後續時間安排", "用搞笑方式調侃對方緩和尷尬氣氛"],
+      ["參加線上研習課程時", "開兩倍速快速聽完重點", "認真做筆記並整理成心智圖", "邊聽邊在旁邊視窗探索其他感興趣議題"],
+      ["租屋挑選房間時", "採光通風好就立刻簽約", "精算房租水電與通勤時間成本", "注重空間有沒有特殊的隱密小角落"],
+      ["突然遇到暴雨沒帶傘時", "頂著大雨一口氣跑回目的地", "走騎樓避雨並冷靜等待雨勢變小", "買一把顏色最誇張的傘順便逛街"],
+      ["被指派擔任活動主持人時", "掌控全場節奏，炒熱現場氣氛", "嚴格照著流程表與講稿進行", "脫稿演出，加進許多臨場笑料"],
+      ["面對不熟的遠房親戚時", "大方主動打招呼並寒暄", "保持禮貌距離，問什麼答什麼", "開些奇妙話題讓氣氛變得奇特有趣"],
+      ["逛熱鬧夜市時", "鎖定排隊名店一口氣吃完離場", "從頭走一遍比較價格與美味度再買", "專挑從沒見過的新奇小吃嘗試"],
+      ["發現自己買貴東西時", "算了！當作花錢買經驗", "找出發票研究退差價或退貨規則", "自我安慰這東西有其他特殊的價值"],
+      ["辦公桌整理風格", "東西隨手放，但要用時能快速抓到", "物品分類歸位，井然有序", "擺滿各種怪異模型與公仔飾品"],
+      ["去 KTV 唱歌時", "搶先點歌並帶頭高唱帶動氣氛", "默默幫大家點餐分分食物", "專點極度冷門或搞笑迷因歌曲"],
+      ["面對客戶不合理要求時", "直接正面談判溝通底線", "提出合約條款與數據分析回應", "提出跳脫框架的替代方案化解解解"],
+      ["收到臨時出差通知時", "快速打包行李，提早出發", "條理列出清單，一件不漏打包", "把出差當旅行，尋找當地隱藏美食"],
+      ["朋友借錢求助時", "評估交情，能幫就直接轉帳", "明確釐清借款原因與還款計劃", "提供不花錢就能解決對方困境的怪招"],
+      ["挑選健身運動項目時", "選擇高強度的重訓或高爆發運動", "選擇能記錄心率數據的規律訓練", "選擇有趣不枯燥的跳舞或極限運動"],
+      ["生活用品快用完時", "用到最後一刻立刻跑超商買", "定期檢查存量，雙十一大批補貨", "嘗試尋找替代品發揮DIY精神"],
+      ["團購邀約襲來時", "覺得划算就立刻喊 +1", "算單價與折扣後再決定是否加入", "只對包裝奇特或稀有進口貨有興趣"],
+      ["參加變裝派對時", "穿上最吸睛爆笑的英雄裝", "精緻還原經典動漫角色的細節", "扮演大家完全意想不到的無關物品"],
+      ["原定計畫被臨時取消時", "立刻轉移陣地去找別的樂子", "利用多出來的時間規劃後續工作", "順勢找個安靜地方發呆探索想像"],
+      ["信箱收到大量垃圾郵件", "一口氣全選刪除清空", "設定自動過濾規則以防漏信", "挑幾封標題荒謬的信點開笑一笑"],
+      ["決定假期住宿地點時", "挑離景點最近、交通最快的地方", "仔細看負評並比較各平台房價", "選擇樹屋、露營車等特殊住宿體驗"],
+      ["去主題樂園玩設施時", "衝第一個排最刺激的雲霄飛車", "研究 App 通關攻略，最大化設施數", "專門逛周邊商品店與找吉祥物拍照"]
+    ];
+
+    extScenarios.forEach((sc, idx) => {
+      rawExtQuestions.push({
+        q: `當你在日常生活中【${sc[0]}】，你通常會？`,
+        opts: [
+          { t: sc[1], s: { action: 10, resilience: 7 } },
+          { t: sc[2], s: { insight: 10, resilience: 7 } },
+          { t: sc[3], s: { uniqueness: 10, flexibility: 8 } }
+        ]
+      });
+    });
+
+    const rawIntQuestions = [
+      { q: "獨自一人面對極度高壓且長期的考驗時，你內心真實狀態是？", opts: [{ t: "越有挑戰性越興奮，咬緊牙關證明自己！", s: { resilience: 10, action: 8 } }, { t: "抽離情緒冷靜評估，尋求最節省資源的路徑。", s: { insight: 8, flexibility: 8 } }, { t: "維持專屬的奇妙節奏，不受外界焦慮影響。", s: { uniqueness: 10, resilience: 6 } }] },
+      { q: "夜晚獨自看著隊伍裡的皮克敏睡覺時，你內心最真實的感受是？", opts: [{ t: "明天一定要帶著它們衝更遠、解更多任務！", s: { action: 10, resilience: 6 } }, { t: "思考今天種了多少花，對明天的佈局做總結。", s: { insight: 10, resilience: 8 } }, { t: "覺得這些小傢伙好療癒，享受屬於自己的安靜時光。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "當深夜獨自一人沈思時，你最常浮現的想法是？", opts: [{ t: "還有哪些目標還沒達成？明天要更努力！", s: { action: 10, resilience: 8 } }, { t: "反思最近的決定是否正確，有沒有更好的選擇。", s: { insight: 10, resilience: 6 } }, { t: "天馬行空地幻想未來或各種奇妙的平行宇宙。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "對你而言，什麼事情最能讓你獲得內心的安全感？", opts: [{ t: "掌控生活主導權，不被任何人事物擺佈。", s: { resilience: 10, action: 8 } }, { t: "萬事皆在預料之中，有條不紊的穩定感。", s: { insight: 10, resilience: 8 } }, { t: "擁有完全自由的空間，不受任何規則約束。", s: { uniqueness: 10, flexibility: 10 } }] },
+      { q: "當你感到能量耗盡時，你最有效的充電方式是？", opts: [{ t: "去運動或做有成就感的事，重新燃起熱情。", s: { action: 10, resilience: 8 } }, { t: "獨處看書、整理房間，理清混亂的思緒。", s: { insight: 10, resilience: 6 } }, { t: "沉浸在個人興趣創作裡，完全切斷外界打擾。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "在內心深處，你最害怕自己變成什麼樣的人？", opts: [{ t: "軟弱無能、遇到困難只會逃避的人。", s: { resilience: 10, action: 8 } }, { t: "糊里糊塗、被情緒綁架缺乏智慧的人。", s: { insight: 10, resilience: 8 } }, { t: "隨波逐流、失去個人獨特特色的普通人。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "當計劃被徹底打亂，無法按原定方向進行時，你內心的真實感受？", opts: [{ t: "燃起不服輸的鬥志，一定要把方向導正！", s: { resilience: 10, action: 8 } }, { t: "快速調整心態，重新評估現有條件尋找新路。", s: { insight: 8, flexibility: 10 } }, { t: "覺得沒關係，搞不好這樣會帶來意外的驚喜。", s: { flexibility: 10, uniqueness: 8 } }] },
+      { q: "如果可以擁有一種超能力，你內心最渴望的是？", opts: [{ t: "無堅不摧的防禦力與無窮無盡的力量。", s: { resilience: 10, action: 8 } }, { t: "看穿一切真相與預知未來的洞察力。", s: { insight: 10, resilience: 6 } }, { t: "隨意穿梭時空與改變形態的自由度。", s: { uniqueness: 10, flexibility: 10 } }] },
+      { q: "對於別人的評價與眼光，你內心真正的想法是？", opts: [{ t: "用實力與成果說話，讓所有質疑的人閉嘴。", s: { action: 10, resilience: 10 } }, { t: "理性客觀看待，有參考價值的吸取，無用的忽略。", s: { insight: 10, resilience: 6 } }, { t: "完全不在意，我本來就是獨一無二的存在。", s: { uniqueness: 10, flexibility: 8 } }] },
+      { q: "在理想狀態下，你希望自己的生活節奏是？", opts: [{ t: "充滿挑戰與突破，每天都精彩充實。", s: { action: 10, resilience: 8 } }, { t: "規律有序，一切皆在掌握與計畫之中。", s: { insight: 10, resilience: 8 } }, { t: "隨興所至，充滿驚喜與不被定義的彈性。", s: { flexibility: 10, uniqueness: 10 } }] }
+    ];
+
+    // 擴展內在獨立情境題目
+    const intScenarios = [
+      ["強烈的孤獨感襲來時", "用忙碌與挑戰充實自己轉移注意力", "靜下心解析孤獨的由來與內心需求", "享受這份孤獨，沉浸在自我奇幻世界"],
+      ["面對未知的未來產生恐懼時", "主動出擊做點什麼來消除不確定感", "理性分析最壞打算並做好萬全防禦", "相信船到橋頭自然直，順其自然"],
+      ["產生自我懷疑的低潮時刻", "透過完成小目標重新找回掌控感", "客觀審視自己的優缺點並進行修正", "接受自己的不完美，告訴自己獨一無二"],
+      ["思考生命的價值與成功時", "能留下令人矚目的具體戰績與突破", "擁有看透事物本質的智慧與從容", "能無拘無束地體驗世間各種奇妙事物"],
+      ["面對一段關係的離別時", "果斷前看，感謝相遇並邁向新階段", "深思這段關係帶給自己的成長與課題", "順其自然，相信有緣終究會再重逢"],
+      ["深夜獨處消化負面情緒時", "透過運動或宣洩把情緒代謝掉", "像心理醫生般客觀剖析情緒根源", "聽音樂或畫畫將情緒轉化為靈感"],
+      ["當自由與規則發生衝突時", "用強大實力打破不合理的舊規則", "在規則許可的範圍內尋求最大效率", "無視規則，走出屬於自己的新道路"],
+      ["維護內心最堅定的信念時", "勇往直前，絕不向任何壓力妥協", "條理分明地捍衛立場並用邏輯說明", "默默堅守，不需要向任何人證明"],
+      ["面對無法挽回的遺憾時", "總結教訓，發誓下次絕不再犯", "理性接受事實，將其整理為人生經驗", "轉化視角，相信一切都是最好的安排"],
+      ["看待自己性格上的缺點時", "積極改善，想辦法將其修復或克服", "客觀接受，並尋求互補的機制或夥伴", "視為個人特色，甚至覺得有點可愛"],
+      ["渴望獲得怎樣的理解", "認同我的能力與付出的努力", "懂我的思考邏輯與深層考量", "接納我古怪但真實的內在靈魂"],
+      ["面對徹底失敗的打擊時", "燃起鬥志，在哪裡跌倒就在哪裡站起來", "冷靜檢討敗因，重新制定精準策略", "拍拍灰塵，換個全新賽道重新開始"],
+      ["靈魂感到最放鬆的時刻", "揮灑汗水完成挑戰後的征服感", "一切盡在掌握中的秩序與安寧感", "無人在意的角落自由發呆的時刻"],
+      ["對完美主義的態度", "追求極致，要做就要做到最好", "精確衡量，在完美與效率間取得平衡", "比起完美，有趣與獨特更加重要"],
+      ["面對嫉妒情緒時", "化嫉妒為動力，發誓要超越對方", "分析對方成功的要素並學習優點", "意識到每個人賽道不同，無須比較"],
+      ["最珍視的精神財產", "永不言敗的勇氣與執行力", "獨立思考與敏銳的洞察力", "源源不絕的想像力與自由靈魂"],
+      ["面對時間流逝與老去", "積極保持狀態，讓每個階段都精彩", "坦然接受自然規律，積累智慧底蘊", "保持一顆童心，永遠對世界好奇"],
+      ["面對重大選擇拉扯時", "選擇最困難但回報最大的道路", "選擇風險最低、邏輯最通順的路", "選擇最有趣、最不平凡的道路"],
+      ["面對承諾與責任時", "一諾千金，咬牙也會扛到最後", "審慎評估，確認能做到才給予承諾", "靈活應變，隨情況調整履行方式"],
+      ["探索內心小宇宙時", "充滿熱情地將想法轉化為實際行動", "建立一套完整的內在價值與思維體系", "構建一個天馬行空、色彩繽紛的世界"],
+      ["面對善意的謊言時", "寧可面對殘酷的真相，也不要虛假", "理解謊言背後的動機並理性處理", "不在意真假，只關心當下的感受"],
+      ["面對信任危機時", "直球對決，當面把話說清楚", "保持距離，用時間與行動觀察對方", "隨緣面對，不強求任何人的停留"],
+      ["對熱情的持久度", "爆發力極強，認準目標就全力衝刺", "穩定輸出，像水滴石穿般持久細水長流", "隨興所至，靈感來時全情投入"],
+      ["內心對和平的追求", "用強大力量止息紛爭維護秩序", "用溝通與智慧化解摩擦與誤解", "保持適當距離，各過各的互不打擾"],
+      ["面對名利與自我時", "用名利證明自己的能力與地位", "名利只是附帶品，追求真理更重要", "做真實的自己，名利如浮雲"],
+      ["享受孤獨的程度", "不太喜歡孤獨，更喜歡團體作戰", "能很好地處理孤獨，視為思考時機", "極度享受孤獨，那是靈魂飛翔的時間"],
+      ["面對環境大變革時", "主動引領變革，成為弄潮兒", "快速理解新規則並找到最佳定位", "保持彈性，在哪裡都能找到生活樂趣"],
+      ["看待命運與努力", "命運掌握在自己手裡，人定勝天", "尊重客觀規律，在有限條件下努力", "人生是一場體驗，享受過程最重要"],
+      ["渴望的愛情型態", "並肩作戰、轟轟烈烈的強強聯手", "心照不宣、理性成熟的精神共鳴", "靈魂契合、輕鬆自在的奇幻冒險"],
+      ["依賴直覺還是邏輯", "相信行動與實戰中產生的直覺", "嚴格依賴邏輯推理與數據分析", "相信靈光一閃的神秘第六感"],
+      ["面對犯下的過錯時", "勇於承擔責任並立刻進行補償", "深刻自省並找出邏輯漏洞避免再犯", "寬恕自己，將其視為成長的養分"],
+      ["物質與精神的權衡", "兩者都要，用物質支撐精神追求", "物質夠用即可，精神豐富才是根本", "精神自由高於一切，物質只是道具"],
+      ["最崇尚的性格品質", "敢作敢當、永不言棄的霸氣", "深謀慮、冷靜理智的智慧", "真實不做作、獨一無二的靈性"],
+      ["內心不安時的錨點", "專注於眼前具體能做的事", "梳理現狀，找到問題的確定性", "沉浸在喜歡的興趣世界中"],
+      ["對同理心與界線", "重情重義，朋友的事就是我的事", "保持清晰界線，理性給予建議", "給予對方充分自由，不強加干涉"],
+      ["思考問題的維度", "著重於如何落地與執行", "著重於結構、因果與邏輯關係", "著重於可能性、創意與隱喻"],
+      ["理想與現實的落差", "用行動把現實改變成理想的樣子", "調整理想，使其在現實中具體可行", "在心中保有理想，現實中靈活生存"],
+      ["對歸屬感的定義", "與夥伴共同征服目標的戰友情誼", "被深度理解與尊重智商的環境", "自由自在不受審判的安心空間"],
+      ["對命運隨機性的適應", "把隨機挑戰當成遊戲關卡來打", "建立風險備案以應對隨機變化", "擁抱隨機，將其視為驚喜的禮物"],
+      ["靈魂深處終極願望", "戰勝所有困難，實現極致自我", "洞察世界奧秘，獲得終極平靜", "自由探索宇宙，活出獨特色彩"]
+    ];
+
+    intScenarios.forEach((sc, idx) => {
+      rawIntQuestions.push({
+        q: `當你探索內心深處【${sc[0]}】，你最真實的反應是？`,
+        opts: [
+          { t: sc[1], s: { resilience: 10, action: 7 } },
+          { t: sc[2], s: { insight: 10, resilience: 7 } },
+          { t: sc[3], s: { uniqueness: 10, flexibility: 8 } }
+        ]
+      });
+    });
+
+    // 彙整 100 題完整問題庫（50 外顯、50 內在）
     const masterQuestionBank = [];
-
-    // 自動生成並填充 50 題外顯與 50 題內在
-    (function buildQuestionLibrary() {
-      const extQuestions = [
-        {
-          q: "打開 Pikmin Bloom 準備散步種花時，你通常會如何安排路線？",
-          opts: [
-            { t: "鎖定花苞地標衝刺，用最快速度種開花！", s: { action: 10, resilience: 8 } },
-            { t: "仔細規劃能最大化覆蓋景點的效率路線。", s: { insight: 10, resilience: 6 } },
-            { t: "隨心所欲亂晃，專挑沒走過的奇妙小巷弄探索。", s: { uniqueness: 10, flexibility: 8 } }
-          ]
-        },
-        {
-          q: "當團隊突然面臨緊急危機，大家一片混亂時，你的第一反應是？",
-          opts: [
-            { t: "立刻捲起袖子直球破局，做了再調整！", s: { action: 10, resilience: 8 } },
-            { t: "保持冷靜，深呼吸觀察釐清核心問題。", s: { insight: 10, resilience: 6 } },
-            { t: "跳脫常規，提出大家都沒想過的奇特新點子。", s: { uniqueness: 10, flexibility: 8 } }
-          ]
-        },
-        {
-          q: "在路上看到巨大的蘑菇需要大家協力挑戰時，你通常會？",
-          opts: [
-            { t: "毫不猶豫立刻加入！先打了再說。", s: { action: 8, resilience: 8 } },
-            { t: "先看隊友戰力與皮克敏屬性，評估最佳回報。", s: { insight: 10, flexibility: 6 } },
-            { t: "挑選身上裝飾最特別、最搞怪的皮克敏出戰。", s: { flexibility: 10, uniqueness: 8 } }
-          ]
-        },
-        {
-          q: "和朋友約好聚會，但對方臨時改時間，你會？",
-          opts: [
-            { t: "無所謂！順便改去另一個想去的地方玩。", s: { flexibility: 10, uniqueness: 6 } },
-            { t: "冷靜評估新時間是否會影響後面其他行程。", s: { insight: 8, resilience: 8 } },
-            { t: "主動主導，幫大家重新規劃一個更好的新地點。", s: { action: 10, resilience: 6 } }
-          ]
-        },
-        {
-          q: "去一家沒去過的餐廳點餐，你傾向於？",
-          opts: [
-            { t: "點招牌或店員推薦，最快最不容易踩雷。", s: { action: 8, resilience: 8 } },
-            { t: "認真研究評論與菜單配料，挑出 CP 值最高的。", s: { insight: 10, resilience: 6 } },
-            { t: "專門點名字最怪、最罕見的限定隱藏料理。", s: { uniqueness: 10, flexibility: 8 } }
-          ]
-        },
-        {
-          q: "參加朋友多的社交派對時，你通常扮演什麼角色？",
-          opts: [
-            { t: "主動開話題帶動氣氛，成為全場焦點。", s: { action: 10, flexibility: 6 } },
-            { t: "角落安靜觀察大家，偶爾精準吐嘈。", s: { insight: 10, uniqueness: 6 } },
-            { t: "到處穿梭跟不同圈子聊天，靈活切換。", s: { flexibility: 10, uniqueness: 8 } }
-          ]
-        },
-        {
-          q: "收到一份全新的複雜任務時，你第一步會怎麼做？",
-          opts: [
-            { t: "先動手做看看，遇到問題再見招拆招。", s: { action: 10, resilience: 8 } },
-            { t: "先把整體步驟跟流程圖劃清楚再開始。", s: { insight: 10, resilience: 6 } },
-            { t: "想想有沒有更省力、打破傳統的新方法。", s: { uniqueness: 10, flexibility: 8 } }
-          ]
-        },
-        {
-          q: "出國旅遊時，你最喜歡哪種行程安排？",
-          opts: [
-            { t: "行程塞滿滿，把所有地標跑遍才過癮！", s: { action: 10, resilience: 8 } },
-            { t: "規劃完善的時間表，連備案都準備好。", s: { insight: 10, resilience: 6 } },
-            { t: "只訂機票飯店，每天醒來再決定去哪。", s: { flexibility: 10, uniqueness: 8 } }
-          ]
-        },
-        {
-          q: "與人發生意見分歧時，你對外的反應通常是？",
-          opts: [
-            { t: "直接提出論點，據理力爭論出結果。", s: { action: 10, resilience: 8 } },
-            { t: "條理清晰地分析優缺點，用數據說服對方。", s: { insight: 10, resilience: 6 } },
-            { t: "尋求折衷或繞過爭議的第三種可能性。", s: { flexibility: 10, uniqueness: 8 } }
-          ]
-        },
-        {
-          q: "當身邊朋友向你傾訴遭遇的挫折時，你會？",
-          opts: [
-            { t: "立刻幫對方想出具體的解決方案與行動步驟。", s: { action: 10, resilience: 6 } },
-            { t: "冷靜分析整件事的原因，幫對方理清思緒。", s: { insight: 10, resilience: 8 } },
-            { t: "用幽默創意的視角安撫對方，轉移注意力。", s: { flexibility: 10, uniqueness: 8 } }
-          ]
-        }
-      ];
-
-      // 擴展外顯問題（總共達到 50 題）
-      const extTopics = [
-        "面對會議討論過久", "組隊打遊戲時", "挑選日常生活用品時", "遇到路邊宣傳活動",
-        "處理突如其來的信件", "去超市買菜時", "準備發表簡報前", "遇到交通大堵塞",
-        "面對新加入的同事情", "參加手作體驗課程", "處理二手物品拍賣", "遇到公共設施故障",
-        "排隊排很長的時候", "看展覽或博物館時", "朋友邀請挑戰極限運動", "收到不合心意的禮物",
-        "規劃週末一日遊時", "決定晚餐吃什麼時", "挑選手機或電子產品", "面對團隊成員遲到",
-        "參加線上線上課程時", "租房子或買房時", "遇到突然大雨沒帶傘", "被指派擔任活動主持",
-        "面對不熟的遠房親戚", "去夜市逛街時", "發現自己買貴東西時", "辦公桌的整理習慣",
-        "去KTV唱歌時的風格", "面對客戶的不合理要求", "收到臨時出差通知", "遇到朋友借錢求助",
-        "挑選運動健身項目", "發現生活用品快用完", "面對團購邀約時", "參加變裝派對主題",
-        "發現計畫被臨時取消", "處理信箱的垃圾郵件", "決定假期住宿地點", "去主題樂園玩設施"
-      ];
-
-      extTopics.forEach((topic, idx) => {
-        extQuestions.push({
-          q: `在日常中【${topic}】，你習慣呈現出怎樣的行動風格？`,
-          opts: [
-            { t: "快速決斷並直接採取具體行動突破", s: { action: 9 + (idx % 2), resilience: 7 } },
-            { t: "先全面收集資訊並冷靜分析優缺點", s: { insight: 9 + (idx % 2), resilience: 7 } },
-            { t: "發揮靈動創意，尋找不按牌理出牌的特異解法", s: { uniqueness: 9, flexibility: 8 } }
-          ]
-        });
+    
+    rawExtQuestions.forEach((q, idx) => {
+      masterQuestionBank.push({
+        id: `EXT_${idx + 1}`,
+        isOuter: true,
+        text: q.q,
+        options: q.opts
       });
+    });
 
-      const intQuestions = [
-        {
-          q: "獨自一人面對極度高壓且長期的考驗時，你內心真實狀態是？",
-          opts: [
-            { t: "越有挑戰性越興奮，咬緊牙關證明自己！", s: { resilience: 10, action: 8 } },
-            { t: "抽離情緒冷靜評估，尋求最節省資源的路徑。", s: { insight: 8, flexibility: 8 } },
-            { t: "維持專屬的奇妙節奏，不受外界焦慮影響。", s: { uniqueness: 10, resilience: 6 } }
-          ]
-        },
-        {
-          q: "夜晚獨自看著隊伍裡的皮克敏睡覺時，你內心最真實的感受是？",
-          opts: [
-            { t: "明天一定要帶著它們衝更遠、解更多任務！", s: { action: 10, resilience: 6 } },
-            { t: "思考今天種了多少花，對明天的佈局做總結。", s: { insight: 10, resilience: 8 } },
-            { t: "覺得這些小傢伙好療癒，享受屬於自己的安靜時光。", s: { uniqueness: 10, flexibility: 8 } }
-          ]
-        },
-        {
-          q: "當深夜獨自一人沈思時，你最常浮現的想法是？",
-          opts: [
-            { t: "還有哪些目標還沒達成？明天要更努力！", s: { action: 10, resilience: 8 } },
-            { t: "反思最近的決定是否正確，有沒有更好的選擇。", s: { insight: 10, resilience: 6 } },
-            { t: "天馬行空地幻想未來或各種奇妙的平行宇宙。", s: { uniqueness: 10, flexibility: 8 } }
-          ]
-        },
-        {
-          q: "對你而言，什麼事情最能讓你獲得內心的安全感？",
-          opts: [
-            { t: "掌控生活主導權，不被任何人事物擺佈。", s: { resilience: 10, action: 8 } },
-            { t: "萬事皆在預料之中，有條不紊的穩定感。", s: { insight: 10, resilience: 8 } },
-            { t: "擁有完全自由的空間，不受任何規則約束。", s: { uniqueness: 10, flexibility: 10 } }
-          ]
-        },
-        {
-          q: "當你感到能量耗盡時，你最有效的充電方式是？",
-          opts: [
-            { t: "去運動或做有成就感的事，重新燃起熱情。", s: { action: 10, resilience: 8 } },
-            { t: "獨處看書、整理房間，理清混亂的思緒。", s: { insight: 10, resilience: 6 } },
-            { t: "沉浸在個人興趣創作裡，完全切斷外界打擾。", s: { uniqueness: 10, flexibility: 8 } }
-          ]
-        },
-        {
-          q: "在內心深處，你最害怕自己變成什麼樣的人？",
-          opts: [
-            { t: "軟弱無能、遇到困難只會逃避的人。", s: { resilience: 10, action: 8 } },
-            { t: "糊里糊塗、被情緒綁架缺乏智慧的人。", s: { insight: 10, resilience: 8 } },
-            { t: "隨波逐流、失去個人獨特特色的普通人。", s: { uniqueness: 10, flexibility: 8 } }
-          ]
-        },
-        {
-          q: "當計劃被徹底打亂，無法按原定方向進行時，你內心的真實感受？",
-          opts: [
-            { t: "燃起不服輸的鬥志，一定要把方向導正！", s: { resilience: 10, action: 8 } },
-            { t: "快速調整心態，重新評估現有條件尋找新路。", s: { insight: 8, flexibility: 10 } },
-            { t: "覺得沒關係，搞不好這樣會帶來意外的驚喜。", s: { flexibility: 10, uniqueness: 8 } }
-          ]
-        },
-        {
-          q: "如果可以擁有一種超能力，你內心最渴望的是？",
-          opts: [
-            { t: "無堅不摧的防禦力與無窮無盡的力量。", s: { resilience: 10, action: 8 } },
-            { t: "看穿一切真相與預知未來的洞察力。", s: { insight: 10, resilience: 6 } },
-            { t: "隨意穿梭時空與改變形態的自由度。", s: { uniqueness: 10, flexibility: 10 } }
-          ]
-        },
-        {
-          q: "對於別人的評價與眼光，你內心真正的想法是？",
-          opts: [
-            { t: "用實力與成果說話，讓所有質疑的人閉嘴。", s: { action: 10, resilience: 10 } },
-            { t: "理性客觀看待，有參考價值的吸取，無用的忽略。", s: { insight: 10, resilience: 6 } },
-            { t: "完全不在意，我本來就是獨一無二的存在。", s: { uniqueness: 10, flexibility: 8 } }
-          ]
-        },
-        {
-          q: "在理想狀態下，你希望自己的生活節奏是？",
-          opts: [
-            { t: "充滿挑戰與突破，每天都精彩充實。", s: { action: 10, resilience: 8 } },
-            { t: "規律有序，一切皆在掌握與計畫之中。", s: { insight: 10, resilience: 8 } },
-            { t: "隨興所至，充滿驚喜與不被定義的彈性。", s: { flexibility: 10, uniqueness: 10 } }
-          ]
-        }
-      ];
-
-      // 擴展內在問題（總共達到 50 題）
-      const intTopics = [
-        "孤獨感襲來時", "面對未知的未來恐懼", "對價值的自我懷疑", "內心對成功的定義",
-        "面對人際關係的離合", "獨處時的情緒消化", "對自由與規則的平衡", "內心深處的信念系統",
-        "面對遺憾與後悔時", "對自己缺點的包容度", "渴望獲得的理解類型", "面對失敗時的自白",
-        "靈魂最感到放鬆的時刻", "對完美主義的態度", "面對嫉妒情緒時", "內心最珍視的精神財產",
-        "對老去與時間流逝的看法", "面對選擇困難的內心拉扯", "對承諾的重壓感受", "內心小宇宙的探索深度",
-        "對誠實與謊言的衡量", "面對信任危機時的自我保護", "對熱情的持久度", "內心對和平的追求",
-        "面對名利與自我追求", "對孤寂感的享受程度", "面對變革時的心理防禦", "對命運與努力的看法",
-        "內心對愛情的渴望型態", "對直覺與邏輯的依賴", "面對過錯時的自省方式", "對物質與精神的權衡",
-        "內心最崇尚的性格品質", "面對不安時的心理錨點", "對同理心與界線的取捨", "獨處時的思考維度",
-        "面對理想與現實落差", "內心對歸屬感的定義", "對命運隨機性的適應", "靈魂深處的終極願望"
-      ];
-
-      intTopics.forEach((topic, idx) => {
-        intQuestions.push({
-          q: `當探索靈魂深處【${topic}】，你最真實的內在反應是？`,
-          opts: [
-            { t: "展現堅韌毅力，不服輸地主動尋求突破", s: { resilience: 9 + (idx % 2), action: 7 } },
-            { t: "抽離視角，理性深刻地洞察背後本質", s: { insight: 9 + (idx % 2), resilience: 7 } },
-            { t: "擁抱獨特視角，保持靈魂的彈性與自由", s: { uniqueness: 9, flexibility: 8 } }
-          ]
-        });
+    rawIntQuestions.forEach((q, idx) => {
+      masterQuestionBank.push({
+        id: `INT_${idx + 1}`,
+        isOuter: false,
+        text: q.q,
+        options: q.opts
       });
+    });
 
-      // 格式化併入 masterQuestionBank
-      extQuestions.forEach((item, idx) => {
-        masterQuestionBank.push({
-          id: `EXT_${idx + 1}`,
-          isOuter: true,
-          textVersions: {
-            default: item.q,
-            afterOuter: `（順著剛剛的步調）${item.q}`,
-            afterInner: `（切換回社交與行動姿態）${item.q}`
-          },
-          options: item.opts.map(o => ({ text: o.t, scores: o.s }))
-        });
-      });
-
-      intQuestions.forEach((item, idx) => {
-        masterQuestionBank.push({
-          id: `INT_${idx + 1}`,
-          isOuter: false,
-          textVersions: {
-            default: item.q,
-            afterOuter: `（深入靈魂深處）${item.q}`,
-            afterInner: `（繼續回看內心小宇宙）${item.q}`
-          },
-          options: item.opts.map(o => ({ text: o.t, scores: o.s }))
-        });
-      });
-    })();
-
-    // 詳細皮克敏 Profile 設定
+    // 皮克敏屬性 Profile
     const pikminProfiles = {
-      red: {
-        code: "#001_RED",
-        name: "🔴 紅色皮克敏",
-        title: "「永不退縮的直球衝鋒隊」",
-        color: "#E65100",
-        desc: "你是團隊中不可或缺的堅韌先鋒。面對困難與未知，你很少退縮或優柔寡斷，習慣直接用行動破局。你的熱情與直率極具感染力，常能帶動身邊的人一起前進；然而，有時過於專注於目標衝刺，可能會忽略周遭細微的情緒與隱含的風險。",
-        soulmate: "藍色皮克敏",
-        soulmateDesc: "一個冷靜觀察防守，一個向前衝刺破局。",
-        enemy: "黃色皮克敏",
-        enemyDesc: "覺得對方天馬行空、缺乏接地氣的執行力。"
-      },
-      blue: {
-        code: "#003_BLUE",
-        name: "🔵 藍色皮克敏",
-        title: "「深謀慮的冷靜觀察家」",
-        color: "#0288D1",
-        desc: "你擁有如水一般的冷靜與包容力。即使在極度混亂的環境中，你也能抽離情緒，迅速梳理出問題的本質與秩序。你做事穩健、講求邏輯與全局觀，總是能在關鍵時刻給予最可靠的支援；但有時因考慮過於周全，會在行動前花費較長時間評估。",
-        soulmate: "紅色皮克敏",
-        soulmateDesc: "互補防守與進攻，提供內在絕對安全感。",
-        enemy: "羽翅皮克敏",
-        enemyDesc: "受不了對方過於隨性與缺乏秩序的步調。"
-      },
-      yellow: {
-        code: "#002_YELLOW",
-        name: "🟡 黃色皮克敏",
-        title: "「天馬行空的靈感發電機」",
-        color: "#F57F17",
-        desc: "你的腦袋裡裝滿了無數奇思妙想，充滿活力且彈性極佳。你不喜歡被固有的框架與規則束縛，遇到問題時總是能從意想不到的角度找到妙招。你是大家的開心果與靈感源泉，不過有時專注力容易被新奇事物吸引，需要身邊有人幫忙拉回常軌。",
-        soulmate: "岩石皮克敏",
-        soulmateDesc: "能把你天馬行空的點子穩穩落地實現。",
-        enemy: "紅色皮克敏",
-        enemyDesc: "覺得對方太過莽撞衝動、缺乏靈活變通。"
-      },
-      purple: {
-        code: "#004_PURPLE",
-        name: "🟣 紫色皮克敏",
-        title: "「力挽狂瀾的絕對核心」",
-        color: "#7B1FA2",
-        desc: "你具備無可比擬的氣場與強大執行力，一個人就能扛起數倍於常人的重任。你具有極強的責任感與掌控力，習慣在混亂中挺身而出擔任主導角色。你的存在給人極高的安全感，但也要注意別把所有壓力獨自扛在肩膀上而過度疲累。",
-        soulmate: "白色皮克敏",
-        soulmateDesc: "敏銳補位細節，讓你無後顧之憂集中輸出。",
-        enemy: "冰霜皮克敏",
-        enemyDesc: "覺得對方步調太慢、過於保守而打亂節奏。"
-      },
-      white: {
-        code: "#005_WHITE",
-        name: "⚪ 白色皮克敏",
-        title: "「機警敏銳的隱形快手」",
-        color: "#78909C",
-        desc: "你的直覺極其敏銳，擁有洞悉周遭環境微小變化的天賦。你討厭拖泥帶水與繁複的社交套路，習慣以最有效率且精準的方式處理事務。雖然看起來有些高冷或獨來獨往，但你總是能在一瞬間點出關鍵，是隊伍中極具威脅力的隱形奇兵。",
-        soulmate: "紫色皮克敏",
-        soulmateDesc: "大膽輸出與精細防護的黃金合作組合。",
-        enemy: "岩石皮克敏",
-        enemyDesc: "受不了對方過於沉悶固執、反應不夠靈敏。"
-      },
-      rock: {
-        code: "#006_ROCK",
-        name: "🪨 岩石皮克敏",
-        title: "「穩如泰山的鋼鐵盾牌」",
-        color: "#424242",
-        desc: "你是大家心中最可靠的定海神針。情緒穩定度極高，具有強大的抗壓性與原則性，無論外界如何動盪，你都能踏實地守住底線。你做事一步一腳印，絕不投機取巧；不過偶爾可能因為太過堅持原則，而被認為略顯固執與缺乏彈性。",
-        soulmate: "黃色皮克敏",
-        soulmateDesc: "為對方靈動的點子提供最堅實的落地支援。",
-        enemy: "白色皮克敏",
-        enemyDesc: "覺得對方太過急躁捉摸不定、缺乏穩定度。"
-      },
-      wing: {
-        code: "#007_WING", name: "🌸 羽翅皮克敏",
-        title: "「自由翱翔的跨界奇才」",
-        color: "#EC407A",
-        desc: "你天生帶有一種輕盈自由的氣質，討厭任何形式的約束與繁文縟節。面對障礙，你不喜歡硬碰硬，而是擅長運用靈動的思維直飛彼岸。你具備極佳的適應力與跨界想像力，能為死板的環境注入活水，但有時也會被誤解為不夠嚴謹。",
-        soulmate: "發光皮克敏",
-        soulmateDesc: "靈動不設限，兩人在一起能創造無限可能。",
-        enemy: "藍色皮克敏",
-        enemyDesc: "覺得對方規矩太多、個性過於嚴肅沉重。"
-      },
-      ice: {
-        code: "#008_ICE",
-        name: "🧊 冰霜皮克敏",
-        title: "「掌控全局的局勢凍結者」",
-        color: "#00ACC1",
-        desc: "你擁有強大的局勢掌控力與極佳的冷靜度。當場面失控時，你總能以冰冷精確的邏輯降溫場面，將複雜問題一步步拆解並逐步凍結風險。你極具戰略眼光，行動俐落，雖然表面上看起來有些距離感，但其實對自己人無比照顧。",
-        soulmate: "藍色皮克敏",
-        soulmateDesc: "雙重冷靜思考，共同打造無懈可擊的防線。",
-        enemy: "紫色皮克敏",
-        enemyDesc: "覺得對方衝勁過頭、缺乏周全的控制規劃。"
-      },
-      glow: {
-        code: "#009_GLOW",
-        name: "✨ 發光皮克敏",
-        title: "「黑暗中的靈魂引路人」",
-        color: "#7CB342",
-        desc: "你本身就自帶獨特的光芒與感染力。在眾人迷茫或陷入黑暗低谷時，你總能憑藉極強的第六感與信念，照亮一條大家都沒想過的新路。你的靈魂獨立而純粹，不隨波逐流，是能夠在絕境中點燃希望的靈魂引路人。",
-        soulmate: "羽翅皮克敏",
-        soulmateDesc: "靈魂高度共鳴，彼此相處輕鬆自在無壓力。",
-        enemy: "岩石皮克敏",
-        enemyDesc: "覺得對方太過保守墨守成規、缺乏變通樂趣。"
-      }
+      red: { code: "#001_RED", name: "🔴 紅色皮克敏", title: "「永不退縮的直球衝鋒隊」", color: "#E65100", desc: "你是團隊中不可或缺的堅韌先鋒。面對困難與未知，你很少退縮或優柔寡斷，習慣直接用行動破局。你的熱情與直率極具感染力，常能帶動身邊的人一起前進。", soulmate: "藍色皮克敏", soulmateDesc: "一個冷靜觀察防守，一個向前衝刺破局。", enemy: "黃色皮克敏", enemyDesc: "覺得對方天馬行空、缺乏接地氣的執行力。" },
+      blue: { code: "#003_BLUE", name: "🔵 藍色皮克敏", title: "「深謀慮的冷靜觀察家」", color: "#0288D1", desc: "你擁有如水一般的冷靜與包容力。即使在極度混亂的環境中，你也能抽離情緒，迅速梳理出問題的本質與秩序。你做事穩健、講求邏輯與全局觀，總是能在關鍵時刻給予最可靠的支援。", soulmate: "紅色皮克敏", soulmateDesc: "互補防守與進攻，提供內在絕對安全感。", enemy: "羽翅皮克敏", enemyDesc: "受不了對方過於隨性與缺乏秩序的步調。" },
+      yellow: { code: "#002_YELLOW", name: "🟡 黃色皮克敏", title: "「天馬行空的靈感發電機」", color: "#F57F17", desc: "你的腦袋裡裝滿了無數奇思妙想，充滿活力且彈性極佳。你不喜歡被固有的框架與規則束縛，遇到問題時總是能從意想不到的角度找到妙招。你是大家的開心果與靈感源泉。", soulmate: "岩石皮克敏", soulmateDesc: "能把你天馬行空的點子穩穩落地實現。", enemy: "紅色皮克敏", enemyDesc: "覺得對方太過莽撞衝動、缺乏靈活變通。" },
+      purple: { code: "#004_PURPLE", name: "🟣 紫色皮克敏", title: "「力挽狂瀾的絕對核心」", color: "#7B1FA2", desc: "你具備無可比擬的氣場與強大執行力，一個人就能扛起數倍於常人的重任。你具有極強的責任感與掌控力，習慣在混亂中挺身而出擔任主導角色。你的存在給人極高的安全感。", soulmate: "白色皮克敏", soulmateDesc: "敏銳補位細節，讓你無後顧之憂集中輸出。", enemy: "冰霜皮克敏", enemyDesc: "覺得對方步調太慢、過於保守而打亂節奏。" },
+      white: { code: "#005_WHITE", name: "⚪ 白色皮克敏", title: "「機警敏銳的隱形快手」", color: "#78909C", desc: "你的直覺極其敏銳，擁有洞悉周遭環境微小變化的天賦。你討厭拖泥帶水與繁複的社交套路，習慣以最有效率且精準的方式處理事務。雖然看起來有些高冷，但總能一瞬間點出關鍵。", soulmate: "紫色皮克敏", soulmateDesc: "大膽輸出與精細防護的黃金合作組合。", enemy: "岩石皮克敏", enemyDesc: "受不了對方過於沉悶固執、反應不夠靈敏。" },
+      rock: { code: "#006_ROCK", name: "🪨 岩石皮克敏", title: "「穩如泰山的鋼鐵盾牌」", color: "#424242", desc: "你是大家心中最可靠的定海神針。情緒穩定度極高，具有強大的抗壓性與原則性，無論外界如何動盪，你都能踏實地守住底線。你做事一步一腳印，絕不投機取巧。", soulmate: "黃色皮克敏", soulmateDesc: "為對方靈動的點子提供最堅實的落地支援。", enemy: "白色皮克敏", enemyDesc: "覺得對方太過急躁捉摸不定、缺乏穩定度。" },
+      wing: { code: "#007_WING", name: "🌸 羽翅皮克敏", title: "「自由翱翔的跨界奇才」", color: "#EC407A", desc: "你天生帶有一種輕盈自由的氣質，討厭任何形式的約束與繁文縟節。面對障礙，你不喜歡硬碰硬，而是擅長運用靈動的思維直飛彼岸。你具備極佳的適應力與跨界想像力。", soulmate: "發光皮克敏", soulmateDesc: "靈動不設限，兩人在一起能創造無限可能。", enemy: "藍色皮克敏", enemyDesc: "覺得對方規矩太多、個性過於嚴肅沉重。" },
+      ice: { code: "#008_ICE", name: "🧊 冰霜皮克敏", title: "「掌控全局的局勢凍結者」", color: "#00ACC1", desc: "你擁有強大的局勢掌控力與極佳的冷靜度。當場面失控時，你總能以冰冷精確的邏輯降溫場面，將複雜問題一步步拆解並逐步凍結風險。你極具戰略眼光，行動俐落。", soulmate: "藍色皮克敏", soulmateDesc: "雙重冷靜思考，共同打造無懈可擊的防線。", enemy: "紫色皮克敏", enemyDesc: "覺得對方衝勁過頭、缺乏周全的控制規劃。" },
+      glow: { code: "#009_GLOW", name: "✨ 發光皮克敏", title: "「黑暗中的靈魂引路人」", color: "#7CB342", desc: "你本身就自帶獨特的光芒與感染力。在眾人迷茫或陷入黑暗低谷時，你總能憑藉極強的第六感與信念，照亮一條大家都沒想過的新路。你的靈魂獨立而純粹，不隨波逐流。", soulmate: "羽翅皮克敏", soulmateDesc: "靈魂高度共鳴，彼此相處輕鬆自在無壓力。", enemy: "岩石皮克敏", enemyDesc: "覺得對方太過保守墨守成規、缺乏變通樂趣。" }
     };
 
     const pikminColorThemeMap = {
@@ -595,7 +415,6 @@
     let selectedQuestions = [];
     let currentIndex = 0;
     let questionStartTime = 0;
-    let lastQuestionIsOuter = null;
     let chartInstance = null;
     let innerChartInstance = null;
 
@@ -606,20 +425,32 @@
 
     const TOTAL_QUESTIONS_TO_ASK = 20;
 
+    // Fisher-Yates 洗牌演算法
+    function shuffleArray(arr) {
+      const array = [...arr];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
     function startQuiz() {
       currentIndex = 0;
-      lastQuestionIsOuter = null;
       userScores = {
         outer: { action: 0, insight: 0, resilience: 0, flexibility: 0, uniqueness: 0 },
         inner: { action: 0, insight: 0, resilience: 0, flexibility: 0, uniqueness: 0 }
       };
 
-      const shuffle = arr => [...arr].sort(() => 0.5 - Math.random());
-      
-      const outerQuestions = shuffle(masterQuestionBank.filter(q => q.isOuter)).slice(0, 10);
-      const innerQuestions = shuffle(masterQuestionBank.filter(q => !q.isOuter)).slice(0, 10);
-      
-      selectedQuestions = shuffle([...outerQuestions, ...innerQuestions]);
+      // 嚴格分流：取 10 題外顯 + 10 題內在，並確保絕對不重覆
+      const outerPool = masterQuestionBank.filter(q => q.isOuter);
+      const innerPool = masterQuestionBank.filter(q => !q.isOuter);
+
+      const pickedOuter = shuffleArray(outerPool).slice(0, 10);
+      const pickedInner = shuffleArray(innerPool).slice(0, 10);
+
+      // 隨機交錯混合這 20 題
+      selectedQuestions = shuffleArray([...pickedOuter, ...pickedInner]);
 
       document.getElementById('quiz-screen').classList.remove('hidden');
       document.getElementById('quiz-screen').classList.add('flex');
@@ -641,31 +472,32 @@
       document.getElementById('q-total').innerText = String(TOTAL_QUESTIONS_TO_ASK).padStart(2, '0');
       document.getElementById('progress-bar').style.width = `${((currentIndex + 1) / TOTAL_QUESTIONS_TO_ASK) * 100}%`;
 
-      let questionText = q.textVersions.default;
-      if (lastQuestionIsOuter !== null) {
-        questionText = lastQuestionIsOuter ? q.textVersions.afterOuter : q.textVersions.afterInner;
-      }
-      document.getElementById('question-text').innerText = questionText;
+      document.getElementById('question-text').innerText = q.text;
 
       const container = document.getElementById('options-container');
       container.innerHTML = '';
 
       const optionLabels = ['A', 'B', 'C'];
-      q.options.forEach((opt, idx) => {
+      // 選項洗牌，打破固定答案位置
+      const shuffledOptions = shuffleArray(q.options);
+
+      shuffledOptions.forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.className = "w-full text-left p-4 rounded-2xl border-2 border-[#EFEAE1] bg-paper hover:border-forest hover:bg-white hover:shadow-sm active:scale-[0.99] transition-all duration-200 group flex items-start gap-3.5 cursor-pointer";
-        btn.onclick = () => selectOption(opt.scores, q.isOuter);
+        // 修正：使用 opt.s 與 opt.t 對應資料屬性
+        btn.onclick = () => selectOption(opt.s, q.isOuter);
         btn.innerHTML = `
           <span class="flex-shrink-0 w-6 h-6 rounded-full bg-earth/10 text-earth group-hover:bg-forest group-hover:text-white flex items-center justify-center text-xs font-bold transition-colors">
             ${optionLabels[idx]}
           </span>
-          <span class="text-sm text-wood group-hover:text-forest font-medium pt-0.5">${opt.text}</span>
+          <span class="text-sm text-wood group-hover:text-forest font-medium pt-0.5">${opt.t}</span>
         `;
         container.appendChild(btn);
       });
     }
 
     function selectOption(scores, isOuter) {
+      if (!scores) return;
       const elapsedTime = (Date.now() - questionStartTime) / 1000;
       let multiplier = 1.0;
       if (elapsedTime < 2.5) multiplier = 1.15;
@@ -675,8 +507,6 @@
       for (const [dim, val] of Object.entries(scores)) {
         target[dim] += Math.round(val * multiplier);
       }
-
-      lastQuestionIsOuter = isOuter;
 
       const card = document.getElementById('quiz-card');
       card.classList.remove('slide-in');
