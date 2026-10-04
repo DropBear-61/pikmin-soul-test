@@ -224,8 +224,8 @@
     </main>
 
     <div class="w-full space-y-3 mb-6">
-      <button id="share-btn" onclick="generateAndShareImage()" class="w-full py-3.5 px-4 bg-forest hover:bg-forestHover text-white font-bold rounded-2xl shadow-paper flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
-        <span id="save-btn-text">🖼️ 儲存你嘅皮克敏屬性卡</span>
+      <button id="share-btn" onclick="generateAndPreviewImage()" class="w-full py-3.5 px-4 bg-forest hover:bg-forestHover text-white font-bold rounded-2xl shadow-paper flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
+        <span id="save-btn-text">🖼️ 查看你嘅皮克敏屬性卡 (PNG)</span>
       </button>
       <button onclick="restartQuiz()" class="w-full py-3 px-4 bg-white border border-[#EFEAE1] text-earth hover:text-wood font-medium rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all">
         <span id="restart-btn-text">🔄 再測一次</span>
@@ -233,7 +233,27 @@
     </div>
   </div>
 
-  <!-- ==================== 3. JavaScript 邏輯與雙語引擎 ==================== -->
+  <!-- ==================== 3. 圖片預覽彈窗 (Preview Modal) ==================== -->
+  <div id="image-modal" class="fixed inset-0 z-50 bg-black/80 hidden flex-col items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+    <div class="relative max-w-md w-full bg-cardBg rounded-3xl p-4 flex flex-col items-center space-y-3 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center w-full px-2">
+        <h3 id="modal-title" class="font-bold text-wood text-sm">證書 / 屬性卡預覽</h3>
+        <button onclick="closeModal()" class="text-earth hover:text-wood font-bold text-lg p-1">✕</button>
+      </div>
+      
+      <p id="modal-hint" class="text-xs text-earth text-center">可長按圖片或右鍵儲存至相簿 / Long press or right click to save</p>
+      
+      <div class="w-full overflow-hidden rounded-2xl border border-[#EFEAE1]">
+        <img id="preview-img" src="" alt="Pikmin Certificate PNG" class="w-full h-auto object-contain max-h-[65vh]" />
+      </div>
+
+      <button onclick="closeModal()" class="w-full py-2.5 bg-forest text-white font-bold text-xs rounded-xl hover:bg-forestHover transition-all">
+        關閉 / Close
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== 4. JavaScript 邏輯與雙語引擎 ==================== -->
   <script>
     let currentLang = 'zh'; 
 
@@ -251,11 +271,13 @@
         soulmateTitle: "🍀 最佳拍檔",
         enemyTitle: "⚡ 相剋隊友",
         rotateHint: "↺ 轉一轉個電話 180 度，睇埋內在皮克敏！ ↺",
-        saveBtn: "🖼️ 儲存你嘅皮克敏屬性卡",
+        saveBtn: "🖼️ 查看你嘅皮克敏屬性卡 (PNG)",
         restartBtn: "🔄 再測一次",
         radarOuterLabel: "☀️ 外顯靈魂屬性",
         radarInnerLabel: "🌙 內在靈魂屬性",
-        chartTraits: ['執行力', '洞察力', '韌性', '彈性', '獨特性']
+        chartTraits: ['執行力', '洞察力', '韌性', '彈性', '獨特性'],
+        modalTitle: "皮克敏屬性卡預覽",
+        modalHint: "💡 長按或右鍵點擊圖片即可直接儲存 PNG！"
       },
       en: {
         headerTitle: "Explore Your Pikmin Soul Traits",
@@ -270,11 +292,13 @@
         soulmateTitle: "🍀 Best Match",
         enemyTitle: "⚡ Clash Match",
         rotateHint: "↺ Rotate phone 180° to view Inner Pikmin! ↺",
-        saveBtn: "🖼️ Save Your Pikmin Result Card",
+        saveBtn: "🖼️ View Pikmin Result Card (PNG)",
         restartBtn: "🔄 Take Test Again",
         radarOuterLabel: "☀️ Outer Soul Traits",
         radarInnerLabel: "🌙 Inner Soul Traits",
-        chartTraits: ['Action', 'Insight', 'Resilience', 'Flexibility', 'Uniqueness']
+        chartTraits: ['Action', 'Insight', 'Resilience', 'Flexibility', 'Uniqueness'],
+        modalTitle: "Pikmin Result Card Preview",
+        modalHint: "💡 Long press or right-click the image to save PNG!"
       }
     };
 
@@ -618,6 +642,8 @@
       document.getElementById('rotate-hint').innerText = t.rotateHint;
       document.getElementById('save-btn-text').innerText = t.saveBtn;
       document.getElementById('restart-btn-text').innerText = t.restartBtn;
+      document.getElementById('modal-title').innerText = t.modalTitle;
+      document.getElementById('modal-hint').innerText = t.modalHint;
     }
 
     function startQuiz() {
@@ -861,14 +887,24 @@
       });
     }
 
-    function generateAndShareImage() {
+    // 修改處：將原本自動下載改成產生 PNG DataURL 並開啟 Modal 直接預覽
+    function generateAndPreviewImage() {
       const card = document.getElementById('result-card');
       html2canvas(card, { scale: 2, useCORS: true }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `Pikmin-Soul-Result-${currentLang}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
+        const dataUrl = canvas.toDataURL('image/png');
+        const imgEl = document.getElementById('preview-img');
+        const modal = document.getElementById('image-modal');
+        
+        imgEl.src = dataUrl;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
       });
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('image-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
     }
 
     function restartQuiz() {
